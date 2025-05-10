@@ -2,7 +2,7 @@ import React from "react";
 import { View, Button, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../App";
+import { RootStackParamList } from "@/App";
 
 export default function HomeScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();

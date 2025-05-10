@@ -1,12 +1,12 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "./src/screens/HomeScreen";
-import AddWordScreen from "./src/screens/AddWordScreen";
-import LexiconScreen from "./src/screens/LexiconScreen";
-import ChooseSettingsScreen from "./src/screens/ChooseSettingsScreen";
-import QuizScreen from "./src/screens/QuizScreen";
-import ResultScreen from "./src/screens/ResultScreen";
+import HomeScreen from "./screens/HomeScreen";
+import AddWordScreen from "./screens/AddWordScreen";
+import LexiconScreen from "./screens/LexiconScreen";
+import ChooseSettingsScreen from "./screens/ChooseSettingsScreen";
+import QuizScreen from "./screens/QuizScreen";
+import ResultScreen from "./screens/ResultScreen";
 
 export type RootStackParamList = {
   Home: undefined;
