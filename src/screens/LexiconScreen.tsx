@@ -8,17 +8,25 @@ import {
   Pressable,
   Alert,
   TouchableOpacity,
+  LayoutAnimation,
+  Platform,
+  UIManager,
 } from "react-native";
 import FilterBar from "@/components/FilterBar";
 import { dbPromise } from "@/db/database";
 import { Difficulty } from "@/types/Difficulty";
 import type { LexiconEntry } from "@/types/LexiconEntry";
 
+if (Platform.OS === "android") {
+  UIManager.setLayoutAnimationEnabledExperimental?.(true);
+}
+
 export default function LexiconScreen() {
   const [lexicon, setLexicon] = useState<LexiconEntry[]>([]);
   const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [showFilters, setShowFilters] = useState(false);
+  const [showSortOptions, setShowSortOptions] = useState(false);
+  const [showFilterOptions, setShowFilterOptions] = useState(false);
 
   const fetchLexicon = async () => {
     const db = await dbPromise;
@@ -28,9 +36,7 @@ export default function LexiconScreen() {
     const params: any[] = [];
 
     if (selectedDifficulties.length > 0) {
-      conditions.push(
-        `difficulty IN (${selectedDifficulties.map(() => "?").join(",")})`
-      );
+      conditions.push(`difficulty IN (${selectedDifficulties.map(() => "?").join(",")})`);
       params.push(...selectedDifficulties);
     }
 
@@ -79,15 +85,42 @@ export default function LexiconScreen() {
     setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
   };
 
+  const toggleSortSection = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setShowSortOptions((prev) => !prev);
+    if (showFilterOptions) setShowFilterOptions(false);
+  };
+
+  const toggleFilterSection = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setShowFilterOptions((prev) => !prev);
+    if (showSortOptions) setShowSortOptions(false);
+  };
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => setShowFilters(!showFilters)}>
-        <Text style={styles.toggleFilters}>
-          {showFilters ? "Masquer les filtres ▲" : "Afficher les filtres ▼"}
-        </Text>
-      </TouchableOpacity>
+      <View style={styles.topFilterRow}>
+        <TouchableOpacity style={styles.topFilterBox} onPress={toggleSortSection}>
+          <Text style={styles.topFilterText}>Trier</Text>
+        </TouchableOpacity>
+        <View style={styles.verticalDivider} />
+        <TouchableOpacity style={styles.topFilterBox} onPress={toggleFilterSection}>
+          <Text style={styles.topFilterText}>Filtrer</Text>
+        </TouchableOpacity>
+      </View>
 
-      {showFilters && (
+      {showSortOptions && (
+        <View style={styles.sortOptionsContainer}>
+          <TouchableOpacity onPress={() => setSortOrder("asc")}>
+            <Text style={styles.optionText}>A → Z</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setSortOrder("desc")}>
+            <Text style={styles.optionText}>Z → A</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {showFilterOptions && (
         <View style={styles.filtersContainer}>
           <Text style={styles.filterLabel}>Tri par difficulté</Text>
           <FilterBar
@@ -99,31 +132,36 @@ export default function LexiconScreen() {
         </View>
       )}
 
-      <Text style={styles.title}>Lexique</Text>
-
-      <FlatList
-        data={lexicon}
-        contentContainerStyle={styles.listContent}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.fr, { color: difficultyColor(item.difficulty) }]}>{item.fr}</Text>
-              <Text style={styles.phonetic}>{item.phonetic}</Text>
-              <Text style={styles.ko}>{item.ko}</Text>
+      <View style={{ padding: 12 }}>
+        <Text style={styles.title}>Lexique</Text>
+        <FlatList
+          data={lexicon}
+          contentContainerStyle={styles.listContent}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.card}>
+              <View style={styles.cardContent}>
+                <View style={styles.texts}>
+                  <Text style={[styles.fr, { color: difficultyColor(item.difficulty) }]}>
+                    🇫🇷 {item.fr}
+                  </Text>
+                  <Text style={styles.phonetic}>{item.phonetic}</Text>
+                  <Text style={styles.ko}>🇰🇷 {item.ko}</Text>
+                </View>
+                <View style={styles.actions}>
+                  <Switch
+                    value={item.active === 1}
+                    onValueChange={() => toggleActive(item.id, item.active)}
+                  />
+                  <Pressable onPress={() => deleteWord(item.id)}>
+                    <Text style={styles.delete}>🗑️</Text>
+                  </Pressable>
+                </View>
+              </View>
             </View>
-            <View style={styles.controlsRow}>
-              <Switch
-                value={item.active === 1}
-                onValueChange={() => toggleActive(item.id, item.active)}
-              />
-              <Pressable onPress={() => deleteWord(item.id)}>
-                <Text style={styles.delete}>🗑️</Text>
-              </Pressable>
-            </View>
-          </View>
-        )}
-      />
+          )}
+        />
+      </View>
     </View>
   );
 }
@@ -144,20 +182,42 @@ function difficultyColor(difficulty: string) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 12,
   },
-  toggleFilters: {
-    textAlign: "right",
-    color: "#007aff",
+  topFilterRow: {
+    flexDirection: "row",
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
     marginBottom: 8,
+  },
+  topFilterBox: {
+    flex: 1,
+    paddingVertical: 12,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  topFilterText: {
     fontWeight: "500",
   },
-  filtersContainer: {
-    marginBottom: 16,
+  verticalDivider: {
+    width: 1,
+    backgroundColor: "#ccc",
+  },
+  sortOptionsContainer: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     backgroundColor: "#f9f9f9",
-    borderRadius: 8,
+    borderBottomWidth: 1,
+    borderColor: "#ddd",
+  },
+  optionText: {
+    paddingVertical: 4,
+    fontSize: 16,
+  },
+  filtersContainer: {
     padding: 12,
-    borderWidth: 1,
+    backgroundColor: "#f9f9f9",
+    borderBottomWidth: 1,
     borderColor: "#ddd",
   },
   filterLabel: {
@@ -177,7 +237,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: "#bdbdbd",
   },
   fr: {
     fontSize: 16,
@@ -198,4 +258,31 @@ const styles = StyleSheet.create({
   delete: {
     fontSize: 20,
   },
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 1,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  cardContent: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  texts: {
+    flex: 1,
+    gap: 4,
+  },
+  actions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  }
 });

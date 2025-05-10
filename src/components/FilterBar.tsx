@@ -29,10 +29,6 @@ export default function FilterBar({
                 selectedValues={selectedDifficulties}
                 onToggle={onToggleDifficulty}
             />
-
-            <Pressable style={styles.sortButton} onPress={onToggleSortOrder}>
-                <Text>Tri : {sortOrder === "asc" ? "A → Z" : "Z → A"}</Text>
-            </Pressable>
         </View>
     );
 }
