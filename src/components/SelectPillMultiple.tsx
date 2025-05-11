@@ -1,20 +1,25 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import Pill from "./Pill";
+import { Difficulty } from "@/types/Difficulty";
 
-interface SelectPillOption {
+interface Option {
     label: string;
-    value: string | number;
+    value: Difficulty;
     color: string;
 }
 
-interface SelectPillProps {
-    options: SelectPillOption[];
-    selectedValue: string | number;
-    onSelect: (value: string | number) => void;
+interface Props {
+    options: Option[];
+    selectedValues: Difficulty[];
+    onToggle: (value: Difficulty) => void;
 }
 
-export default function SelectPill({ options, selectedValue, onSelect }: SelectPillProps) {
+export default function SelectPillMultiple({
+    options,
+    selectedValues,
+    onToggle,
+}: Props) {
     return (
         <View style={styles.container}>
             {options.map((opt) => (
@@ -22,8 +27,8 @@ export default function SelectPill({ options, selectedValue, onSelect }: SelectP
                     key={opt.value}
                     label={opt.label}
                     color={opt.color}
-                    selected={opt.value === selectedValue}
-                    onClick={() => onSelect(opt.value)}
+                    selected={selectedValues.includes(opt.value)}
+                    onClick={() => onToggle(opt.value)}
                 />
             ))}
         </View>
@@ -33,6 +38,7 @@ export default function SelectPill({ options, selectedValue, onSelect }: SelectP
 const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
+        flexWrap: "wrap",
         gap: 8,
         marginVertical: 8,
     },

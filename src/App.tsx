@@ -9,13 +9,14 @@ import LexiconScreen from "./screens/LexiconScreen";
 import ChooseSettingsScreen from "./screens/ChooseSettingsScreen";
 import QuizScreen from "./screens/QuizScreen";
 import ResultScreen from "./screens/ResultScreen";
+import { GameSettings } from "./types/GameSettings";
 
 export type RootStackParamList = {
   Home: undefined;
   AddWord: undefined;
   Lexicon: undefined;
   ChooseSettings: { type: "translation" | "comprehension" };
-  Quiz: { settings: any };
+  Quiz: { settings: GameSettings };
   Result: { score: number; total: number };
 };
 
