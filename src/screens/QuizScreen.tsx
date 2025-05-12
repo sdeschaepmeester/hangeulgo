@@ -84,7 +84,15 @@ export default function QuizScreen({ route, navigation }: Props) {
           ))}
         </View>
       )}
-
+      {settings.length == "unlimited" && !showResult && (
+        <>
+          <TouchableOpacity style={styles.quitButton} onPress={() => {
+            navigation.replace("Result", { score, total: currentIndex });
+          }}>
+            <Text style={styles.quitText}>Terminer</Text>
+          </TouchableOpacity>
+        </>
+      )}
       {showResult && (
         <TouchableOpacity style={styles.nextButton} onPress={next}>
           <Text style={styles.nextText}>Continuer</Text>
@@ -145,4 +153,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+  quitButton: {
+    marginTop: 24,
+    padding: 10,
+    borderRadius: 6,
+    backgroundColor: "#ff9d9d",
+  },
+  quitText: {
+    color: "white",
+    textAlign: "center",
+    fontWeight: "bold",
+  }
 });
