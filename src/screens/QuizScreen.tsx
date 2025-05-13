@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, TextInput, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  TextInput,
+  ImageBackground,
+} from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
 import { generateQuestions, type Question } from "@/services/quizGenerator";
@@ -14,11 +23,19 @@ export default function QuizScreen({ route, navigation }: Props) {
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
+  const backgrounds = [
+    require("../../assets/bg_quiz_1.png"),
+    require("../../assets/bg_quiz_2.png"),
+    require("../../assets/bg_quiz_3.png"),
+  ];
+  const [bgImage, setBgImage] = useState(backgrounds[0]);
 
   const current = questions[currentIndex];
 
   useEffect(() => {
     generateQuestions(settings).then(setQuestions);
+    const randomImage = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+    setBgImage(randomImage);
   }, []);
 
   const checkAnswer = (answer: string) => {
@@ -48,57 +65,66 @@ export default function QuizScreen({ route, navigation }: Props) {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.counter}>
-        {currentIndex + 1} / {questions.length}
-      </Text>
-
-      <Text style={styles.prompt}>
-        {settings.type === "translation" ? current.fr : current.ko}
-      </Text>
-
-      {settings.type === "translation" && settings.inputMode === "input" ? (
-        <TextInput
-          style={styles.input}
-          placeholder="Votre réponse en coréen"
-          value={userInput}
-          onChangeText={setUserInput}
-          onSubmitEditing={() => checkAnswer(userInput)}
-          editable={!showResult}
-        />
-      ) : (
-        <View style={styles.choices}>
-          {current.choices?.map((choice: string) => (
-            <TouchableOpacity
-              key={choice}
-              style={[
-                styles.choice,
-                selected === choice && {
-                  backgroundColor: choice === current.correctAnswer ? "#c6f6d5" : "#feb2b2",
-                },
-              ]}
-              onPress={() => !showResult && checkAnswer(choice)}
-            >
-              <Text>{choice}</Text>
-            </TouchableOpacity>
-          ))}
+    <ImageBackground source={bgImage} style={styles.background} imageStyle={{ opacity: 0.8 }}>
+      <View style={styles.container}>
+        <View style={styles.counterBar}>
+          <Text style={styles.counterText}>
+            Question {currentIndex + 1} / {questions.length}
+          </Text>
         </View>
-      )}
-      {settings.length == "unlimited" && !showResult && (
-        <>
-          <TouchableOpacity style={styles.quitButton} onPress={() => {
-            navigation.replace("Result", { score, total: currentIndex });
-          }}>
+
+        <View style={styles.promptBox}>
+          <Text style={styles.prompt}>
+            {settings.type === "translation" ? current.fr : current.ko}
+          </Text>
+        </View>
+
+        {settings.type === "translation" && settings.inputMode === "input" ? (
+          <TextInput
+            style={styles.input}
+            placeholder="Votre réponse en coréen"
+            value={userInput}
+            onChangeText={setUserInput}
+            onSubmitEditing={() => checkAnswer(userInput)}
+            editable={!showResult}
+          />
+        ) : (
+          <View style={styles.choices}>
+            {current.choices?.map((choice: string) => (
+              <TouchableOpacity
+                key={choice}
+                style={[
+                  styles.choice,
+                  selected === choice && {
+                    backgroundColor: choice === current.correctAnswer ? "#c6f6d5" : "#feb2b2",
+                  },
+                ]}
+                onPress={() => !showResult && checkAnswer(choice)}
+              >
+                <Text>{choice}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+
+        {settings.length == "unlimited" && !showResult && (
+          <TouchableOpacity
+            style={styles.quitButton}
+            onPress={() => {
+              navigation.replace("Result", { score, total: currentIndex });
+            }}
+          >
             <Text style={styles.quitText}>Terminer</Text>
           </TouchableOpacity>
-        </>
-      )}
-      {showResult && (
-        <TouchableOpacity style={styles.nextButton} onPress={next}>
-          <Text style={styles.nextText}>Continuer</Text>
-        </TouchableOpacity>
-      )}
-    </View>
+        )}
+
+        {showResult && (
+          <TouchableOpacity style={styles.nextButton} onPress={next}>
+            <MaterialIcons name="arrow-forward" size={24} color="white" />
+          </TouchableOpacity>
+        )}
+      </View>
+    </ImageBackground>
   );
 }
 
@@ -113,15 +139,29 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  counter: {
+  counterBar: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    padding: 10,
+    backgroundColor: "rgba(255,255,255,0.5)",
+    alignItems: "center",
+  },
+  counterText: {
     fontSize: 16,
-    marginBottom: 8,
-    textAlign: "center",
+    fontWeight: "600",
+  },
+  promptBox: {
+    backgroundColor: "rgba(255,255,255,0.5)",
+    padding: 16,
+    marginTop: 60,
+    borderRadius: 8,
+    marginBottom: 20,
   },
   prompt: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
     textAlign: "center",
   },
   input: {
@@ -138,20 +178,17 @@ const styles = StyleSheet.create({
   choice: {
     padding: 16,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "transparent",
     borderRadius: 8,
     backgroundColor: "#f9f9f9",
   },
   nextButton: {
-    marginTop: 30,
+    position: "absolute",
+    bottom: 85,
+    alignSelf: "center",
     backgroundColor: "#9da7ff",
     padding: 12,
-    borderRadius: 8,
-  },
-  nextText: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
+    borderRadius: 999,
   },
   quitButton: {
     marginTop: 24,
@@ -163,5 +200,10 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     fontWeight: "bold",
-  }
+  },
+  background: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
 });
