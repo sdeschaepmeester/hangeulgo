@@ -8,6 +8,7 @@ import {
   TextInput,
   ImageBackground,
 } from "react-native";
+import Animated, { FadeInUp } from "react-native-reanimated";
 import { MaterialIcons } from "@expo/vector-icons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
@@ -23,6 +24,7 @@ export default function QuizScreen({ route, navigation }: Props) {
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
   const backgrounds = [
     require("../../assets/bg_quiz_1.png"),
     require("../../assets/bg_quiz_2.png"),
@@ -40,9 +42,15 @@ export default function QuizScreen({ route, navigation }: Props) {
 
   const checkAnswer = (answer: string) => {
     const isCorrect = answer.trim() === current.correctAnswer;
-    if (isCorrect) setScore((s) => s + 1);
+    if (isCorrect) {
+      setScore((s) => s + 1);
+      setFeedback("correct");
+    } else {
+      setFeedback("wrong");
+    }
     setShowResult(true);
     setSelected(answer);
+    setTimeout(() => setFeedback(null), 1000); // Reset feedback after 1 sec
   };
 
   const next = () => {
@@ -105,6 +113,23 @@ export default function QuizScreen({ route, navigation }: Props) {
               </TouchableOpacity>
             ))}
           </View>
+        )}
+
+        {showResult && selected !== current.correctAnswer && (
+          <Text style={styles.correctAnswer}>Bonne réponse : {current.correctAnswer}</Text>
+        )}
+
+        {feedback && (
+          <Animated.View
+            entering={FadeInUp.duration(500)}
+            style={styles.feedbackIcon}
+          >
+            <MaterialIcons
+              name={feedback === "correct" ? "emoji-events" : "cancel"}
+              size={100}
+              color={feedback === "correct" ? "gold" : "#ff5e5e"}
+            />
+          </Animated.View>
         )}
 
         {settings.length == "unlimited" && !showResult && (
@@ -205,5 +230,34 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     height: "100%",
+  },
+  correctAnswer: {
+    textAlign: "center",
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 20,
+    marginTop: 10,
+  },
+  feedbackCircle: {
+    position: "absolute",
+    top: 120,
+    left: "50%",
+    transform: [{ translateX: -50 }],
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    opacity: 0.4,
+  },
+  correctCircle: {
+    backgroundColor: "green",
+  },
+  wrongCircle: {
+    backgroundColor: "red",
+  },
+  feedbackIcon: {
+    position: "absolute",
+    top: 100,
+    alignSelf: "center",
+    zIndex: 10,
   },
 });
