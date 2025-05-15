@@ -2,13 +2,26 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
   TextInput,
   ImageBackground,
+  PanResponder,
+  Vibration,
+  LayoutAnimation,
+  Platform,
+  UIManager,
+  StyleSheet,
 } from "react-native";
-import Animated, { FadeInUp } from "react-native-reanimated";
+import Animated, {
+  FadeInUp,
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withSequence,
+  withTiming,
+  runOnJS,
+} from "react-native-reanimated";
 import { MaterialIcons } from "@expo/vector-icons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
@@ -38,7 +51,34 @@ export default function QuizScreen({ route, navigation }: Props) {
     generateQuestions(settings).then(setQuestions);
     const randomImage = backgrounds[Math.floor(Math.random() * backgrounds.length)];
     setBgImage(randomImage);
+
+    if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
   }, []);
+
+  const next = () => {
+    setShowResult(false);
+    setSelected(null);
+    setUserInput("");
+
+    if (currentIndex + 1 >= questions.length) {
+      navigation.replace("Result", { score, total: questions.length });
+    } else {
+      setCurrentIndex((i) => i + 1);
+    }
+  };
+
+  const panResponder = PanResponder.create({
+    onMoveShouldSetPanResponder: (_, gestureState) => gestureState.dx < -50,
+    onPanResponderRelease: () => {
+      if (showResult) {
+        Vibration.vibrate([0, 60, 40, 60]);
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        runOnJS(next)();
+      }
+    },
+  });
 
   const checkAnswer = (answer: string) => {
     const isCorrect = answer.trim() === current.correctAnswer;
@@ -50,18 +90,7 @@ export default function QuizScreen({ route, navigation }: Props) {
     }
     setShowResult(true);
     setSelected(answer);
-    setTimeout(() => setFeedback(null), 1000); // Reset feedback after 1 sec
-  };
-
-  const next = () => {
-    setShowResult(false);
-    setSelected(null);
-    setUserInput("");
-    if (currentIndex + 1 >= questions.length) {
-      navigation.replace("Result", { score, total: questions.length });
-    } else {
-      setCurrentIndex((i) => i + 1);
-    }
+    setTimeout(() => setFeedback(null), 1000);
   };
 
   if (questions.length === 0) {
@@ -74,17 +103,19 @@ export default function QuizScreen({ route, navigation }: Props) {
 
   return (
     <ImageBackground source={bgImage} style={styles.background} imageStyle={{ opacity: 0.8 }}>
-      <View style={styles.container}>
+      <View style={styles.container} {...panResponder.panHandlers}>
         <View style={styles.counterBar}>
           <Text style={styles.counterText}>
             Question {currentIndex + 1} / {questions.length}
           </Text>
         </View>
 
-        <View style={styles.promptBox}>
-          <Text style={styles.prompt}>
-            {settings.type === "translation" ? current.fr : current.ko}
-          </Text>
+        <View style={styles.promptWrapper}>
+          <View style={styles.promptBox}>
+            <Text style={styles.prompt}>
+              {settings.type === "translation" ? current.fr : current.ko}
+            </Text>
+          </View>
         </View>
 
         {settings.type === "translation" && settings.inputMode === "input" ? (
@@ -104,10 +135,12 @@ export default function QuizScreen({ route, navigation }: Props) {
                 style={[
                   styles.choice,
                   selected === choice && {
-                    backgroundColor: choice === current.correctAnswer ? "#c6f6d5" : "#feb2b2",
+                    backgroundColor:
+                      choice === current.correctAnswer ? "#c6f6d5" : "#feb2b2",
                   },
                 ]}
                 onPress={() => !showResult && checkAnswer(choice)}
+                disabled={!!selected}
               >
                 <Text>{choice}</Text>
               </TouchableOpacity>
@@ -116,7 +149,9 @@ export default function QuizScreen({ route, navigation }: Props) {
         )}
 
         {showResult && selected !== current.correctAnswer && (
-          <Text style={styles.correctAnswer}>Bonne réponse : {current.correctAnswer}</Text>
+          <View style={styles.correctAnswerWrapper}>
+            <Text style={styles.correctAnswer}>Bonne réponse : {current.correctAnswer}</Text>
+          </View>
         )}
 
         {feedback && (
@@ -132,7 +167,7 @@ export default function QuizScreen({ route, navigation }: Props) {
           </Animated.View>
         )}
 
-        {settings.length == "unlimited" && !showResult && (
+        {settings.length === "unlimited" && !showResult && (
           <TouchableOpacity
             style={styles.quitButton}
             onPress={() => {
@@ -145,7 +180,7 @@ export default function QuizScreen({ route, navigation }: Props) {
 
         {showResult && (
           <TouchableOpacity style={styles.nextButton} onPress={next}>
-            <MaterialIcons name="arrow-forward" size={24} color="white" />
+            <MaterialIcons name="arrow-forward" size={28} color="white" />
           </TouchableOpacity>
         )}
       </View>
@@ -177,12 +212,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+  promptWrapper: {
+    borderRadius: 12,
+    marginTop: 60,
+    marginBottom: 20,
+  },
   promptBox: {
     backgroundColor: "rgba(255,255,255,0.5)",
     padding: 16,
-    marginTop: 60,
-    borderRadius: 8,
-    marginBottom: 20,
+    borderRadius: 12,
   },
   prompt: {
     fontSize: 24,
@@ -209,10 +247,11 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     position: "absolute",
-    bottom: 85,
+    bottom: 70,
     alignSelf: "center",
     backgroundColor: "#9da7ff",
-    padding: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 24,
     borderRadius: 999,
   },
   quitButton: {
@@ -231,28 +270,15 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
+  correctAnswerWrapper: {
+    alignItems: "center",
+    marginTop: 16,
+  },
   correctAnswer: {
     textAlign: "center",
     color: "white",
     fontWeight: "bold",
     fontSize: 20,
-    marginTop: 10,
-  },
-  feedbackCircle: {
-    position: "absolute",
-    top: 120,
-    left: "50%",
-    transform: [{ translateX: -50 }],
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    opacity: 0.4,
-  },
-  correctCircle: {
-    backgroundColor: "green",
-  },
-  wrongCircle: {
-    backgroundColor: "red",
   },
   feedbackIcon: {
     position: "absolute",

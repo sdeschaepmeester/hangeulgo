@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  ImageBackground,
 } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
@@ -58,7 +59,11 @@ export default function ResultScreen({ route, navigation }: Props) {
   });
 
   return (
-    <View style={styles.container}>
+    <ImageBackground
+      source={require("../../assets/bg_pattern.png")}
+      resizeMode="repeat"
+      style={styles.container}
+    >
       <View style={styles.medalWrapper}>
         <Animated.View style={[styles.glow, glowStyle]} />
         <Image source={medal} style={styles.medal} resizeMode="contain" />
@@ -84,7 +89,7 @@ export default function ResultScreen({ route, navigation }: Props) {
           <Text style={styles.buttonText}>Quitter</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
