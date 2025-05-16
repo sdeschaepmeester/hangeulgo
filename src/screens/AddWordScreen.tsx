@@ -31,6 +31,7 @@ export default function AddWordScreen() {
   const [phonetic, setPhonetic] = useState("");
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [tags, setTags] = useState("");
 
   const phoneticRef = useRef<TextInput>(null);
   const koRef = useRef<TextInput>(null);
@@ -38,21 +39,26 @@ export default function AddWordScreen() {
   const isValid = fr.trim() && ko.trim();
 
   const onSubmit = async () => {
+    console.log('coucou')
+    console.log(isValid)
     if (!isValid) return;
+        console.log("ca marche ?")
     const db = await dbPromise;
     await db.runAsync(
-      `INSERT INTO lexicon (fr, ko, phonetic, difficulty, active) VALUES (?, ?, ?, ?, ?)`,
+      `INSERT INTO lexicon (fr, ko, phonetic, difficulty, active, tags) VALUES (?, ?, ?, ?, ?, ?)`,
       fr.trim(),
       ko.trim(),
       phonetic.trim(),
       difficulty,
-      1
+      1,
+      tags.trim()
     );
     setShowSuccess(true);
     setFr("");
     setKo("");
     setPhonetic("");
     setDifficulty("easy");
+    setTags("");
   };
 
   return (
@@ -109,6 +115,14 @@ export default function AddWordScreen() {
             onSubmitEditing={Keyboard.dismiss}
           />
         </View>
+
+        <Text style={styles.label}>Mots-clés</Text>
+        <TextInput
+          value={tags}
+          onChangeText={setTags}
+          style={styles.input}
+          placeholder="Ex : nourriture, salutations"
+        />
 
         <Text style={[styles.label, { marginTop: 16 }]}>Difficulté d’apprentissage</Text>
         <SelectPill
@@ -205,7 +219,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     alignSelf: "center",
-    marginTop: 64,
+    marginTop: 24,
     opacity: 0.9,
   }
 });

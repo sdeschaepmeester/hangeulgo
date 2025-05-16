@@ -6,11 +6,11 @@ import {
   StyleSheet,
   Switch,
   Pressable,
-  Alert,
   TouchableOpacity,
   LayoutAnimation,
   Platform,
   UIManager,
+  TextInput,
 } from "react-native";
 import FilterBar from "@/components/FilterBar";
 import { dbPromise } from "@/db/database";
@@ -31,6 +31,7 @@ export default function LexiconScreen() {
   const [showSortOptions, setShowSortOptions] = useState(false);
   const [showFilterOptions, setShowFilterOptions] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
+  const [keywordFilter, setKeywordFilter] = useState("");
 
   const fetchLexicon = async () => {
     const db = await dbPromise;
@@ -42,6 +43,11 @@ export default function LexiconScreen() {
     if (selectedDifficulties.length > 0) {
       conditions.push(`difficulty IN (${selectedDifficulties.map(() => "?").join(",")})`);
       params.push(...selectedDifficulties);
+    }
+
+    if (keywordFilter.trim()) {
+      conditions.push(`tags LIKE ?`);
+      params.push(`%${keywordFilter.trim()}%`);
     }
 
     if (conditions.length > 0) {
@@ -56,7 +62,7 @@ export default function LexiconScreen() {
 
   useEffect(() => {
     fetchLexicon().catch(console.error);
-  }, [selectedDifficulties, sortOrder]);
+  }, [selectedDifficulties, sortOrder, keywordFilter]);
 
   const toggleActive = async (id: number, current: number) => {
     const db = await dbPromise;
@@ -122,6 +128,20 @@ export default function LexiconScreen() {
             sortOrder={sortOrder}
             onToggleSortOrder={onToggleSortOrder}
           />
+          <Text style={{ fontWeight: "bold", marginTop: 12 }}>Mots-clés</Text>
+          <TextInput
+            value={keywordFilter}
+            onChangeText={setKeywordFilter}
+            placeholder="Ex : nourriture"
+            style={{
+              marginTop: 6,
+              borderWidth: 1,
+              borderColor: "#ccc",
+              borderRadius: 6,
+              padding: 8,
+              fontSize: 14,
+            }}
+          />
         </View>
       )}
 
@@ -138,8 +158,15 @@ export default function LexiconScreen() {
                   <Text style={[styles.fr, { color: difficultyColor(item.difficulty) }]}>
                     🇫🇷 {item.fr}
                   </Text>
-                  <Text style={styles.phonetic}>{item.phonetic}</Text>
-                  <Text style={styles.ko}>🇰🇷 {item.ko}</Text>
+                  <Text style={styles.ko}>
+                    🇰🇷 {item.ko}
+                    {item.phonetic ? (
+                      <Text style={styles.phoneticInline}> ({item.phonetic})</Text>
+                    ) : null}
+                  </Text>
+                  {item.tags && (
+                    <Text style={styles.tags}>{item.tags}</Text>
+                  )}
                 </View>
                 <View style={styles.actions}>
                   <Switch
@@ -296,5 +323,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
+  },
+  tags: {
+    fontSize: 13,
+    color: "#666",
+    marginTop: 4,
+  },
+  phoneticInline: {
+    fontSize: 13,
+    color: "#888",
+    fontStyle: "italic",
   }
 });
