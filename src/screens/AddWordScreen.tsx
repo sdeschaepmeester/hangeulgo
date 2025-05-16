@@ -6,8 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Keyboard,
-  Dimensions,
-  Image
+  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { dbPromise } from "@/db/database";
@@ -16,7 +15,7 @@ import SelectPill from "@/components/SelectPill";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
 import AlertCustom from "@/components/AlertCustom";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import NavBar from "@/components/NavBar";
 
 const difficulties = [
@@ -58,72 +57,78 @@ export default function AddWordScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.imageWrapper}>
-        <Image
-          source={require("../../assets/write.png")}
-          style={styles.image}
-          resizeMode="cover"
-        />
-      </View>
-      <View style={{ padding: 18, gap: 12 }}>
+      <View style={styles.headerRow}>
         <Text style={styles.title}>Ajouter du vocabulaire</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <MaterialIcons name="close" size={28} color="#999" />
+        </TouchableOpacity>
+      </View>
 
-        <Text style={styles.label}>Français</Text>
-        <TextInput
-          value={fr}
-          onChangeText={setFr}
-          style={styles.input}
-          placeholder="Ex : Bonjour"
-          returnKeyType="next"
-          onSubmitEditing={() => phoneticRef.current?.focus()}
-        />
+      <View style={styles.form}>
+        <View style={styles.field}>
+          <View style={styles.labelRow}>
+            <Text style={styles.label}>🇫🇷 Français</Text>
+          </View>
+          <TextInput
+            value={fr}
+            onChangeText={setFr}
+            style={styles.input}
+            placeholder="Ex : Bonjour"
+            returnKeyType="next"
+            onSubmitEditing={() => phoneticRef.current?.focus()}
+          />
+        </View>
 
-        <Text style={styles.label}>Phonétique</Text>
-        <TextInput
-          ref={phoneticRef}
-          value={phonetic}
-          onChangeText={setPhonetic}
-          style={styles.input}
-          placeholder="Ex : annyeonghaseyo"
-          returnKeyType="next"
-          onSubmitEditing={() => koRef.current?.focus()}
-        />
+        <View style={styles.field}>
+          <View style={styles.labelRow}>
+            <MaterialCommunityIcons name="alphabetical" size={20} color="#333" style={styles.labelIcon} />
+            <Text style={styles.label}>Phonétique</Text>
+          </View>
+          <TextInput
+            ref={phoneticRef}
+            value={phonetic}
+            onChangeText={setPhonetic}
+            style={styles.input}
+            placeholder="Ex : annyeonghaseyo"
+            returnKeyType="next"
+            onSubmitEditing={() => koRef.current?.focus()}
+          />
+        </View>
 
-        <Text style={styles.label}>Coréen</Text>
-        <TextInput
-          ref={koRef}
-          value={ko}
-          onChangeText={setKo}
-          style={styles.input}
-          placeholder="Ex : 안녕하세요"
-          returnKeyType="done"
-          onSubmitEditing={Keyboard.dismiss}
-        />
+        <View style={styles.field}>
+          <View style={styles.labelRow}>
+            <Text style={styles.label}>🇰🇷 Coréen</Text>
+          </View>
+          <TextInput
+            ref={koRef}
+            value={ko}
+            onChangeText={setKo}
+            style={styles.input}
+            placeholder="Ex : 안녕하세요"
+            returnKeyType="done"
+            onSubmitEditing={Keyboard.dismiss}
+          />
+        </View>
 
-        <Text style={styles.label}>Difficulté</Text>
+        <Text style={[styles.label, { marginTop: 16 }]}>Difficulté d’apprentissage</Text>
         <SelectPill
           options={difficulties}
           selectedValue={difficulty}
           onSelect={(value) => setDifficulty(value as Difficulty)}
         />
 
-        <View style={styles.buttonRow}>
-          <TouchableOpacity
-            style={[styles.button, styles.cancel]}
-            onPress={() => navigation.navigate("Home")}
-          >
-            <Text style={styles.buttonText}>Annuler</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, styles.submit, !isValid && styles.disabled]}
-            onPress={onSubmit}
-            disabled={!isValid}
-          >
-            <Text style={styles.buttonText}>Ajouter au lexique</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={[styles.fullButton, !isValid && styles.disabled]}
+          onPress={onSubmit}
+          disabled={!isValid}
+        >
+          <Text style={styles.fullButtonText}>Ajouter au lexique</Text>
+        </TouchableOpacity>
       </View>
-
+      <Image
+        source={require("../../assets/dictionary.png")}
+        style={styles.dictionary}
+      />
 
       <AlertCustom
         visible={showSuccess}
@@ -139,56 +144,68 @@ export default function AddWordScreen() {
 }
 
 const styles = StyleSheet.create({
-  imageWrapper: {
-    width: "100%",
-    height: (280 / 395) * Dimensions.get("window").width * 0.75,
-    overflow: "hidden",
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-  },
   container: {
     flex: 1,
+    padding: 18,
     gap: 12,
+    paddingTop: 50
+  },
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20,
+  },
+  form: {
+    gap: 16,
+    marginTop: 4,
+  },
+  field: {
+    gap: 6,
+  },
+  labelRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  labelIcon: {
+    marginRight: 4,
   },
   label: {
     fontWeight: "bold",
+    fontSize: 14,
   },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 6,
-    padding: 8,
+    borderRadius: 8,
+    padding: 14,
+    fontSize: 16,
   },
-  buttonRow: {
-    flexDirection: "row",
-    gap: 12,
-    marginTop: 20,
-  },
-  button: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 6,
-    alignItems: "center",
-  },
-  cancel: {
-    backgroundColor: "#ffd6d6",
-  },
-  submit: {
+  fullButton: {
+    marginTop: 28,
     backgroundColor: "#9da7ff",
+    paddingVertical: 16,
+    borderRadius: 8,
   },
-  buttonText: {
+  fullButtonText: {
+    textAlign: "center",
     color: "white",
     fontWeight: "bold",
+    fontSize: 16,
   },
   disabled: {
     opacity: 0.4,
   },
+  dictionary: {
+    width: 120,
+    height: 120,
+    alignSelf: "center",
+    marginTop: 64,
+    opacity: 0.9,
+  }
 });

@@ -35,14 +35,20 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="AddWord" component={AddWordScreen} />
-        <Stack.Screen name="Lexicon" component={LexiconScreen} />
-        <Stack.Screen name="ChooseSettings" component={ChooseSettingsScreen} />
-        <Stack.Screen name="Quiz" component={QuizScreen} />
-        <Stack.Screen name="Result" component={ResultScreen} />
-        <Stack.Screen name="Score" component={ScoreScreen} />
+      <Stack.Navigator initialRouteName="Home"
+        screenOptions={{
+          headerStyle: { backgroundColor: "#9da7ff" },
+          headerTintColor: "#fff",
+          headerTitleStyle: { fontWeight: "bold" },
+        }}
+      >
+        <Stack.Screen name="Home" component={HomeScreen} options={{ title: "" }} />
+        <Stack.Screen name="AddWord" component={AddWordScreen} options={{ title: "Ajouter un mot" }} />
+        <Stack.Screen name="Lexicon" component={LexiconScreen} options={{ title: "Réviser" }} />
+        <Stack.Screen name="ChooseSettings" component={ChooseSettingsScreen} options={{ title: "Paramètres du jeu" }} />
+        <Stack.Screen name="Quiz" component={QuizScreen} options={{ headerTitle: "", headerLeft: () => null, }} />
+        <Stack.Screen name="Result" component={ResultScreen} options={{ headerTitle: "", headerLeft: () => null, }} />
+        <Stack.Screen name="Score" component={ScoreScreen} options={{ title: "Mes scores" }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -16,6 +16,9 @@ import FilterBar from "@/components/FilterBar";
 import { dbPromise } from "@/db/database";
 import { Difficulty } from "@/types/Difficulty";
 import type { LexiconEntry } from "@/types/LexiconEntry";
+import AlertCustom from "@/components/AlertCustom";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import NavBar from "@/components/NavBar";
 
 if (Platform.OS === "android") {
   UIManager.setLayoutAnimationEnabledExperimental?.(true);
@@ -27,6 +30,7 @@ export default function LexiconScreen() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [showSortOptions, setShowSortOptions] = useState(false);
   const [showFilterOptions, setShowFilterOptions] = useState(false);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
 
   const fetchLexicon = async () => {
     const db = await dbPromise;
@@ -60,19 +64,8 @@ export default function LexiconScreen() {
     fetchLexicon();
   };
 
-  const deleteWord = async (id: number) => {
-    Alert.alert("Supprimer", "Confirmer la suppression ?", [
-      { text: "Annuler", style: "cancel" },
-      {
-        text: "Supprimer",
-        style: "destructive",
-        onPress: async () => {
-          const db = await dbPromise;
-          await db.runAsync("DELETE FROM lexicon WHERE id = ?", id);
-          fetchLexicon();
-        },
-      },
-    ]);
+  const deleteWord = (id: number) => {
+    setConfirmDeleteId(id);
   };
 
   const onToggleDifficulty = (diff: Difficulty) => {
@@ -136,7 +129,7 @@ export default function LexiconScreen() {
         <Text style={styles.title}>Lexique</Text>
         <FlatList
           data={lexicon}
-          contentContainerStyle={styles.listContent}
+          contentContainerStyle={[styles.listContent, { paddingBottom: 190 }]}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View style={styles.card}>
@@ -162,6 +155,25 @@ export default function LexiconScreen() {
           )}
         />
       </View>
+      {confirmDeleteId !== null && (
+        <AlertCustom
+          visible={true}
+          icon={<MaterialCommunityIcons name="delete" size={30} color="#e53935" />}
+          iconColor="#e53935"
+          title="Supprimer"
+          description="Confirmer la suppression de ce mot du lexique ?"
+          onClose={() => setConfirmDeleteId(null)}
+          onConfirm={async () => {
+            const db = await dbPromise;
+            await db.runAsync("DELETE FROM lexicon WHERE id = ?", confirmDeleteId);
+            setConfirmDeleteId(null);
+            fetchLexicon();
+          }}
+          confirmText="Supprimer"
+          cancelText="Annuler"
+        />
+      )}
+      <NavBar />
     </View>
   );
 }

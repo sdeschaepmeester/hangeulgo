@@ -27,11 +27,11 @@ const difficultyOptions: { label: string; value: Difficulty; icon: JSX.Element }
   },
 ];
 
-const lengths: { label: string; value: string }[] = [
-  { label: "Court", value: "10" },
-  { label: "Normal", value: "20" },
-  { label: "Long", value: "30" },
-  { label: "Sans fin", value: "unlimited" },
+const lengths = [
+  { label: "Court", value: "10", color: "#b3b3ff" },
+  { label: "Normal", value: "20", color: "#b3b3ff" },
+  { label: "Long", value: "30", color: "#b3b3ff" },
+  { label: "Sans fin", value: "unlimited", color: "#b3b3ff" },
 ];
 
 const modes = [
@@ -79,7 +79,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Paramètres du jeu</Text>
+      <Text style={styles.title}>Choix du mode de jeu</Text>
 
       <Text style={styles.label}>Difficulté des mots</Text>
       <IconCardSelectMultiple<Difficulty>
@@ -94,13 +94,9 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
 
       <Text style={styles.label}>Durée de jeu</Text>
       <SelectPill
-        options={lengths.map((l) => ({
-          label: l.label,
-          value: l.value,
-          color: "#ccc",
-        }))}
+        options={lengths}
         selectedValue={String(length)}
-        onSelect={(val) => setLength(val === "unlimited" ? "unlimited" : parseInt(val as string))}
+        onSelect={(val) => setLength(val === "unlimited" ? "unlimited" : parseInt(val.toString()))}
       />
 
       {type === "translation" && (
@@ -125,11 +121,11 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
       </View>
 
       <TouchableOpacity
-        style={[styles.button, isDisabled && styles.disabledButton]}
+        style={[styles.fullButton, isDisabled && styles.disabled]}
         onPress={startGame}
         disabled={isDisabled}
       >
-        <Text style={styles.buttonText}>🚀 Démarrer</Text>
+        <Text style={styles.fullButtonText}>🎮 Commencer la partie 🎮</Text>
       </TouchableOpacity>
     </View>
   );
@@ -138,14 +134,14 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    gap: 16,
+    padding: 24,
+    gap: 20,
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 16,
+    marginBottom: 12,
   },
   label: {
     fontWeight: "bold",
@@ -173,24 +169,19 @@ const styles = StyleSheet.create({
   checkboxLabel: {
     fontSize: 14,
   },
-  button: {
-    backgroundColor: "#6c74ff",
-    borderRadius: 30,
-    paddingVertical: 14,
-    marginTop: 24,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
+  fullButton: {
+    marginTop: 28,
+    backgroundColor: "#9da7ff",
+    paddingVertical: 16,
+    borderRadius: 8,
   },
-  disabledButton: {
-    opacity: 0.5,
-  },
-  buttonText: {
+  fullButtonText: {
+    textAlign: "center",
     color: "white",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  disabled: {
+    opacity: 0.4,
   },
 });

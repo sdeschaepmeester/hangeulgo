@@ -8,20 +8,11 @@ import {
   ImageBackground,
   PanResponder,
   Vibration,
-  LayoutAnimation,
   Platform,
   UIManager,
   StyleSheet,
 } from "react-native";
-import Animated, {
-  FadeInUp,
-  useSharedValue,
-  useAnimatedStyle,
-  withRepeat,
-  withSequence,
-  withTiming,
-  runOnJS,
-} from "react-native-reanimated";
+import Animated, { FadeInUp } from "react-native-reanimated";
 import { MaterialIcons } from "@expo/vector-icons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
@@ -81,8 +72,7 @@ export default function QuizScreen({ route, navigation }: Props) {
     onPanResponderRelease: () => {
       if (showResult) {
         Vibration.vibrate([0, 60, 40, 60]);
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        runOnJS(next)();
+        setTimeout(next, 100); // plus stable
       }
     },
   });
@@ -160,7 +150,6 @@ export default function QuizScreen({ route, navigation }: Props) {
           </View>
         )}
 
-        {/* Answer bloc when the selected answer is wrong*/}
         {showResult && selected !== current.correctAnswer && (
           <View style={styles.correctAnswerWrapper}>
             <Text style={styles.correctAnswer}>
@@ -202,6 +191,7 @@ export default function QuizScreen({ route, navigation }: Props) {
             <Text style={styles.quitText}>Terminer</Text>
           </TouchableOpacity>
         )}
+
         {settings.type === "translation" && settings.inputMode === "input" ? (
           <TouchableOpacity
             style={[
@@ -298,7 +288,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 24,
     borderRadius: 8,
-    width: "100%"
+    width: "100%",
   },
   quitButton: {
     marginTop: 24,
@@ -344,5 +334,5 @@ const styles = StyleSheet.create({
     left: 10,
     padding: 8,
     zIndex: 20,
-  }
+  },
 });
