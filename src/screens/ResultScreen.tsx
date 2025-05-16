@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -17,22 +17,32 @@ import Animated, {
   withTiming,
   interpolateColor,
 } from "react-native-reanimated";
+import { saveScore } from "@/services/score";
 
 const { width } = Dimensions.get("window");
 
 type Props = NativeStackScreenProps<RootStackParamList, "Result">;
 
 export default function ResultScreen({ route, navigation }: Props) {
-  const { score, total } = route.params;
+  const { score, total, settings } = route.params;
   const percent = Math.round((score / total) * 100);
+
+  useEffect(() => {
+    saveScore({
+      score,
+      total,
+      type: settings.type,
+      inputMode: settings.inputMode ?? "multiple",
+    });
+  }, []);
 
   let medal = require("../../assets/bronze_medal.png");
   let message = "Continue comme ça !";
   let glowColor = "#cd7f32";
 
-  if (percent == 0) {
+  if (percent === 0) {
     medal = require("../../assets/terrible.png");
-    message = "Non là tu le fais exprès ?"
+    message = "Non là tu le fais exprès ?";
   }
   if (percent >= 80) {
     medal = require("../../assets/gold_medal.png");
@@ -51,7 +61,7 @@ export default function ResultScreen({ route, navigation }: Props) {
     const backgroundColor = interpolateColor(
       glow.value,
       [0, 1],
-      ["#ffffff00", glowColor + "66"] // semi-transparent
+      ["#ffffff00", glowColor + "66"]
     );
     return {
       backgroundColor,
@@ -72,7 +82,9 @@ export default function ResultScreen({ route, navigation }: Props) {
       <Text style={styles.message}>{message}</Text>
 
       <View style={styles.bubble}>
-        <Text style={styles.score}>{score} / {total}</Text>
+        <Text style={styles.score}>
+          {score} / {total}
+        </Text>
       </View>
 
       <View style={styles.bottomRow}>
@@ -119,7 +131,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     textAlign: "center",
-    marginTop: 50
+    marginTop: 50,
   },
   bubble: {
     backgroundColor: "#f0f0f0",

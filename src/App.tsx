@@ -9,6 +9,7 @@ import LexiconScreen from "./screens/LexiconScreen";
 import ChooseSettingsScreen from "./screens/ChooseSettingsScreen";
 import QuizScreen from "./screens/QuizScreen";
 import ResultScreen from "./screens/ResultScreen";
+import ScoreScreen from "./screens/ScoreScreen";
 import { GameSettings } from "./types/GameSettings";
 
 export type RootStackParamList = {
@@ -17,7 +18,12 @@ export type RootStackParamList = {
   Lexicon: undefined;
   ChooseSettings: { type: "translation" | "comprehension" };
   Quiz: { settings: GameSettings };
-  Result: { score: number; total: number };
+  Result: {
+    score: number;
+    total: number;
+    settings: Pick<GameSettings, "type" | "inputMode">;
+  };
+  Score: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -36,6 +42,7 @@ export default function App() {
         <Stack.Screen name="ChooseSettings" component={ChooseSettingsScreen} />
         <Stack.Screen name="Quiz" component={QuizScreen} />
         <Stack.Screen name="Result" component={ResultScreen} />
+        <Stack.Screen name="Score" component={ScoreScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -65,7 +65,7 @@ export default function HomeScreen() {
                     resizeMode="cover"
                 />
                 <View style={styles.bottomOverlay}>
-                    <TouchableOpacity style={styles.scoreButton}>
+                    <TouchableOpacity style={styles.scoreButton} onPress={() => navigation.navigate("Score")}>
                         <Text style={styles.scoreText}>Scores</Text>
                     </TouchableOpacity>
                 </View>

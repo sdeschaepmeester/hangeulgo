@@ -63,7 +63,14 @@ export default function QuizScreen({ route, navigation }: Props) {
     setUserInput("");
 
     if (currentIndex + 1 >= questions.length) {
-      navigation.replace("Result", { score, total: questions.length });
+      navigation.replace("Result", {
+        score,
+        total: questions.length,
+        settings: {
+          type: settings.type,
+          inputMode: settings.inputMode ?? "multiple",
+        },
+      });
     } else {
       setCurrentIndex((i) => i + 1);
     }
@@ -182,7 +189,14 @@ export default function QuizScreen({ route, navigation }: Props) {
           <TouchableOpacity
             style={styles.quitButton}
             onPress={() => {
-              navigation.replace("Result", { score, total: currentIndex });
+              navigation.replace("Result", {
+                score,
+                total: questions.length,
+                settings: {
+                  type: settings.type,
+                  inputMode: settings.inputMode ?? "multiple",
+                },
+              });
             }}
           >
             <Text style={styles.quitText}>Terminer</Text>

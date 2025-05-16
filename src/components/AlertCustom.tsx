@@ -17,6 +17,9 @@ interface AlertCustomProps {
     title: string;
     description: string;
     onClose: () => void;
+    onConfirm?: () => void;
+    confirmText?: string;
+    cancelText?: string;
 }
 
 export default function AlertCustom({
@@ -26,6 +29,9 @@ export default function AlertCustom({
     title,
     description,
     onClose,
+    onConfirm,
+    confirmText = "Confirmer",
+    cancelText = "Annuler",
 }: AlertCustomProps) {
     return (
         <Modal visible={visible} transparent animationType="fade">
@@ -35,16 +41,33 @@ export default function AlertCustom({
                         <MaterialCommunityIcons name="close" size={22} color="#999" />
                     </TouchableOpacity>
 
-                    <View style={[styles.iconCircle, { borderColor: "#ccc" }]}>
+                    <View style={[styles.iconCircle, { borderColor: iconColor }]}>
                         {icon}
                     </View>
 
                     <Text style={styles.title}>{title}</Text>
                     <Text style={styles.description}>{description}</Text>
 
-                    <TouchableOpacity onPress={onClose} style={styles.okButton}>
-                        <Text style={styles.okText}>Ok</Text>
-                    </TouchableOpacity>
+                    {onConfirm ? (
+                        <View style={styles.buttonRow}>
+                            <TouchableOpacity
+                                onPress={onClose}
+                                style={[styles.button, styles.cancel]}
+                            >
+                                <Text style={styles.buttonText}>{cancelText}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={onConfirm}
+                                style={[styles.button, styles.confirm]}
+                            >
+                                <Text style={styles.buttonText}>{confirmText}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    ) : (
+                        <TouchableOpacity onPress={onClose} style={styles.okButton}>
+                            <Text style={styles.okText}>Ok</Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
             </View>
         </Modal>
@@ -110,5 +133,26 @@ const styles = StyleSheet.create({
         color: "white",
         fontWeight: "bold",
         textAlign: "center",
+    },
+    buttonRow: {
+        flexDirection: "row",
+        gap: 12,
+        alignSelf: "stretch",
+    },
+    button: {
+        flex: 1,
+        borderRadius: 6,
+        paddingVertical: 12,
+        alignItems: "center",
+    },
+    cancel: {
+        backgroundColor: "#e0e0e0",
+    },
+    confirm: {
+        backgroundColor: "#ff9d9d",
+    },
+    buttonText: {
+        fontWeight: "bold",
+        color: "white",
     },
 });
