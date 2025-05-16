@@ -104,6 +104,12 @@ export default function QuizScreen({ route, navigation }: Props) {
   return (
     <ImageBackground source={bgImage} style={styles.background} imageStyle={{ opacity: 0.8 }}>
       <View style={styles.container} {...panResponder.panHandlers}>
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => navigation.replace("Home")}
+        >
+          <MaterialIcons name="close" size={28} color="black" />
+        </TouchableOpacity>
         <View style={styles.counterBar}>
           <Text style={styles.counterText}>
             Question {currentIndex + 1} / {questions.length}
@@ -120,11 +126,10 @@ export default function QuizScreen({ route, navigation }: Props) {
 
         {settings.type === "translation" && settings.inputMode === "input" ? (
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: "#ccc" }]}
             placeholder="Votre réponse en coréen"
             value={userInput}
             onChangeText={setUserInput}
-            onSubmitEditing={() => checkAnswer(userInput)}
             editable={!showResult}
           />
         ) : (
@@ -148,9 +153,15 @@ export default function QuizScreen({ route, navigation }: Props) {
           </View>
         )}
 
+        {/* Answer bloc when the selected answer is wrong*/}
         {showResult && selected !== current.correctAnswer && (
           <View style={styles.correctAnswerWrapper}>
-            <Text style={styles.correctAnswer}>Bonne réponse : {current.correctAnswer}</Text>
+            <Text style={styles.correctAnswer}>
+              Bonne réponse : {current.correctAnswer}
+              {settings.type === "translation" && current.phonetic
+                ? ` (${current.phonetic})`
+                : ""}
+            </Text>
           </View>
         )}
 
@@ -177,11 +188,31 @@ export default function QuizScreen({ route, navigation }: Props) {
             <Text style={styles.quitText}>Terminer</Text>
           </TouchableOpacity>
         )}
-
-        {showResult && (
-          <TouchableOpacity style={styles.nextButton} onPress={next}>
-            <MaterialIcons name="arrow-forward" size={28} color="white" />
+        {settings.type === "translation" && settings.inputMode === "input" ? (
+          <TouchableOpacity
+            style={[
+              styles.nextButton,
+              (!userInput && !showResult) && { opacity: 0.4 },
+            ]}
+            onPress={() => {
+              if (showResult) {
+                next();
+              } else {
+                checkAnswer(userInput);
+              }
+            }}
+            disabled={!userInput && !showResult}
+          >
+            <Text style={styles.nextButtonText}>
+              {showResult ? "Prochaine question »" : "Valider ma réponse"}
+            </Text>
           </TouchableOpacity>
+        ) : (
+          showResult && (
+            <TouchableOpacity style={styles.nextButton} onPress={next}>
+              <Text style={styles.nextButtonText}>Prochaine question »</Text>
+            </TouchableOpacity>
+          )
         )}
       </View>
     </ImageBackground>
@@ -249,10 +280,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 70,
     alignSelf: "center",
-    backgroundColor: "#9da7ff",
+    backgroundColor: "#7f8bff",
     paddingVertical: 14,
     paddingHorizontal: 24,
-    borderRadius: 999,
+    borderRadius: 8,
+    width: "100%"
   },
   quitButton: {
     marginTop: 24,
@@ -286,4 +318,17 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     zIndex: 10,
   },
+  nextButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 16,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 0,
+    left: 10,
+    padding: 8,
+    zIndex: 20,
+  }
 });
