@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Keyboard,
   Image,
-  FlatList
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { dbPromise } from "@/db/database";
@@ -112,6 +111,7 @@ export default function AddWordScreen() {
             value={fr}
             onChangeText={setFr}
             style={styles.input}
+            placeholderTextColor="#000"
             placeholder="Ex : Bonjour"
             returnKeyType="next"
             onSubmitEditing={() => phoneticRef.current?.focus()}
@@ -125,6 +125,7 @@ export default function AddWordScreen() {
             value={phonetic}
             onChangeText={setPhonetic}
             style={styles.input}
+            placeholderTextColor="#000"
             placeholder="Ex : annyeonghaseyo"
             returnKeyType="next"
             onSubmitEditing={() => koRef.current?.focus()}
@@ -138,6 +139,7 @@ export default function AddWordScreen() {
             value={ko}
             onChangeText={setKo}
             style={styles.input}
+            placeholderTextColor="#000"
             placeholder="Ex : 안녕하세요"
             returnKeyType="done"
             onSubmitEditing={Keyboard.dismiss}
@@ -149,6 +151,7 @@ export default function AddWordScreen() {
           value={tags}
           onChangeText={handleTagChange}
           style={styles.input}
+          placeholderTextColor="#000"
           placeholder="Ex : nourriture, salutations"
         />
 
