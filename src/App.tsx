@@ -13,10 +13,6 @@ import ScoreScreen from "./screens/ScoreScreen";
 import { GameSettings } from "./types/GameSettings";
 import { injectPreviewLexicon } from "@/data/injectPreviewLexicon";
 
-useEffect(() => {
-  injectPreviewLexicon();
-}, []);
-
 export type RootStackParamList = {
   Home: undefined;
   AddWord: undefined;
@@ -36,6 +32,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function App() {
   useEffect(() => {
     initDatabase().catch(console.error);
+    injectPreviewLexicon();
   }, []);
 
   return (

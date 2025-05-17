@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
     container: {
         position: "absolute",
         bottom: 24,
-        width: "100%",
+        left: 0, // ✅ Ajouté pour étendre jusqu’au bord gauche
+        right: 0, // ✅ Ajouté pour étendre jusqu’au bord droit
         height: 60,
         backgroundColor: "white",
         borderTopWidth: 1,
