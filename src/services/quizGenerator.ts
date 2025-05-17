@@ -18,11 +18,31 @@ function shuffle<T>(array: T[]): T[] {
 export async function generateQuestions(settings: GameSettings): Promise<Question[]> {
     const db = await dbPromise;
 
-    const placeholders = settings.difficulties.map(() => "?").join(",");
-    const rows = await db.getAllAsync<LexiconEntry>(
-        `SELECT * FROM lexicon WHERE difficulty IN (${placeholders}) AND active = 1`,
-        ...settings.difficulties
-    );
+    let rows: LexiconEntry[] = [];
+
+    if (settings.tags && settings.tags.length > 0) {
+        const diffPlaceholders = settings.difficulties.map(() => "?").join(",");
+        const tagPlaceholders = settings.tags.map(() => "?").join(",");
+
+        rows = await db.getAllAsync<LexiconEntry>(
+            `
+    SELECT l.* FROM lexicon l
+    JOIN lexicon_tags t ON l.id = t.lexicon_id
+    WHERE l.difficulty IN (${diffPlaceholders})
+      AND l.active = 1
+      AND t.tag IN (${tagPlaceholders})
+    GROUP BY l.id
+    `,
+            ...settings.difficulties,
+            ...settings.tags
+        );
+    } else {
+        const placeholders = settings.difficulties.map(() => "?").join(",");
+        rows = await db.getAllAsync<LexiconEntry>(
+            `SELECT * FROM lexicon WHERE difficulty IN (${placeholders}) AND active = 1`,
+            ...settings.difficulties
+        );
+    }
 
     const baseSet = shuffle(rows);
     const needed = settings.length === "unlimited" ? baseSet.length : settings.length;

@@ -36,27 +36,33 @@ export default function LexiconScreen() {
   const fetchLexicon = async () => {
     const db = await dbPromise;
 
-    let query = "SELECT * FROM lexicon";
-    const conditions: string[] = [];
+    const whereClauses: string[] = [];
     const params: any[] = [];
 
     if (selectedDifficulties.length > 0) {
-      conditions.push(`difficulty IN (${selectedDifficulties.map(() => "?").join(",")})`);
+      whereClauses.push(`l.difficulty IN (${selectedDifficulties.map(() => "?").join(",")})`);
       params.push(...selectedDifficulties);
     }
 
     if (keywordFilter.trim()) {
-      conditions.push(`tags LIKE ?`);
+      whereClauses.push(`t.tag LIKE ?`);
       params.push(`%${keywordFilter.trim()}%`);
     }
 
-    if (conditions.length > 0) {
-      query += " WHERE " + conditions.join(" AND ");
-    }
+    const whereSQL = whereClauses.length > 0 ? `WHERE ${whereClauses.join(" AND ")}` : "";
 
-    query += ` ORDER BY fr COLLATE NOCASE ${sortOrder.toUpperCase()}`;
+    const rows = await db.getAllAsync<(LexiconEntry & { tags: string | null })>(
+      `
+    SELECT l.*, GROUP_CONCAT(t.tag, ', ') AS tags
+    FROM lexicon l
+    LEFT JOIN lexicon_tags t ON l.id = t.lexicon_id
+    ${whereSQL}
+    GROUP BY l.id
+    ORDER BY l.fr COLLATE NOCASE ${sortOrder.toUpperCase()}
+    `,
+      ...params
+    );
 
-    const rows = await db.getAllAsync<LexiconEntry>(query, ...params);
     setLexicon(rows);
   };
 
@@ -165,7 +171,16 @@ export default function LexiconScreen() {
                     ) : null}
                   </Text>
                   {item.tags && (
-                    <Text style={styles.tags}>{item.tags}</Text>
+                    <View style={styles.tagsContainer}>
+                      <Text style={styles.tagsLabel}>Mots-clés :</Text>
+                      <View style={styles.tagsRow}>
+                        {item.tags.split(",").map((tag) => (
+                          <View key={tag.trim()} style={styles.tag}>
+                            <Text style={styles.tagText}>{tag.trim()}</Text>
+                          </View>
+                        ))}
+                      </View>
+                    </View>
                   )}
                 </View>
                 <View style={styles.actions}>
@@ -333,5 +348,29 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: "#888",
     fontStyle: "italic",
+  },
+  tagsContainer: {
+    marginTop: 6,
+  },
+  tagsLabel: {
+    fontSize: 13,
+    fontWeight: "bold",
+    color: "#444",
+    marginBottom: 4,
+  },
+  tagsRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 6,
+  },
+  tag: {
+    backgroundColor: "#e0e0ff",
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  tagText: {
+    fontSize: 12,
+    color: "#333",
   }
 });

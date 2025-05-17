@@ -1,5 +1,5 @@
 import React, { useState, useEffect, JSX } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
 import type { Difficulty } from "@/types/Difficulty";
@@ -8,6 +8,7 @@ import SelectPill from "@/components/SelectPill";
 import Storage from "expo-sqlite/kv-store";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import IconCardSelectMultiple from "@/components/IconCardSelectMultiple";
+import { getAllUniqueTags } from "@/services/tags";
 
 const difficultyOptions: { label: string; value: Difficulty; icon: JSX.Element }[] = [
   {
@@ -47,8 +48,12 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
   const [length, setLength] = useState<number | "unlimited">(10);
   const [inputMode, setInputMode] = useState<InputMode>("multiple");
   const [rememberSettings, setRememberSettings] = useState(false);
+  const [allTags, setAllTags] = useState<string[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [showTags, setShowTags] = useState(false);
 
   useEffect(() => {
+    getAllUniqueTags().then(setAllTags);
     Storage.getItem("gameSettings").then((data) => {
       if (!data) return;
       const parsed = JSON.parse(data);
@@ -65,6 +70,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
       difficulties: selectedDifficulties,
       length,
       ...(type === "translation" && { inputMode }),
+      ...(selectedTags.length > 0 && { tags: selectedTags }),
     };
     if (rememberSettings) {
       Storage.setItem(
@@ -98,6 +104,44 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
         selectedValue={String(length)}
         onSelect={(val) => setLength(val === "unlimited" ? "unlimited" : parseInt(val.toString()))}
       />
+
+      {allTags.length > 0 && (
+        <>
+          <Text style={styles.label}>Types de mots</Text>
+          <TouchableOpacity
+            onPress={() => setShowTags((prev) => !prev)}
+            style={[styles.tagItem, { flexDirection: "row", justifyContent: "space-between" }]}
+          >
+            <Text style={{ color: "#333" }}>
+              {selectedTags.length > 0 ? selectedTags.join(", ") : "Aucun mot clé sélectionné"}
+            </Text>
+            <MaterialCommunityIcons name={showTags ? "chevron-up" : "chevron-down"} size={20} />
+          </TouchableOpacity>
+
+          {showTags && (
+            <View style={{ gap: 6, marginTop: 8 }}>
+              {allTags.map((tag) => (
+                <TouchableOpacity
+                  key={tag}
+                  style={[
+                    styles.tagItem,
+                    selectedTags.includes(tag) && styles.tagItemSelected,
+                  ]}
+                  onPress={() => {
+                    setSelectedTags((prev) =>
+                      prev.includes(tag)
+                        ? prev.filter((t) => t !== tag)
+                        : [...prev, tag]
+                    );
+                  }}
+                >
+                  <Text style={{ color: selectedTags.includes(tag) ? "white" : "#333" }}>{tag}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        </>
+      )}
 
       {type === "translation" && (
         <>
@@ -184,4 +228,14 @@ const styles = StyleSheet.create({
   disabled: {
     opacity: 0.4,
   },
+  tagItem: {
+    padding: 8,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "#ccc",
+  },
+  tagItemSelected: {
+    backgroundColor: "#9da7ff",
+    borderColor: "#9da7ff",
+  }
 });

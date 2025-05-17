@@ -15,6 +15,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
 import { dbPromise } from "@/db/database";
 import SquareButton from "@/components/SquareButton";
+import { injectPreviewLexicon } from "@/data/injectPreviewLexicon";
 
 const screenHeight = Dimensions.get("window").height;
 
@@ -25,35 +26,6 @@ export default function HomeScreen() {
         const db = await dbPromise;
         await db.runAsync("DELETE FROM lexicon");
         Alert.alert("Lexique réinitialisé !");
-    }
-    async function testInsert() {
-        const db = await dbPromise;
-
-        const entries = [
-            ["bonjour", "안녕하세요", "annyeonghaseyo", "easy", 1],
-            ["merci", "감사합니다", "gamsahamnida", "easy", 1],
-            ["oui", "네", "ne", "easy", 1],
-            ["non", "아니요", "aniyo", "easy", 1],
-            ["au revoir", "안녕히 가세요", "annyeonghi gaseyo", "easy", 1],
-            ["je suis", "저는", "jeoneun", "medium", 1],
-            ["femme", "여자", "yeoja", "medium", 1],
-            ["homme", "남자", "namja", "medium", 1],
-            ["eau", "물", "mul", "medium", 1],
-            ["pain", "빵", "ppang", "medium", 1],
-        ];
-
-        for (const [fr, ko, phonetic, difficulty, active] of entries) {
-            await db.runAsync(
-                `INSERT INTO lexicon (fr, ko, phonetic, difficulty, active) VALUES (?, ?, ?, ?, ?)`,
-                fr,
-                ko,
-                phonetic,
-                difficulty,
-                active
-            );
-        }
-
-        Alert.alert("10 mots insérés !");
     }
 
     return (
@@ -70,8 +42,6 @@ export default function HomeScreen() {
                     </TouchableOpacity>
                 </View>
             </View>
-
-            {/* <Button title="Test DB insert" onPress={testInsert} /> */}
 
             <View style={{ padding: 20 }}>
                 <Text style={styles.section}>Exercices</Text>
