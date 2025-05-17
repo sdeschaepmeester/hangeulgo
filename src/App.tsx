@@ -11,6 +11,11 @@ import QuizScreen from "./screens/QuizScreen";
 import ResultScreen from "./screens/ResultScreen";
 import ScoreScreen from "./screens/ScoreScreen";
 import { GameSettings } from "./types/GameSettings";
+import { injectPreviewLexicon } from "@/data/injectPreviewLexicon";
+
+useEffect(() => {
+  injectPreviewLexicon();
+}, []);
 
 export type RootStackParamList = {
   Home: undefined;

@@ -1,11 +1,15 @@
 {
   "expo": {
-    "name": "hangeulgo",
+    "name": "Hangeul Go !",
     "slug": "hangeulgo",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/042d9545-3de8-47e6-aa2f-1f6f7f9ae37d"
+    },
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -20,7 +24,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.sdeschaepmeester.hangeulgo"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -42,6 +47,14 @@
           }
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "042d9545-3de8-47e6-aa2f-1f6f7f9ae37d"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
   }
 }
