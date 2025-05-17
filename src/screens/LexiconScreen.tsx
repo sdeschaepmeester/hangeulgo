@@ -32,6 +32,7 @@ export default function LexiconScreen() {
   const [showFilterOptions, setShowFilterOptions] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
   const [keywordFilter, setKeywordFilter] = useState("");
+  const [confirmDeleteAll, setConfirmDeleteAll] = useState(false);
 
   const fetchLexicon = async () => {
     const db = await dbPromise;
@@ -152,7 +153,12 @@ export default function LexiconScreen() {
       )}
 
       <View style={{ padding: 12 }}>
-        <Text style={styles.title}>Lexique</Text>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+          <Text style={styles.title}>Lexique</Text>
+          <TouchableOpacity onPress={() => setConfirmDeleteAll(true)}>
+            <MaterialCommunityIcons name="delete-empty" size={24} color="#e53935" />
+          </TouchableOpacity>
+        </View>
         <FlatList
           data={lexicon}
           contentContainerStyle={[styles.listContent, { paddingBottom: 190 }]}
@@ -212,6 +218,25 @@ export default function LexiconScreen() {
             fetchLexicon();
           }}
           confirmText="Supprimer"
+          cancelText="Annuler"
+        />
+      )}
+      {confirmDeleteAll && (
+        <AlertCustom
+          visible={true}
+          icon={<MaterialCommunityIcons name="delete-alert" size={30} color="#e53935" />}
+          iconColor="#e53935"
+          title="Tout supprimer"
+          description="Cela va supprimer tous les mots du lexique. Continuer ?"
+          onClose={() => setConfirmDeleteAll(false)}
+          onConfirm={async () => {
+            const db = await dbPromise;
+            await db.runAsync("DELETE FROM lexicon");
+            await db.runAsync("DELETE FROM lexicon_tags");
+            setConfirmDeleteAll(false);
+            fetchLexicon();
+          }}
+          confirmText="Supprimer tout"
           cancelText="Annuler"
         />
       )}

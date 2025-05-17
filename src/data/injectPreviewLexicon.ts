@@ -3,6 +3,12 @@ import { dbPromise } from "@/db/database";
 export async function injectPreviewLexicon() {
     const db = await dbPromise;
 
+    // Verify is lexicon exists, if yes skip whole function
+    const existing = await db.getFirstAsync<{ count: number }>("SELECT COUNT(*) as count FROM lexicon");
+    if (existing?.count && existing.count > 0) {
+        return;
+    }
+
     await db.runAsync(`
     CREATE TABLE IF NOT EXISTS lexicon_tags (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

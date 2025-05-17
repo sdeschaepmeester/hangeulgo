@@ -13,20 +13,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
-import { dbPromise } from "@/db/database";
 import SquareButton from "@/components/SquareButton";
-import { injectPreviewLexicon } from "@/data/injectPreviewLexicon";
 
 const screenHeight = Dimensions.get("window").height;
 
 export default function HomeScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
-    async function resetLexicon() {
-        const db = await dbPromise;
-        await db.runAsync("DELETE FROM lexicon");
-        Alert.alert("Lexique réinitialisé !");
-    }
 
     return (
         <View style={styles.container}>
