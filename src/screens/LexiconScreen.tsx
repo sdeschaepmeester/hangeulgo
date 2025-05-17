@@ -161,7 +161,7 @@ export default function LexiconScreen() {
         </View>
         <FlatList
           data={lexicon}
-          contentContainerStyle={[styles.listContent, { paddingBottom: 190 }]}
+          contentContainerStyle={[styles.listContent, { paddingBottom: 220 }]}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View style={styles.card}>
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   listContent: {
-    paddingBottom: 100,
+    paddingBottom: 200,
   },
   item: {
     flexDirection: "row",
