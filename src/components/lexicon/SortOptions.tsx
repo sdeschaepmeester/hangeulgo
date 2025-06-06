@@ -1,0 +1,104 @@
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Pressable } from "react-native";
+
+type Props = {
+    currentOrder: "asc" | "desc";
+    onChange: (order: "asc" | "desc") => void;
+};
+
+export default function SortOptions({ currentOrder, onChange }: Props) {
+    const [open, setOpen] = useState(false);
+
+    const labelFromValue = (value: "asc" | "desc") =>
+        value === "asc" ? "A → Z" : "Z → A";
+
+    return (
+        <View style={styles.container}>
+            <Text style={styles.label}>Ordre alphabétique :</Text>
+
+            <TouchableOpacity style={styles.dropdown} onPress={() => setOpen(true)}>
+                <Text style={styles.dropdownText}>
+                    {labelFromValue(currentOrder)}
+                </Text>
+            </TouchableOpacity>
+
+            {open && (
+                <Modal transparent animationType="fade">
+                    <Pressable style={styles.overlay} onPress={() => setOpen(false)}>
+                        <View style={styles.dropdownMenu}>
+                            <TouchableOpacity
+                                style={styles.dropdownItem}
+                                onPress={() => {
+                                    onChange("asc");
+                                    setOpen(false);
+                                }}
+                            >
+                                <Text style={styles.dropdownItemText}>A → Z</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.dropdownItem}
+                                onPress={() => {
+                                    onChange("desc");
+                                    setOpen(false);
+                                }}
+                            >
+                                <Text style={styles.dropdownItemText}>Z → A</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Pressable>
+                </Modal>
+            )}
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        padding: 12,
+        backgroundColor: "#f9f9f9",
+        borderBottomWidth: 1,
+        borderColor: "#ddd",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 12,
+    },
+    label: {
+        fontWeight: "bold",
+        fontSize: 16,
+        color: "#333",
+    },
+    dropdown: {
+        flex: 1,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 6,
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+        backgroundColor: "#fff",
+    },
+    dropdownText: {
+        fontSize: 16,
+        color: "#333",
+    },
+    overlay: {
+        flex: 1,
+        justifyContent: "center",
+        paddingHorizontal: 40,
+        backgroundColor: "rgba(0,0,0,0.2)",
+    },
+    dropdownMenu: {
+        backgroundColor: "#fff",
+        borderRadius: 6,
+        overflow: "hidden",
+        elevation: 4,
+    },
+    dropdownItem: {
+        padding: 12,
+        borderBottomWidth: 1,
+        borderColor: "#eee",
+    },
+    dropdownItemText: {
+        fontSize: 16,
+        color: "#333",
+    },
+});
