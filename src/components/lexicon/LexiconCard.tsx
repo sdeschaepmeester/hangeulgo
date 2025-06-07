@@ -11,6 +11,7 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import WordForm from "../form/WordForm";
 import type { Difficulty } from "@/types/Difficulty";
+import * as Speech from "expo-speech";
 
 type Props = {
     id: number;
@@ -38,6 +39,15 @@ export default function LexiconCard({
     onUpdate,
 }: Props) {
     const [showEdit, setShowEdit] = useState(false);
+
+    // Phone plays the korean word
+    const speakWord = () => {
+        Speech.speak(ko, {
+            language: "ko-KR",
+            rate: 0.9,
+            pitch: 1.0,
+        });
+    };
 
     return (
         <View style={styles.card}>
@@ -71,7 +81,7 @@ export default function LexiconCard({
                 <View style={styles.actions}>
                     <TouchableOpacity
                         style={styles.listenButton}
-                        onPress={() => console.log("Écouter", ko)}
+                        onPress={() => speakWord()}
                     >
                         <View style={styles.listenContent}>
                             <MaterialCommunityIcons

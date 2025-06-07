@@ -24,7 +24,8 @@
     "react-native-screens": "~4.10.0",
     "react-native-sqlite-storage": "^6.0.1",
     "uuid": "^11.1.0",
-    "expo-updates": "~0.28.13"
+    "expo-updates": "~0.28.13",
+    "expo-speech": "~13.1.7"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
