@@ -16,6 +16,7 @@ export default function FilterBarToggle({
 }: Props) {
     return (
         <View style={styles.row}>
+            {/* ----------------- Main filter bar with two filters types  ----------------- */}
             <TouchableOpacity
                 style={[styles.box, isSortOpen && styles.boxActive]}
                 onPress={onToggleSort}

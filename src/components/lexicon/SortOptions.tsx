@@ -14,16 +14,17 @@ export default function SortOptions({ currentOrder, onChange }: Props) {
 
     return (
         <View style={styles.container}>
+            {/* ----------------- Sort by label  ----------------- */}
             <Text style={styles.label}>Ordre alphabétique :</Text>
-
             <TouchableOpacity style={styles.dropdown} onPress={() => setOpen(true)}>
                 <Text style={styles.dropdownText}>
                     {labelFromValue(currentOrder)}
                 </Text>
             </TouchableOpacity>
 
+            {/* ----------------- Sort by options  ----------------- */}
             {open && (
-                <Modal transparent animationType="fade">
+                < Modal transparent animationType="fade">
                     <Pressable style={styles.overlay} onPress={() => setOpen(false)}>
                         <View style={styles.dropdownMenu}>
                             <TouchableOpacity
@@ -47,8 +48,9 @@ export default function SortOptions({ currentOrder, onChange }: Props) {
                         </View>
                     </Pressable>
                 </Modal>
-            )}
-        </View>
+            )
+            }
+        </View >
     );
 }
 

@@ -27,12 +27,14 @@ export default function LexiconFilters({
 
     return (
         <View style={styles.container}>
+            {/* ----------------- Filter by name (asc desc)  ----------------- */}
             <FilterBar
                 selectedDifficulties={selectedDifficulties}
                 onToggleDifficulty={onToggleDifficulty}
                 sortOrder={sortOrder}
                 onToggleSortOrder={onToggleSortOrder}
             />
+            {/* ----------------- Filter by difficulty and tags  ----------------- */}
             <SelectKeywords
                 allTags={allTags}
                 selectedTags={selectedTags}

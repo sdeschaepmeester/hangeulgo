@@ -39,13 +39,18 @@ export default function LexiconCard({
     onUpdate,
 }: Props) {
     const [showEdit, setShowEdit] = useState(false);
+    const [isSpeaking, setIsSpeaking] = React.useState(false);
 
     // Phone plays the korean word
-    const speakWord = () => {
+    const handleSpeak = () => {
+        setIsSpeaking(true);
         Speech.speak(ko, {
             language: "ko-KR",
             rate: 0.9,
             pitch: 1.0,
+            onDone: () => setIsSpeaking(false),
+            onStopped: () => setIsSpeaking(false),
+            onError: () => setIsSpeaking(false),
         });
     };
 
@@ -80,16 +85,24 @@ export default function LexiconCard({
                 {/* ----------------- Actions section ----------------- */}
                 <View style={styles.actions}>
                     <TouchableOpacity
-                        style={styles.listenButton}
-                        onPress={() => speakWord()}
+                        style={[
+                            styles.listenButton,
+                            isSpeaking && styles.listenButtonSpeaking,
+                        ]}
+                        onPress={handleSpeak}
                     >
                         <View style={styles.listenContent}>
                             <MaterialCommunityIcons
                                 name="volume-high"
                                 size={20}
-                                color="#333"
+                                color={isSpeaking ? "#fff" : "#333"}
                             />
-                            <Text style={styles.listenText}>Écouter</Text>
+                            <Text style={[
+                                styles.listenText,
+                                isSpeaking && { color: "#fff" }
+                            ]}>
+                                {isSpeaking ? "Lecture..." : "Écouter"}
+                            </Text>
                         </View>
                     </TouchableOpacity>
 
@@ -225,6 +238,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         alignItems: "center",
         justifyContent: "center",
+    },
+    listenButtonSpeaking: {
+        backgroundColor: "#9da7ff",
     },
     listenContent: {
         flexDirection: "row",

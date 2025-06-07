@@ -37,6 +37,7 @@ export default function AlertCustom({
         <Modal visible={visible} transparent animationType="fade">
             <View style={styles.overlay}>
                 <View style={styles.container}>
+                    {/* ----------------- Close modale  ----------------- */}
                     <TouchableOpacity onPress={onClose} style={styles.closeButton}>
                         <MaterialCommunityIcons name="close" size={22} color="#999" />
                     </TouchableOpacity>
