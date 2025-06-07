@@ -135,6 +135,7 @@ export default function LexiconScreen() {
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <LexiconCard
+              id={item.id}
               fr={item.fr}
               ko={item.ko}
               phonetic={item.phonetic}
@@ -143,6 +144,7 @@ export default function LexiconScreen() {
               active={item.active}
               onToggle={() => handleToggleActive(item.id, item.active)}
               onDelete={() => handleDeleteWord(item.id)}
+              onUpdate={fetchLexicon}
             />
           )}
           contentContainerStyle={styles.listContent}
@@ -210,6 +212,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   listContent: {
-    paddingBottom: 100,
+    paddingBottom: 15,
   },
 });

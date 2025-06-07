@@ -1,18 +1,32 @@
-import React from "react";
-import { View, Text, Switch, Pressable, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import {
+    View,
+    Text,
+    Switch,
+    Pressable,
+    StyleSheet,
+    TouchableOpacity,
+    Modal,
+} from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import WordForm from "../form/WordForm";
+import type { Difficulty } from "@/types/Difficulty";
 
 type Props = {
+    id: number;
     fr: string;
     ko: string;
     phonetic?: string | null;
     tags?: string | null;
-    difficulty: "easy" | "medium" | "hard";
+    difficulty: Difficulty;
     active: number;
     onToggle: () => void;
     onDelete: () => void;
+    onUpdate: () => void;
 };
 
 export default function LexiconCard({
+    id,
     fr,
     ko,
     phonetic,
@@ -21,10 +35,14 @@ export default function LexiconCard({
     active,
     onToggle,
     onDelete,
+    onUpdate,
 }: Props) {
+    const [showEdit, setShowEdit] = useState(false);
+
     return (
         <View style={styles.card}>
             <View style={styles.cardContent}>
+                {/* ----------------- Left content texts ----------------- */}
                 <View style={styles.texts}>
                     <Text style={[styles.fr, { color: difficultyColor(difficulty) }]}>
                         🇫🇷 {fr}
@@ -48,18 +66,72 @@ export default function LexiconCard({
                         </View>
                     )}
                 </View>
+
+                {/* ----------------- Actions section ----------------- */}
                 <View style={styles.actions}>
-                    <Switch value={active === 1} onValueChange={onToggle} />
-                    <Pressable onPress={onDelete}>
-                        <Text style={styles.delete}>🗑️</Text>
-                    </Pressable>
+                    <TouchableOpacity
+                        style={styles.listenButton}
+                        onPress={() => console.log("Écouter", ko)}
+                    >
+                        <View style={styles.listenContent}>
+                            <MaterialCommunityIcons
+                                name="volume-high"
+                                size={20}
+                                color="#333"
+                            />
+                            <Text style={styles.listenText}>Écouter</Text>
+                        </View>
+                    </TouchableOpacity>
+
+                    <View style={styles.switchRow}>
+                        <Text style={styles.switchLabel}>Activé</Text>
+                        <Switch value={active === 1} onValueChange={onToggle} />
+                    </View>
+
+                    <View style={styles.iconRow}>
+                        <Pressable onPress={onDelete}>
+                            <MaterialCommunityIcons
+                                name="trash-can-outline"
+                                size={24}
+                                color="#e53935"
+                            />
+                        </Pressable>
+                        <Pressable onPress={() => setShowEdit(true)}>
+                            <MaterialCommunityIcons
+                                name="pencil-outline"
+                                size={24}
+                                color="#666"
+                            />
+                        </Pressable>
+                    </View>
                 </View>
             </View>
+
+            {/* ----------------- Edit word modale  ----------------- */}
+            <Modal visible={showEdit} animationType="slide" presentationStyle="formSheet">
+                <View style={{ flex: 1, padding: 20 }}>
+                    <WordForm
+                        edit
+                        initialData={{
+                            id,
+                            fr,
+                            ko,
+                            phonetic: phonetic ?? "",
+                            tags: tags ?? "",
+                            difficulty,
+                        }}
+                        onSuccess={() => {
+                            setShowEdit(false);
+                            onUpdate();
+                        }}
+                    />
+                </View>
+            </Modal>
         </View>
     );
 }
 
-function difficultyColor(difficulty: string) {
+function difficultyColor(difficulty: Difficulty) {
     switch (difficulty) {
         case "easy":
             return "green";
@@ -75,7 +147,6 @@ function difficultyColor(difficulty: string) {
 const styles = StyleSheet.create({
     card: {
         backgroundColor: "#fff",
-        borderRadius: 12,
         padding: 16,
         marginBottom: 12,
         shadowColor: "#000",
@@ -83,8 +154,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.05,
         shadowRadius: 6,
         elevation: 1,
-        borderBottomWidth: 1,
-        borderBottomColor: "#ddd",
+        borderWidth: 1,
+        borderColor: "#e0e0e0",
+        borderRadius: 12,
+        overflow: "hidden",
     },
     cardContent: {
         flexDirection: "row",
@@ -94,11 +167,6 @@ const styles = StyleSheet.create({
     texts: {
         flex: 1,
         gap: 4,
-    },
-    actions: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 12,
     },
     fr: {
         fontSize: 16,
@@ -136,7 +204,42 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: "#333",
     },
-    delete: {
-        fontSize: 20,
+    actions: {
+        alignItems: "center",
+    },
+    listenButton: {
+        width: "100%",
+        backgroundColor: "#e0e0ff",
+        borderRadius: 6,
+        paddingVertical: 6,
+        paddingHorizontal: 10,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    listenContent: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6,
+    },
+    listenText: {
+        fontSize: 14,
+        color: "#333",
+        fontWeight: "500",
+    },
+    switchRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 8,
+        marginTop: 8,
+    },
+    switchLabel: {
+        fontSize: 14,
+        color: "#444",
+        fontWeight: "500",
+    },
+    iconRow: {
+        flexDirection: "row",
+        gap: 16,
+        marginTop: 8,
     },
 });
