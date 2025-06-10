@@ -12,7 +12,6 @@ import {
   UIManager,
   StyleSheet,
 } from "react-native";
-import Animated, { FadeInUp } from "react-native-reanimated";
 import { MaterialIcons } from "@expo/vector-icons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
@@ -72,7 +71,7 @@ export default function QuizScreen({ route, navigation }: Props) {
     onPanResponderRelease: () => {
       if (showResult) {
         Vibration.vibrate([0, 60, 40, 60]);
-        setTimeout(next, 100); // plus stable
+        setTimeout(next, 100);
       }
     },
   });
@@ -97,6 +96,7 @@ export default function QuizScreen({ route, navigation }: Props) {
       </View>
     );
   }
+  console.log('hello quiz')
 
   return (
     <ImageBackground source={bgImage} style={styles.background} imageStyle={{ opacity: 0.8 }}>
@@ -162,16 +162,13 @@ export default function QuizScreen({ route, navigation }: Props) {
         )}
 
         {feedback && (
-          <Animated.View
-            entering={FadeInUp.duration(500)}
-            style={styles.feedbackIcon}
-          >
+          <View style={styles.feedbackIcon}>
             <MaterialIcons
               name={feedback === "correct" ? "emoji-events" : "cancel"}
               size={100}
               color={feedback === "correct" ? "gold" : "#ff5e5e"}
             />
-          </Animated.View>
+          </View>
         )}
 
         {settings.length === "unlimited" && !showResult && (

@@ -83,6 +83,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
 
   const isDisabled = selectedDifficulties.length === 0;
 
+  console.log('hello choosesettingscreen')
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Choix du mode de jeu</Text>
@@ -143,6 +144,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
         </>
       )}
 
+      {/* ----------------- Choose settings Traduction game specific ----------------- */}
       {type === "translation" && (
         <>
           <Text style={styles.label}>Mode de réponse</Text>
