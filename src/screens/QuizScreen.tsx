@@ -96,7 +96,6 @@ export default function QuizScreen({ route, navigation }: Props) {
       </View>
     );
   }
-  console.log('hello quiz')
 
   return (
     <ImageBackground source={bgImage} style={styles.background} imageStyle={{ opacity: 0.8 }}>
@@ -112,52 +111,55 @@ export default function QuizScreen({ route, navigation }: Props) {
             Question {currentIndex + 1} / {questions.length}
           </Text>
         </View>
-
-        <View style={styles.promptWrapper}>
-          <View style={styles.promptBox}>
-            <Text style={styles.prompt}>
-              {settings.type === "translation" ? current.fr : current.ko}
-            </Text>
+        <View style={{ marginTop: "15%"  }}>
+          <View style={styles.promptWrapper}>
+            <View style={styles.promptBox}>
+              <Text style={styles.prompt}>
+                {settings.type === "translation" ? current.fr : current.ko}
+              </Text>
+            </View>
           </View>
+
+          {settings.type === "translation" && settings.inputMode === "input" ? (
+            <TextInput
+              style={[styles.input, { backgroundColor: "#ccc" }]}
+              placeholder="Votre réponse en coréen"
+              value={userInput}
+              onChangeText={setUserInput}
+              editable={!showResult}
+            />
+          ) : (
+            <View style={styles.choices}>
+              {current.choices?.map((choice: string) => (
+                <TouchableOpacity
+                  key={choice}
+                  style={[
+                    styles.choice,
+                    selected === choice && {
+                      backgroundColor:
+                        choice === current.correctAnswer ? "#c6f6d5" : "#feb2b2",
+                    },
+                  ]}
+                  onPress={() => !showResult && checkAnswer(choice)}
+                  disabled={!!selected}
+                >
+                  <Text>{choice}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
         </View>
-
-        {settings.type === "translation" && settings.inputMode === "input" ? (
-          <TextInput
-            style={[styles.input, { backgroundColor: "#ccc" }]}
-            placeholder="Votre réponse en coréen"
-            value={userInput}
-            onChangeText={setUserInput}
-            editable={!showResult}
-          />
-        ) : (
-          <View style={styles.choices}>
-            {current.choices?.map((choice: string) => (
-              <TouchableOpacity
-                key={choice}
-                style={[
-                  styles.choice,
-                  selected === choice && {
-                    backgroundColor:
-                      choice === current.correctAnswer ? "#c6f6d5" : "#feb2b2",
-                  },
-                ]}
-                onPress={() => !showResult && checkAnswer(choice)}
-                disabled={!!selected}
-              >
-                <Text>{choice}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
 
         {showResult && selected !== current.correctAnswer && (
           <View style={styles.correctAnswerWrapper}>
-            <Text style={styles.correctAnswer}>
-              Bonne réponse : {current.correctAnswer}
-              {settings.type === "translation" && current.phonetic
-                ? ` (${current.phonetic})`
-                : ""}
-            </Text>
+            {showResult && selected !== current.correctAnswer && (
+              <Text style={styles.correctAnswer}>
+                Bonne réponse : {current.correctAnswer}
+                {settings.type === "translation" && current.phonetic
+                  ? ` (${current.phonetic})`
+                  : ""}
+              </Text>
+            )}
           </View>
         )}
 
@@ -224,7 +226,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: "center",
   },
   center: {
     flex: 1,
@@ -306,6 +307,7 @@ const styles = StyleSheet.create({
   correctAnswerWrapper: {
     alignItems: "center",
     marginTop: 16,
+    minHeight: 28,
   },
   correctAnswer: {
     textAlign: "center",
