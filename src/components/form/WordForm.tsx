@@ -7,9 +7,11 @@ import {
     Keyboard,
     StyleSheet,
 } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import { dbPromise } from "@/db/database";
 import SelectPill from "@/components/SelectPill";
 import type { Difficulty } from "@/types/Difficulty";
+import { AZURE_TRANSLATOR_KEY, AZURE_TRANSLATOR_REGION, AZURE_TRANSLATOR_ENDPOINT } from "@env";
 
 const difficulties = [
     { label: "Facile", value: "easy", color: "green" },
@@ -33,6 +35,7 @@ type Props = {
 export default function WordForm({ edit, initialData, onSuccess }: Props) {
     const [fr, setFr] = useState(initialData?.fr || "");
     const [ko, setKo] = useState(initialData?.ko || "");
+    const [koSuggested, setKoSuggested] = useState<string | null>(null);
     const [phonetic, setPhonetic] = useState(initialData?.phonetic || "");
     const [difficulty, setDifficulty] = useState<Difficulty>(
         initialData?.difficulty || "easy"
@@ -40,6 +43,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
     const [tags, setTags] = useState(initialData?.tags || "");
     const [allTags, setAllTags] = useState<string[]>([]);
     const [suggestions, setSuggestions] = useState<string[]>([]);
+    const [isConnected, setIsConnected] = useState(false);
 
     const phoneticRef = useRef<TextInput>(null);
     const koRef = useRef<TextInput>(null);
@@ -55,6 +59,10 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
             setAllTags(rows.map((r) => r.tag));
         };
         fetchTags();
+
+        NetInfo.fetch().then((state) => {
+            setIsConnected(state.isConnected === true);
+        });
     }, []);
 
     const handleTagChange = (text: string) => {
@@ -80,7 +88,6 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
     const onSubmit = async () => {
         if (!isValid) return;
         const db = await dbPromise;
-
         const cleanTags = tags.split(",").map((t) => t.trim()).filter(Boolean);
 
         if (edit && initialData) {
@@ -123,16 +130,74 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         onSuccess();
     };
 
+    const fetchKoreanSuggestion = async () => {
+        if (!fr.trim() || !isConnected) return;
+
+        try {
+            const res = await fetch(
+                `${AZURE_TRANSLATOR_ENDPOINT}?api-version=3.0&from=fr&to=ko`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Ocp-Apim-Subscription-Key": AZURE_TRANSLATOR_KEY,
+                        "Ocp-Apim-Subscription-Region": AZURE_TRANSLATOR_REGION,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify([{ Text: fr }]),
+                }
+            );
+
+            const json = await res.json();
+            const korean = json[0]?.translations?.[0]?.text;
+            setKoSuggested(korean);
+        } catch (err) {
+            console.warn(err);
+        }
+    };
+
     return (
         <View style={styles.form}>
             <View style={styles.field}>
                 <Text style={styles.label}>🇫🇷 Français</Text>
                 <TextInput
                     value={fr}
-                    onChangeText={setFr}
+                    onChangeText={(text) => {
+                        setFr(text);
+                        setKoSuggested(null);
+                    }}
+                    style={styles.input}
+                    placeholder="Ex : Bonjour"
+                    returnKeyType="done"
+                    keyboardType="default"
+                    textContentType="givenName"
+                />
+            </View>
+
+            {isConnected && fr.trim().length > 0 && !koSuggested && (
+                <TouchableOpacity style={styles.suggestionButton} onPress={fetchKoreanSuggestion}>
+                    <Text style={styles.suggestionText}>💡 Suggérer une traduction coréenne</Text>
+                </TouchableOpacity>
+            )}
+
+            {koSuggested && !ko && (
+                <TouchableOpacity onPress={() => setKo(koSuggested)}>
+                    <Text style={styles.suggestionBox}>
+                        👉 Appuyer pour remplir avec : {koSuggested}
+                    </Text>
+                </TouchableOpacity>
+            )}
+
+            <View style={styles.field}>
+                <Text style={styles.label}>🇰🇷 Coréen</Text>
+                <TextInput
+                    ref={koRef}
+                    value={ko}
+                    onChangeText={setKo}
                     style={styles.input}
                     placeholderTextColor="#000"
-                    placeholder="Ex : Bonjour"
+                    placeholder="Ex : 안녕하세요"
+                    keyboardType="default"
+                    textContentType="none"
                     returnKeyType="next"
                     onSubmitEditing={() => phoneticRef.current?.focus()}
                 />
@@ -147,21 +212,8 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     style={styles.input}
                     placeholderTextColor="#000"
                     placeholder="Ex : annyeonghaseyo"
-                    returnKeyType="next"
-                    onSubmitEditing={() => koRef.current?.focus()}
-                />
-            </View>
-
-            <View style={styles.field}>
-                <Text style={styles.label}>🇰🇷 Coréen</Text>
-                <TextInput
-                    ref={koRef}
-                    value={ko}
-                    onChangeText={setKo}
-                    style={styles.input}
-                    placeholderTextColor="#000"
-                    placeholder="Ex : 안녕하세요"
                     returnKeyType="done"
+                    keyboardType="default"
                     onSubmitEditing={Keyboard.dismiss}
                 />
             </View>
@@ -241,5 +293,25 @@ const styles = StyleSheet.create({
         padding: 6,
         fontSize: 14,
         color: "#333",
+    },
+    suggestionBox: {
+        backgroundColor: "#e6f7ff",
+        padding: 8,
+        borderRadius: 6,
+        marginBottom: 8,
+        fontStyle: "italic",
+    },
+    suggestionButton: {
+        alignSelf: "flex-start",
+        backgroundColor: "#f5f5f5",
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        borderRadius: 6,
+        marginTop: -10,
+        marginBottom: 6,
+    },
+    suggestionText: {
+        color: "#333",
+        fontSize: 14,
     },
 });
