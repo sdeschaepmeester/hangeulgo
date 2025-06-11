@@ -1,25 +1,10 @@
 import React, { useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-  ImageBackground,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground, } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withRepeat,
-  withTiming,
-  interpolateColor,
-} from "react-native-reanimated";
+import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withTiming, interpolateColor, } from "react-native-reanimated";
 import { saveScore } from "@/services/score";
-
-const { width } = Dimensions.get("window");
+import { getMedalInfo } from "@/services/getMedalInfo";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Result">;
 
@@ -34,25 +19,9 @@ export default function ResultScreen({ route, navigation }: Props) {
       type: settings.type,
       inputMode: settings.inputMode ?? "multiple",
     });
-  }, []);
+  }, [score, total, settings]);
 
-  let medal = require("../../assets/bronze_medal.png");
-  let message = "Continue comme ça !";
-  let glowColor = "#cd7f32";
-
-  if (percent === 0) {
-    medal = require("../../assets/terrible.png");
-    message = "Non là tu le fais exprès ?";
-  }
-  if (percent >= 80) {
-    medal = require("../../assets/gold_medal.png");
-    message = "Super !";
-    glowColor = "#ffd700";
-  } else if (percent >= 60) {
-    medal = require("../../assets/silver_medal.png");
-    message = "Bien !";
-    glowColor = "#c0c0c0";
-  }
+  const { medal, message, glowColor } = getMedalInfo(percent);
 
   const glow = useSharedValue(0);
   glow.value = withRepeat(withTiming(1, { duration: 1000 }), -1, true);
@@ -75,10 +44,12 @@ export default function ResultScreen({ route, navigation }: Props) {
       style={styles.container}
     >
       <View style={styles.medalWrapper}>
+        {/* ----------- Create pulsing background animation behind medal ----------- */}
         <Animated.View style={[styles.glow, glowStyle]} />
         <Image source={medal} style={styles.medal} resizeMode="contain" />
       </View>
 
+      {/* ----------- Result game message ----------- */}
       <Text style={styles.message}>{message}</Text>
 
       <View style={styles.bubble}>
@@ -87,6 +58,7 @@ export default function ResultScreen({ route, navigation }: Props) {
         </Text>
       </View>
 
+      {/* ----------- Actions buttons ----------- */}
       <View style={styles.bottomRow}>
         <TouchableOpacity
           style={[styles.button, styles.retry]}

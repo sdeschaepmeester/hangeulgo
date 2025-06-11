@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-    View,
-    Text,
-    FlatList,
-    StyleSheet,
-    TouchableOpacity,
-    Image,
-} from "react-native";
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, } from "react-native";
 import { getScores, clearScores, type SavedScore } from "@/services/score";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -17,21 +10,24 @@ export default function ScoreScreen() {
     const [scores, setScores] = useState<SavedScore[]>([]);
     const [showConfirm, setShowConfirm] = useState(false);
 
-    useEffect(() => {
-        load();
-    }, []);
-
     const load = async () => {
         const data = await getScores();
         setScores(data);
     };
 
+    // Delete scores history
     const handleClear = async () => {
         await clearScores();
         setScores([]);
         setShowConfirm(false);
     };
 
+    // Load scores
+    useEffect(() => {
+        load();
+    }, []);
+
+    // Get medal image based on score percentage
     const getMedal = (percent: number) => {
         if (percent === 0) return require("../../assets/terrible.png");
         if (percent >= 80) return require("../../assets/gold_medal.png");
@@ -39,6 +35,7 @@ export default function ScoreScreen() {
         return require("../../assets/bronze_medal.png");
     };
 
+    // Render one score card
     const renderItem = ({ item }: { item: SavedScore }) => {
         const percent = Math.round((item.score / item.total) * 100);
         return (
@@ -46,12 +43,18 @@ export default function ScoreScreen() {
                 <Image source={getMedal(percent)} style={styles.medal} />
                 <View style={styles.details}>
                     <Text style={styles.percent}>{percent}%</Text>
-                    <Text style={styles.info}>{item.score} / {item.total}</Text>
                     <Text style={styles.info}>
-                        {item.type === "translation" ? "Traduction" : "Compréhension"} — {item.inputMode === "input" ? "Saisie" : "QCM"}
+                        {item.score} / {item.total}
+                    </Text>
+                    <Text style={styles.info}>
+                        {item.type === "translation" ? "Traduction" : "Compréhension"} —{" "}
+                        {item.inputMode === "input" ? "Saisie" : "QCM"}
                     </Text>
                     <Text style={styles.date}>
-                        {formatDistanceToNow(new Date(item.date), { addSuffix: true, locale: fr })}
+                        {formatDistanceToNow(new Date(item.date), {
+                            addSuffix: true,
+                            locale: fr,
+                        })}
                     </Text>
                 </View>
             </View>
@@ -60,6 +63,7 @@ export default function ScoreScreen() {
 
     return (
         <View style={styles.container}>
+            {/* -------- Header with delete button -------- */}
             <View style={styles.headerRow}>
                 <Text style={styles.title}>Historique des scores</Text>
                 {scores.length > 0 && (
@@ -69,6 +73,7 @@ export default function ScoreScreen() {
                 )}
             </View>
 
+            {/* -------- List of scores -------- */}
             {scores.length === 0 ? (
                 <Text style={styles.empty}>Aucun score enregistré.</Text>
             ) : (
@@ -80,6 +85,7 @@ export default function ScoreScreen() {
                 />
             )}
 
+            {/* -------- Confirm delete modal -------- */}
             <AlertCustom
                 visible={showConfirm}
                 title="Réinitialiser les scores"
@@ -88,7 +94,9 @@ export default function ScoreScreen() {
                 confirmText="Confirmer"
                 cancelText="Annuler"
                 onConfirm={handleClear}
-                icon={<MaterialIcons name="delete-forever" size={30} color="#e53935" />}
+                icon={
+                    <MaterialIcons name="delete-forever" size={30} color="#e53935" />
+                }
                 iconColor="#e53935"
             />
         </View>

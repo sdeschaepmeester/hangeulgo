@@ -1,5 +1,5 @@
 import React, { useState, useEffect, JSX } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
 import type { Difficulty } from "@/types/Difficulty";
@@ -9,6 +9,8 @@ import Storage from "expo-sqlite/kv-store";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import IconCardSelectMultiple from "@/components/IconCardSelectMultiple";
 import { getAllUniqueTags } from "@/services/tags";
+import TagSelector from "@/components/tags/TagSelector";
+import { getSavedSettings, saveSettings } from "@/services/settings";
 
 const difficultyOptions: { label: string; value: Difficulty; icon: JSX.Element }[] = [
   {
@@ -50,20 +52,20 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
   const [rememberSettings, setRememberSettings] = useState(false);
   const [allTags, setAllTags] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [showTags, setShowTags] = useState(false);
 
+  {/* ----------------- Get tags and previously saved settings ----------------- */ }
   useEffect(() => {
     getAllUniqueTags().then(setAllTags);
-    Storage.getItem("gameSettings").then((data) => {
-      if (!data) return;
-      const parsed = JSON.parse(data);
-      setSelectedDifficulties(parsed.difficulties);
-      setLength(parsed.length);
-      if (parsed.inputMode) setInputMode(parsed.inputMode);
+    getSavedSettings().then((saved) => {
+      if (!saved) return;
+      setSelectedDifficulties(saved.difficulties);
+      setLength(saved.length);
+      if (saved.inputMode) setInputMode(saved.inputMode);
       setRememberSettings(true);
     });
   }, []);
 
+  {/* ----------------- Launch quiz with selected parameters ----------------- */ }
   const startGame = () => {
     const settings: GameSettings = {
       type,
@@ -73,10 +75,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
       ...(selectedTags.length > 0 && { tags: selectedTags }),
     };
     if (rememberSettings) {
-      Storage.setItem(
-        "gameSettings",
-        JSON.stringify({ difficulties: selectedDifficulties, length, inputMode })
-      );
+      saveSettings(selectedDifficulties, length, inputMode);
     }
     navigation.navigate("Quiz", { settings });
   };
@@ -86,7 +85,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Choix du mode de jeu</Text>
-
+      {/* ----------------- Select difficulty ----------------- */}
       <Text style={styles.label}>Difficulté des mots</Text>
       <IconCardSelectMultiple<Difficulty>
         options={difficultyOptions}
@@ -98,6 +97,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
         }
       />
 
+      {/* ----------------- Time of game ----------------- */}
       <Text style={styles.label}>Durée de jeu</Text>
       <SelectPill
         options={lengths}
@@ -105,45 +105,19 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
         onSelect={(val) => setLength(val === "unlimited" ? "unlimited" : parseInt(val.toString()))}
       />
 
-      {allTags.length > 0 && (
-        <>
-          <Text style={styles.label}>Types de mots</Text>
-          <TouchableOpacity
-            onPress={() => setShowTags((prev) => !prev)}
-            style={[styles.tagItem, { flexDirection: "row", justifyContent: "space-between" }]}
-          >
-            <Text style={{ color: "#333" }}>
-              {selectedTags.length > 0 ? selectedTags.join(", ") : "Aucun mot clé sélectionné"}
-            </Text>
-            <MaterialCommunityIcons name={showTags ? "chevron-up" : "chevron-down"} size={20} />
-          </TouchableOpacity>
+      {/* ----------------- Filter by tags ----------------- */}
 
-          {showTags && (
-            <View style={{ gap: 6, marginTop: 8 }}>
-              {allTags.map((tag) => (
-                <TouchableOpacity
-                  key={tag}
-                  style={[
-                    styles.tagItem,
-                    selectedTags.includes(tag) && styles.tagItemSelected,
-                  ]}
-                  onPress={() => {
-                    setSelectedTags((prev) =>
-                      prev.includes(tag)
-                        ? prev.filter((t) => t !== tag)
-                        : [...prev, tag]
-                    );
-                  }}
-                >
-                  <Text style={{ color: selectedTags.includes(tag) ? "white" : "#333" }}>{tag}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
-        </>
-      )}
+      <TagSelector
+        tags={allTags}
+        selectedTags={selectedTags}
+        onToggle={(tag) =>
+          setSelectedTags((prev) =>
+            prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+          )
+        }
+      />
 
-      {/* ----------------- Choose settings Traduction game specific ----------------- */}
+      {/* ----------------- Subtype of game (currently 2 for translation game, 0 for comprehension game) ----------------- */}
       {type === "translation" && (
         <>
           <Text style={styles.label}>Mode de réponse</Text>
@@ -155,6 +129,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
         </>
       )}
 
+      {/* ----------------- Checkbox save parameters ----------------- */}
       <View style={styles.checkboxRow}>
         <TouchableOpacity
           style={styles.checkbox}
@@ -165,6 +140,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
         </TouchableOpacity>
       </View>
 
+      {/* ----------------- Start button ----------------- */}
       <TouchableOpacity
         style={[styles.fullButton, isDisabled && styles.disabled]}
         onPress={startGame}
@@ -234,9 +210,5 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: "#ccc",
-  },
-  tagItemSelected: {
-    backgroundColor: "#9da7ff",
-    borderColor: "#9da7ff",
   }
 });

@@ -1,17 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  ActivityIndicator,
-  TouchableOpacity,
-  TextInput,
-  ImageBackground,
-  PanResponder,
-  Vibration,
-  Platform,
-  UIManager,
-  StyleSheet,
-} from "react-native";
+import { View, Text, ActivityIndicator, TouchableOpacity, TextInput, ImageBackground, PanResponder, Vibration, Platform, UIManager, StyleSheet, } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";

@@ -1,33 +1,19 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  Platform,
-  UIManager,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, Platform, UIManager, TouchableOpacity, } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { Difficulty } from "@/types/Difficulty";
 import type { LexiconEntry } from "@/types/LexiconEntry";
-
 import NavBar from "@/components/NavBar";
-import LexiconCard from "@/components/lexicon/LexiconCard";
 import FilterBarToggle from "@/components/lexicon/FilterBarToggle";
 import SortOptions from "@/components/lexicon/SortOptions";
 import LexiconFilters from "@/components/lexicon/LexiconFilters";
 import AlertCustom from "@/components/AlertCustom";
-
-import {
-  getFilteredLexicon,
-  toggleLexiconActive,
-  deleteLexiconEntry,
-  resetLexicon,
-} from "@/services/lexicon";
+import { getFilteredLexicon, toggleLexiconActive, deleteLexiconEntry, resetLexicon, } from "@/services/lexicon";
 import { getAllUniqueTags } from "@/services/tags";
+import LexiconList from "@/components/lexicon/LexiconList";
 
+// Activate animation layout auto on Android without having to use Reanimated
 if (Platform.OS === "android") {
   UIManager.setLayoutAnimationEnabledExperimental?.(true);
 }
@@ -40,28 +26,30 @@ export default function LexiconScreen() {
   const [showFilterOptions, setShowFilterOptions] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
   const [confirmDeleteAll, setConfirmDeleteAll] = useState(false);
-
   const [allTags, setAllTags] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
-  useEffect(() => {
-    getAllUniqueTags().then(setAllTags);
-  }, []);
 
   const fetchLexicon = async () => {
     const rows = await getFilteredLexicon(selectedDifficulties, selectedTags, sortOrder);
     setLexicon(rows);
   };
 
+  // Fetch all unique tags for filters
+  useEffect(() => {
+    getAllUniqueTags().then(setAllTags);
+  }, []);
+
   useEffect(() => {
     fetchLexicon().catch(console.error);
   }, [selectedDifficulties, sortOrder, selectedTags]);
 
+  // Activate or deactivate a word
   const handleToggleActive = async (id: number, current: number) => {
     await toggleLexiconActive(id, current);
     fetchLexicon();
   };
 
+  // Delete a single word 
   const handleDeleteWord = (id: number) => {
     setConfirmDeleteId(id);
   };
@@ -74,6 +62,7 @@ export default function LexiconScreen() {
     }
   };
 
+  // Delete several words
   const handleConfirmDeleteAll = async () => {
     await resetLexicon();
     setConfirmDeleteAll(false);
@@ -130,24 +119,11 @@ export default function LexiconScreen() {
             <MaterialCommunityIcons name="delete-empty" size={24} color="#e53935" />
           </TouchableOpacity>
         </View>
-        <FlatList
+        <LexiconList
           data={lexicon}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <LexiconCard
-              id={item.id}
-              fr={item.fr}
-              ko={item.ko}
-              phonetic={item.phonetic}
-              tags={item.tags}
-              difficulty={item.difficulty}
-              active={item.active}
-              onToggle={() => handleToggleActive(item.id, item.active)}
-              onDelete={() => handleDeleteWord(item.id)}
-              onUpdate={fetchLexicon}
-            />
-          )}
-          contentContainerStyle={styles.listContent}
+          onToggle={handleToggleActive}
+          onDelete={handleDeleteWord}
+          onDeleteAll={() => setConfirmDeleteAll(true)}
         />
       </View>
 
@@ -210,8 +186,5 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-  },
-  listContent: {
-    paddingBottom: 15,
   },
 });

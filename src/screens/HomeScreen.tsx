@@ -1,19 +1,11 @@
 import React from "react";
-import {
-    View,
-    Button,
-    Text,
-    Alert,
-    Image,
-    StyleSheet,
-    TouchableOpacity,
-    Dimensions,
-} from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
 import SquareButton from "@/components/SquareButton";
+import SectionCardGame from "@/components/sections/SectionCardGame";
 
 const screenHeight = Dimensions.get("window").height;
 
@@ -22,6 +14,7 @@ export default function HomeScreen() {
 
     return (
         <View style={styles.container}>
+            {/* ----------------- Header section with score ----------------- */}
             <View style={styles.imageWrapper}>
                 <Image
                     source={require("../../assets/background_home.png")}
@@ -29,15 +22,19 @@ export default function HomeScreen() {
                     resizeMode="cover"
                 />
                 <View style={styles.bottomOverlay}>
-                    <TouchableOpacity style={styles.scoreButton} onPress={() => navigation.navigate("Score")}>
+                    <TouchableOpacity
+                        style={styles.scoreButton}
+                        onPress={() => navigation.navigate("Score")}
+                    >
                         <Text style={styles.scoreText}>Scores</Text>
                     </TouchableOpacity>
                 </View>
             </View>
 
+            {/* ----------------- Content ----------------- */}
             <View style={{ padding: 20 }}>
-                <Text style={styles.section}>Exercices</Text>
-                <View style={styles.buttonRow}>
+                {/* ----------------- Exercises section ----------------- */}
+                <SectionCardGame title="Exercices">
                     <SquareButton
                         icon={<MaterialCommunityIcons name="brain" style={styles.icon} color="#333" />}
                         label="Compréhension"
@@ -50,9 +47,10 @@ export default function HomeScreen() {
                         bgColor="#f6c6c6"
                         onClick={() => navigation.navigate("ChooseSettings", { type: "translation" })}
                     />
-                </View>
-                <Text style={styles.section}>Lexique</Text>
-                <View style={styles.buttonRow}>
+                </SectionCardGame>
+
+                {/* ----------------- Lexicon section ----------------- */}
+                <SectionCardGame title="Lexique">
                     <SquareButton
                         icon={<MaterialCommunityIcons name="book-open-variant" style={styles.icon} color="#333" />}
                         label="Réviser"
@@ -65,7 +63,7 @@ export default function HomeScreen() {
                         bgColor="#c6cbf6"
                         onClick={() => navigation.navigate("AddWord")}
                     />
-                </View>
+                </SectionCardGame>
             </View>
         </View>
     );
@@ -101,23 +99,13 @@ const styles = StyleSheet.create({
         paddingVertical: 6,
         backgroundColor: "#d0d3ff",
         borderRadius: 12,
-        width: "95%"
+        width: "95%",
     },
     scoreText: {
         fontWeight: "bold",
         color: "white",
         textAlign: "center",
-        fontSize: 18
-    },
-    section: {
         fontSize: 18,
-        marginVertical: 10,
-        fontWeight: "600",
-    },
-    buttonRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginBottom: 16,
     },
     icon: {
         fontSize: Dimensions.get("window").width * 0.2,

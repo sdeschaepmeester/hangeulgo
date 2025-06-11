@@ -1,0 +1,64 @@
+import React from "react";
+import { FlatList, StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import type { LexiconEntry } from "@/types/LexiconEntry";
+import LexiconCard from "@/components/lexicon/LexiconCard";
+
+type Props = {
+    data: LexiconEntry[];
+    onToggle: (id: number, current: number) => void;
+    onDelete: (id: number) => void;
+    onDeleteAll: () => void;
+};
+
+export default function LexiconList({ data, onToggle, onDelete, onDeleteAll }: Props) {
+    return (
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <Text style={styles.title}>Lexique</Text>
+                <TouchableOpacity onPress={onDeleteAll}>
+                    <MaterialCommunityIcons name="delete-empty" size={24} color="#e53935" />
+                </TouchableOpacity>
+            </View>
+            <FlatList
+                data={data}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                    <LexiconCard
+                        id={item.id}
+                        fr={item.fr}
+                        ko={item.ko}
+                        phonetic={item.phonetic}
+                        tags={item.tags}
+                        difficulty={item.difficulty}
+                        active={item.active}
+                        onToggle={() => onToggle(item.id, item.active)}
+                        onDelete={() => onDelete(item.id)} onUpdate={function (): void {
+                            throw new Error("Function not implemented.");
+                        }} />
+                )}
+                contentContainerStyle={styles.listContent}
+            />
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 12,
+    },
+    header: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 12,
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: "bold",
+    },
+    listContent: {
+        paddingBottom: 15,
+    },
+});
