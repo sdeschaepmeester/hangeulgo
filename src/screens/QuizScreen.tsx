@@ -4,6 +4,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
 import { generateQuestions, type Question } from "@/services/quizGenerator";
+import PromptBox from "@/components/quiz/PromptBox";
+import Feedback from "@/components/quiz/Feedback";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Quiz">;
 
@@ -35,10 +37,12 @@ export default function QuizScreen({ route, navigation }: Props) {
     }
   }, []);
 
+  // Check if answer is correct or not and show next question
   const next = () => {
     setShowResult(false);
     setSelected(null);
     setUserInput("");
+    setFeedback(null);
 
     if (currentIndex + 1 >= questions.length) {
       navigation.replace("Result", {
@@ -54,6 +58,7 @@ export default function QuizScreen({ route, navigation }: Props) {
     }
   };
 
+  // Handle swipe next question movement
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponder: (_, gestureState) => gestureState.dx < -50,
     onPanResponderRelease: () => {
@@ -64,6 +69,7 @@ export default function QuizScreen({ route, navigation }: Props) {
     },
   });
 
+  // Check if answer is correct or not 
   const checkAnswer = (answer: string) => {
     const isCorrect = answer.trim() === current.correctAnswer;
     if (isCorrect) {
@@ -74,7 +80,6 @@ export default function QuizScreen({ route, navigation }: Props) {
     }
     setShowResult(true);
     setSelected(answer);
-    setTimeout(() => setFeedback(null), 1000);
   };
 
   if (questions.length === 0) {
@@ -88,26 +93,26 @@ export default function QuizScreen({ route, navigation }: Props) {
   return (
     <ImageBackground source={bgImage} style={styles.background} imageStyle={{ opacity: 0.8 }}>
       <View style={styles.container} {...panResponder.panHandlers}>
+        {/* ----------------- Icon close ----------------- */}
         <TouchableOpacity
           style={styles.closeButton}
           onPress={() => navigation.replace("Home")}
         >
           <MaterialIcons name="close" size={28} color="black" />
         </TouchableOpacity>
+
+        {/* ----------------- Number of questions ----------------- */}
         <View style={styles.counterBar}>
           <Text style={styles.counterText}>
             Question {currentIndex + 1} / {questions.length}
           </Text>
         </View>
-        <View style={{ marginTop: "15%"  }}>
-          <View style={styles.promptWrapper}>
-            <View style={styles.promptBox}>
-              <Text style={styles.prompt}>
-                {settings.type === "translation" ? current.fr : current.ko}
-              </Text>
-            </View>
-          </View>
 
+        <View style={{ marginTop: "15%" }}>
+          {/* ----------------- Prompt box ----------------- */}
+          <PromptBox settings={settings} currentQuestion={current} />
+
+          {/* ----------------- Translation input: enter korean answer  ----------------- */}
           {settings.type === "translation" && settings.inputMode === "input" ? (
             <TextInput
               style={[styles.input, { backgroundColor: "#ccc" }]}
@@ -117,6 +122,7 @@ export default function QuizScreen({ route, navigation }: Props) {
               editable={!showResult}
             />
           ) : (
+            // ----------------- Comprehension: several choices box ----------------- 
             <View style={styles.choices}>
               {current.choices?.map((choice: string) => (
                 <TouchableOpacity
@@ -138,29 +144,16 @@ export default function QuizScreen({ route, navigation }: Props) {
           )}
         </View>
 
-        {showResult && selected !== current.correctAnswer && (
-          <View style={styles.correctAnswerWrapper}>
-            {showResult && selected !== current.correctAnswer && (
-              <Text style={styles.correctAnswer}>
-                Bonne réponse : {current.correctAnswer}
-                {settings.type === "translation" && current.phonetic
-                  ? ` (${current.phonetic})`
-                  : ""}
-              </Text>
-            )}
-          </View>
+        {/* ----------------- Feedback with icon and eventual correct answer ----------------- */}
+        {showResult && (
+          <Feedback
+            feedback={feedback}
+            correctAnswer={current.correctAnswer}
+            phonetic={current.phonetic}
+          />
         )}
 
-        {feedback && (
-          <View style={styles.feedbackIcon}>
-            <MaterialIcons
-              name={feedback === "correct" ? "emoji-events" : "cancel"}
-              size={100}
-              color={feedback === "correct" ? "gold" : "#ff5e5e"}
-            />
-          </View>
-        )}
-
+        {/* ----------------- Quiz with unlimited time: terminate button ----------------- */}
         {settings.length === "unlimited" && !showResult && (
           <TouchableOpacity
             style={styles.quitButton}
@@ -179,6 +172,7 @@ export default function QuizScreen({ route, navigation }: Props) {
           </TouchableOpacity>
         )}
 
+        {/* ----------------- Bottom button next or check answer ----------------- */}
         {settings.type === "translation" && settings.inputMode === "input" ? (
           <TouchableOpacity
             style={[
@@ -211,15 +205,8 @@ export default function QuizScreen({ route, navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  center: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+  container: { flex: 1, padding: 20 },
+  center: { flex: 1, justifyContent: "center", alignItems: "center" },
   counterBar: {
     position: "absolute",
     top: 0,
@@ -229,25 +216,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.5)",
     alignItems: "center",
   },
-  counterText: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  promptWrapper: {
-    borderRadius: 12,
-    marginTop: 60,
-    marginBottom: 20,
-  },
-  promptBox: {
-    backgroundColor: "rgba(255,255,255,0.5)",
-    padding: 16,
-    borderRadius: 12,
-  },
-  prompt: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
+  counterText: { fontSize: 16, fontWeight: "600" },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -256,9 +225,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
   },
-  choices: {
-    gap: 12,
-  },
+  choices: { gap: 12 },
   choice: {
     padding: 16,
     borderWidth: 1,
@@ -287,28 +254,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
   },
-  background: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
-  },
-  correctAnswerWrapper: {
-    alignItems: "center",
-    marginTop: 16,
-    minHeight: 28,
-  },
-  correctAnswer: {
-    textAlign: "center",
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 20,
-  },
-  feedbackIcon: {
-    position: "absolute",
-    top: 100,
-    alignSelf: "center",
-    zIndex: 10,
-  },
+  background: { flex: 1, width: "100%", height: "100%" },
   nextButtonText: {
     color: "white",
     fontWeight: "bold",

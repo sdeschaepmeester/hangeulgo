@@ -136,6 +136,7 @@ const styles = StyleSheet.create({
         width: 48,
         height: 48,
         marginRight: 12,
+        resizeMode: "contain"
     },
     details: {
         flex: 1,
