@@ -5,6 +5,7 @@ import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { MaterialIcons } from "@expo/vector-icons";
 import AlertCustom from "@/components/AlertCustom";
+import IconButton from "@/components/IconButton";
 
 export default function ScoreScreen() {
     const [scores, setScores] = useState<SavedScore[]>([]);
@@ -67,9 +68,13 @@ export default function ScoreScreen() {
             <View style={styles.headerRow}>
                 <Text style={styles.title}>Historique des scores</Text>
                 {scores.length > 0 && (
-                    <TouchableOpacity onPress={() => setShowConfirm(true)}>
-                        <MaterialIcons name="delete" size={24} color="#ff4d4d" />
-                    </TouchableOpacity>
+                    <IconButton
+                        label="Tout effacer"
+                        icon="delete"
+                        onPress={() => setShowConfirm(true)}
+                        backgroundColor="#fcebea"
+                        color="#e53935"
+                    />
                 )}
             </View>
 

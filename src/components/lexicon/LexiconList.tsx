@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, View, Text, TouchableOpacity } from "react-native
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { LexiconEntry } from "@/types/LexiconEntry";
 import LexiconCard from "@/components/lexicon/LexiconCard";
+import IconButton from "../IconButton";
 
 type Props = {
     data: LexiconEntry[];
@@ -17,10 +18,14 @@ export default function LexiconList({ data, onToggle, onDelete, onDeleteAll, onU
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Lexique</Text>
-                <TouchableOpacity style={styles.deleteButton} onPress={onDeleteAll}>
-                    <MaterialCommunityIcons name="delete-empty" size={18} color="#e53935" />
-                    <Text style={styles.deleteButtonText}>Supprimer tout</Text>
-                </TouchableOpacity>
+
+                <IconButton
+                    label="Supprimer tout"
+                    icon="delete-empty"
+                    onPress={onDeleteAll}
+                    backgroundColor="#fcebea"
+                    color="#e53935"
+                />
             </View>
             <FlatList
                 data={data}
