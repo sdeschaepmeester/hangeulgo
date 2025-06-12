@@ -43,6 +43,12 @@ export default function LexiconScreen() {
     fetchLexicon().catch(console.error);
   }, [selectedDifficulties, sortOrder, selectedTags]);
 
+  // Fetch all tags
+  const refreshTags = async () => {
+    const tags = await getAllUniqueTags();
+    setAllTags(tags);
+  };
+
   // Activate or deactivate a word
   const handleToggleActive = async (id: number, current: number) => {
     await toggleLexiconActive(id, current);
@@ -69,6 +75,8 @@ export default function LexiconScreen() {
     if (confirmDeleteId !== null) {
       await deleteLexiconEntry(confirmDeleteId);
       setConfirmDeleteId(null);
+      fetchLexicon();
+      refreshTags();
     }
   };
 
@@ -79,6 +87,7 @@ export default function LexiconScreen() {
     }
     setConfirmDeleteSeverals(false);
     resetFiltersAndFetchLexicon();
+    refreshTags();
   };
 
   return (
