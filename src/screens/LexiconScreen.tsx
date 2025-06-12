@@ -49,16 +49,26 @@ export default function LexiconScreen() {
     fetchLexicon();
   };
 
+  // After deletion of several words, reset filters and fetch lexicon
+  const resetFiltersAndFetchLexicon = () => {
+    setSelectedDifficulties([]);
+    setSelectedTags([]);
+    setSortOrder("asc");
+    setShowSortOptions(false);
+    setShowFilterOptions(false);
+    fetchLexicon();
+  };
+
   // Delete a single word 
   const handleDeleteWord = (id: number) => {
     setConfirmDeleteId(id);
   };
 
+  // Confirm single deletion
   const handleConfirmDelete = async () => {
     if (confirmDeleteId !== null) {
       await deleteLexiconEntry(confirmDeleteId);
       setConfirmDeleteId(null);
-      fetchLexicon();
     }
   };
 
@@ -68,7 +78,7 @@ export default function LexiconScreen() {
       await deleteLexiconEntry(entry.id);
     }
     setConfirmDeleteSeverals(false);
-    fetchLexicon();
+    resetFiltersAndFetchLexicon();
   };
 
   return (
@@ -149,7 +159,7 @@ export default function LexiconScreen() {
           icon={<MaterialCommunityIcons name="delete-alert" size={30} color="#e53935" />}
           iconColor="#e53935"
           title="Tout supprimer"
-          description={`Cela va supprimer ${lexicon.length} mots du lexique. Continuer ?`}
+          description={`Cela va supprimer ${lexicon.length} mot${lexicon.length > 1 ? "s" : ""} du lexique. Continuer ?`}
           onClose={() => setConfirmDeleteSeverals(false)}
           onConfirm={handleConfirmDeleteSeveral}
           confirmText="Supprimer tout"
