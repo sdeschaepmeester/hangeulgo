@@ -32,11 +32,23 @@ export async function getFilteredLexicon(
     SELECT l.*, GROUP_CONCAT(t.tag, ', ') AS tags
     FROM lexicon l
     LEFT JOIN lexicon_tags t ON l.id = t.lexicon_id
-    ${whereSQL}
+    ${selectedTags.length > 0
+            ? `WHERE EXISTS (
+            SELECT 1
+            FROM lexicon_tags lt
+            WHERE lt.lexicon_id = l.id
+            AND (${selectedTags.map(() => "lt.tag LIKE ?").join(" OR ")})
+          )`
+            : ""
+        }
+    ${selectedDifficulties.length > 0
+            ? `${selectedTags.length > 0 ? "AND" : "WHERE"} l.difficulty IN (${selectedDifficulties.map(() => "?").join(",")})`
+            : ""
+        }
     GROUP BY l.id
     ORDER BY l.fr COLLATE NOCASE ${sortOrder.toUpperCase()}
     `,
-        ...params
+        ...[...selectedTags.map((tag) => `%${tag}%`), ...selectedDifficulties]
     );
 
     return rows;

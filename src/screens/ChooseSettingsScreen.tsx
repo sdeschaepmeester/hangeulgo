@@ -5,7 +5,6 @@ import type { RootStackParamList } from "@/App";
 import type { Difficulty } from "@/types/Difficulty";
 import type { GameSettings, InputMode } from "@/types/GameSettings";
 import SelectPill from "@/components/SelectPill";
-import Storage from "expo-sqlite/kv-store";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import IconCardSelectMultiple from "@/components/IconCardSelectMultiple";
 import { getAllUniqueTags } from "@/services/tags";

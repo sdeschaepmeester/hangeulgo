@@ -11,16 +11,10 @@ type Props = {
     label?: string;
 };
 
-export default function TagSelector({
-    mode,
-    allTags,
-    selectedTags,
-    onChange,
-    placeholder = "Ajouter ou rechercher un mot-clé...",
-    label = "Mots-clés",
-}: Props) {
+export default function TagSelector({ mode, allTags, selectedTags, onChange, placeholder = "Ajouter ou rechercher un mot-clé...", label = "Mots-clés", }: Props) {
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState("");
+    const [isTouchingList, setIsTouchingList] = useState(false);
 
     const filteredTags = useMemo(() => {
         const lower = input.toLowerCase();
@@ -28,12 +22,21 @@ export default function TagSelector({
     }, [input, allTags]);
 
     const handleToggle = (tag: string) => {
-        if (selectedTags.includes(tag)) {
-            onChange(selectedTags.filter((t) => t !== tag));
+        const isSelected = selectedTags.includes(tag);
+
+        const newTags = isSelected
+            ? selectedTags.filter((t) => t !== tag)
+            : [...selectedTags, tag];
+
+        onChange(newTags);
+
+        if (mode === "edit") {
+            setInput("");
+            setOpen(false);
+            Keyboard.dismiss();
         } else {
-            onChange([...selectedTags, tag]);
+            Keyboard.dismiss();
         }
-        if (mode === "select") Keyboard.dismiss();
     };
 
     const handleAdd = () => {
@@ -72,7 +75,9 @@ export default function TagSelector({
                         }}
                         onFocus={() => setOpen(true)}
                         onBlur={() => {
-                            if (input.trim() === "") setOpen(false);
+                            if (input.trim() === "" && !isTouchingList) {
+                                setOpen(false);
+                            }
                         }}
                         onSubmitEditing={handleAdd}
                         placeholder={placeholder}
@@ -92,40 +97,48 @@ export default function TagSelector({
 
             {/* -------------------- List of tags or create new tag -------------------- */}
             {open && (
-                <FlatList
-                    data={filteredTags}
-                    keyExtractor={(tag) => tag}
-                    style={{ marginTop: 8 }}
-                    scrollEnabled={false}
-                    renderItem={({ item: tag }) => (
-                        <TouchableOpacity
-                            style={[
-                                styles.tagItem,
-                                selectedTags.includes(tag) && styles.tagItemSelected,
-                            ]}
-                            onPress={() => handleToggle(tag)}
-                        >
-                            <Text style={{ color: selectedTags.includes(tag) ? "#fff" : "#333" }}>
-                                {tag}
-                            </Text>
-                        </TouchableOpacity>
-                    )}
-                    ListEmptyComponent={
-                        mode === "edit" &&
-                            input.trim() !== "" &&
-                            !allTags.includes(input.trim()) ? (
-                            <TouchableOpacity onPress={handleAdd} style={styles.newTagButton}>
-                                <Text style={{ color: "#333" }}>➕ Ajouter "{input.trim()}"</Text>
+                <View
+                    onTouchStart={() => setIsTouchingList(true)}
+                    onTouchEnd={() => setTimeout(() => setIsTouchingList(false), 100)}
+                >
+                    <FlatList
+                        data={filteredTags}
+                        keyExtractor={(tag) => tag}
+                        style={{ marginTop: 8, borderTopWidth: 1, borderTopColor: "#eee" }}
+                        scrollEnabled={false}
+                        renderItem={({ item: tag }) => (
+                            <TouchableOpacity
+                                style={[
+                                    styles.tagItemFlat,
+                                    selectedTags.includes(tag) && styles.tagItemSelected,
+                                ]}
+                                onPress={() => handleToggle(tag)}
+                            >
+                                <Text style={{ color: selectedTags.includes(tag) ? "#fff" : "#333" }}>
+                                    {tag}
+                                </Text>
                             </TouchableOpacity>
-                        ) : null
-                    }
-                />
+                        )}
+                        ItemSeparatorComponent={() => (
+                            <View style={{ height: 1, backgroundColor: "#eee" }} />
+                        )}
+                        ListEmptyComponent={
+                            mode === "edit" &&
+                                input.trim() !== "" &&
+                                !allTags.includes(input.trim()) ? (
+                                <TouchableOpacity onPress={handleAdd} style={styles.newTagButton}>
+                                    <Text style={{ color: "#333" }}>➕ Ajouter "{input.trim()}"</Text>
+                                </TouchableOpacity>
+                            ) : null
+                        }
+                    />
+                </View>
             )}
 
             {/* -------------------- Selected tags -------------------- */}
-            {selectedTags.length > 0 && (
+            {selectedTags.filter(Boolean).length > 0 && (
                 <View style={styles.selectedTagsContainer}>
-                    {selectedTags.map((tag) => (
+                    {selectedTags.filter(Boolean).map((tag) => (
                         <View key={tag} style={styles.selectedTag}>
                             <Text style={styles.selectedTagText}>{tag}</Text>
                             <TouchableOpacity onPress={() => handleRemove(tag)}>
@@ -190,5 +203,10 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: "#333",
         marginRight: 6,
+    },
+    tagItemFlat: {
+        paddingVertical: 10,
+        paddingHorizontal: 8,
+        backgroundColor: "#fff",
     },
 });

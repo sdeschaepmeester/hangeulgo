@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, StyleSheet } from "react-native";
 import FilterBar from "@/components/FilterBar";
-import SelectKeywords from "@/components/inputs/SelectKeywords";
+import TagSelector from "../tags/TagSelector";
 import type { Difficulty } from "@/types/Difficulty";
 
 type Props = {
@@ -14,33 +14,33 @@ type Props = {
     onToggleTag: (tag: string) => void;
 };
 
-export default function LexiconFilters({
-    selectedDifficulties,
-    onToggleDifficulty,
-    sortOrder,
-    onToggleSortOrder,
-    allTags,
-    selectedTags,
-    onToggleTag,
-}: Props) {
-    const [showTags, setShowTags] = useState(false);
-
+export default function LexiconFilters({ selectedDifficulties, onToggleDifficulty, sortOrder, onToggleSortOrder, allTags, selectedTags, onToggleTag, }: Props) {
     return (
         <View style={styles.container}>
-            {/* ----------------- Filter by name (asc desc)  ----------------- */}
+            {/* ----------------- Filter by difficulty and sort ----------------- */}
             <FilterBar
                 selectedDifficulties={selectedDifficulties}
                 onToggleDifficulty={onToggleDifficulty}
                 sortOrder={sortOrder}
                 onToggleSortOrder={onToggleSortOrder}
             />
-            {/* ----------------- Filter by difficulty and tags  ----------------- */}
-            <SelectKeywords
+
+            {/* ----------------- Filter by tags ----------------- */}
+            <TagSelector
+                mode="select"
                 allTags={allTags}
                 selectedTags={selectedTags}
-                onToggleTag={onToggleTag}
-                show={showTags}
-                onToggleShow={() => setShowTags((prev) => !prev)}
+                onChange={(tags: string[]) => {
+                    tags.forEach((tag) => {
+                        if (!selectedTags.includes(tag)) onToggleTag(tag);
+                    });
+
+                    selectedTags.forEach((tag) => {
+                        if (!tags.includes(tag)) onToggleTag(tag);
+                    });
+                }}
+                label="Types de mots"
+                placeholder="Rechercher ou sélectionner..."
             />
         </View>
     );
