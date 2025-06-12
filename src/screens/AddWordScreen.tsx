@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, KeyboardAvoidingView, Platform, } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
@@ -12,40 +12,50 @@ export default function AddWordScreen() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Ajouter du vocabulaire</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-          <MaterialIcons name="close" size={28} color="#999" />
-        </TouchableOpacity>
-      </View>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerRow}>
+          <Text style={styles.title}>Ajouter du vocabulaire</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+            <MaterialIcons name="close" size={28} color="#999" />
+          </TouchableOpacity>
+        </View>
 
-      {/* ----------------- Add word form ----------------- */}
-      <WordForm
-        edit={false}
-        onSuccess={() => setShowSuccess(true)}
-      />
+        {/* ----------------- Add word form ----------------- */}
+        <WordForm
+          edit={false}
+          onSuccess={() => setShowSuccess(true)}
+        />
 
-      <Image
-        source={require("../../assets/dictionary.png")}
-        style={styles.dictionary}
-      />
+        <Image
+          source={require("../../assets/dictionary.png")}
+          style={styles.dictionary}
+        />
 
-      {/* ----------------- Modale success add word ----------------- */}
-      <AlertCustom
-        visible={showSuccess}
-        icon={<MaterialCommunityIcons name="check-circle" size={30} color="#4caf50" />}
-        iconColor="#4caf50"
-        title="Ajouté !"
-        description="Le mot a été ajouté au lexique."
-        onClose={() => setShowSuccess(false)}
-      />
-    </View>
+        {/* ----------------- Modale success add word ----------------- */}
+        <AlertCustom
+          visible={showSuccess}
+          icon={<MaterialCommunityIcons name="check-circle" size={30} color="#4caf50" />}
+          iconColor="#4caf50"
+          title="Ajouté !"
+          description="Le mot a été ajouté au lexique."
+          onClose={() => setShowSuccess(false)}
+        />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 18, gap: 12, paddingTop: 50 },
+  scrollContainer: {
+    padding: 18,
+    paddingTop: 50,
+    gap: 12,
+    flexGrow: 1,
+  },
   headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",

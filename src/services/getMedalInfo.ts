@@ -1,4 +1,4 @@
-import gold from "../../assets/icon.png";
+import gold from "../../assets/gold_medal.png";
 import silver from "../../assets/silver_medal.png";
 import bronze from "../../assets/bronze_medal.png";
 import terrible from "../../assets/terrible.png";

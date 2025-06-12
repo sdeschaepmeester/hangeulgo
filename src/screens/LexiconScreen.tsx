@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Platform, UIManager, TouchableOpacity, } from "react-native";
+import { View, StyleSheet, Platform, UIManager } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { Difficulty } from "@/types/Difficulty";
@@ -9,7 +9,7 @@ import FilterBarToggle from "@/components/lexicon/FilterBarToggle";
 import SortOptions from "@/components/lexicon/SortOptions";
 import LexiconFilters from "@/components/lexicon/LexiconFilters";
 import AlertCustom from "@/components/AlertCustom";
-import { getFilteredLexicon, toggleLexiconActive, deleteLexiconEntry, resetLexicon, } from "@/services/lexicon";
+import { getFilteredLexicon, toggleLexiconActive, deleteLexiconEntry } from "@/services/lexicon";
 import { getAllUniqueTags } from "@/services/tags";
 import LexiconList from "@/components/lexicon/LexiconList";
 

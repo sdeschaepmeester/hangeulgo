@@ -12,6 +12,7 @@ import { dbPromise } from "@/db/database";
 import SelectPill from "@/components/SelectPill";
 import type { Difficulty } from "@/types/Difficulty";
 import { AZURE_TRANSLATOR_KEY, AZURE_TRANSLATOR_REGION, AZURE_TRANSLATOR_ENDPOINT } from "@env";
+import TagSelector from "../tags/TagSelector";
 
 const difficulties = [
     { label: "Facile", value: "easy", color: "green" },
@@ -218,13 +219,11 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 />
             </View>
 
-            <Text style={styles.label}>Mots-clés</Text>
-            <TextInput
-                value={tags}
-                onChangeText={handleTagChange}
-                style={styles.input}
-                placeholderTextColor="#000"
-                placeholder="Ex : nourriture, salutations"
+            <TagSelector
+                mode="edit"
+                allTags={allTags}
+                selectedTags={tags.split(",").map(t => t.trim())}
+                onChange={(newTags) => setTags(newTags.join(", "))}
             />
 
             {suggestions.length > 0 && (

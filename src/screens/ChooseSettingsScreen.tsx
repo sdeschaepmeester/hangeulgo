@@ -106,15 +106,11 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
       />
 
       {/* ----------------- Filter by tags ----------------- */}
-
       <TagSelector
-        tags={allTags}
+        mode="select"
+        allTags={allTags}
         selectedTags={selectedTags}
-        onToggle={(tag) =>
-          setSelectedTags((prev) =>
-            prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
-          )
-        }
+        onChange={setSelectedTags}
       />
 
       {/* ----------------- Subtype of game (currently 2 for translation game, 0 for comprehension game) ----------------- */}

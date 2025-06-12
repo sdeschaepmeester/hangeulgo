@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-    View,
-    Text,
-    Switch,
-    Pressable,
-    StyleSheet,
-    TouchableOpacity,
-    Modal,
-} from "react-native";
+import { View, Text, Switch, Pressable, StyleSheet, TouchableOpacity, Modal, } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import WordForm from "../form/WordForm";
 import type { Difficulty } from "@/types/Difficulty";
@@ -26,18 +18,7 @@ type Props = {
     onUpdate: () => void;
 };
 
-export default function LexiconCard({
-    id,
-    fr,
-    ko,
-    phonetic,
-    tags,
-    difficulty,
-    active,
-    onToggle,
-    onDelete,
-    onUpdate,
-}: Props) {
+export default function LexiconCard({ id, fr, ko, phonetic, tags, difficulty, active, onToggle, onDelete, onUpdate, }: Props) {
     const [showEdit, setShowEdit] = useState(false);
     const [isSpeaking, setIsSpeaking] = React.useState(false);
 
