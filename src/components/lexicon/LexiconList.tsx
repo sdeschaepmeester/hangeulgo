@@ -9,15 +9,17 @@ type Props = {
     onToggle: (id: number, current: number) => void;
     onDelete: (id: number) => void;
     onDeleteAll: () => void;
+    onUpdate: () => void;
 };
 
-export default function LexiconList({ data, onToggle, onDelete, onDeleteAll }: Props) {
+export default function LexiconList({ data, onToggle, onDelete, onDeleteAll, onUpdate }: Props) {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Lexique</Text>
-                <TouchableOpacity onPress={onDeleteAll}>
-                    <MaterialCommunityIcons name="delete-empty" size={24} color="#e53935" />
+                <TouchableOpacity style={styles.deleteButton} onPress={onDeleteAll}>
+                    <MaterialCommunityIcons name="delete-empty" size={18} color="#e53935" />
+                    <Text style={styles.deleteButtonText}>Supprimer tout</Text>
                 </TouchableOpacity>
             </View>
             <FlatList
@@ -33,9 +35,9 @@ export default function LexiconList({ data, onToggle, onDelete, onDeleteAll }: P
                         difficulty={item.difficulty}
                         active={item.active}
                         onToggle={() => onToggle(item.id, item.active)}
-                        onDelete={() => onDelete(item.id)} onUpdate={function (): void {
-                            throw new Error("Function not implemented.");
-                        }} />
+                        onDelete={() => onDelete(item.id)}
+                        onUpdate={onUpdate}
+                    />
                 )}
                 contentContainerStyle={styles.listContent}
             />
@@ -61,4 +63,18 @@ const styles = StyleSheet.create({
     listContent: {
         paddingBottom: 15,
     },
+    deleteButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#fcebea",
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        borderRadius: 20,
+    },
+    deleteButtonText: {
+        marginLeft: 6,
+        color: "#e53935",
+        fontSize: 14,
+        fontWeight: "500",
+    }
 });

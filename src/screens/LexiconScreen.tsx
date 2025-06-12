@@ -25,7 +25,7 @@ export default function LexiconScreen() {
   const [showSortOptions, setShowSortOptions] = useState(false);
   const [showFilterOptions, setShowFilterOptions] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
-  const [confirmDeleteAll, setConfirmDeleteAll] = useState(false);
+  const [confirmDeleteSeverals, setConfirmDeleteSeverals] = useState(false);
   const [allTags, setAllTags] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
@@ -63,9 +63,11 @@ export default function LexiconScreen() {
   };
 
   // Delete several words
-  const handleConfirmDeleteAll = async () => {
-    await resetLexicon();
-    setConfirmDeleteAll(false);
+  const handleConfirmDeleteSeveral = async () => {
+    for (const entry of lexicon) {
+      await deleteLexiconEntry(entry.id);
+    }
+    setConfirmDeleteSeverals(false);
     fetchLexicon();
   };
 
@@ -113,17 +115,12 @@ export default function LexiconScreen() {
 
       {/* ----------------- Content section: List of lexicon words ----------------- */}
       <View style={styles.listSection}>
-        <View style={styles.listHeader}>
-          <Text style={styles.title}>Lexique</Text>
-          <TouchableOpacity onPress={() => setConfirmDeleteAll(true)}>
-            <MaterialCommunityIcons name="delete-empty" size={24} color="#e53935" />
-          </TouchableOpacity>
-        </View>
         <LexiconList
           data={lexicon}
           onToggle={handleToggleActive}
           onDelete={handleDeleteWord}
-          onDeleteAll={() => setConfirmDeleteAll(true)}
+          onDeleteAll={() => setConfirmDeleteSeverals(true)}
+          onUpdate={fetchLexicon}
         />
       </View>
 
@@ -146,15 +143,15 @@ export default function LexiconScreen() {
       )}
 
       {/* ----------------- Modales deletion whole lexicon ----------------- */}
-      {confirmDeleteAll && (
+      {confirmDeleteSeverals && (
         <AlertCustom
           visible={true}
           icon={<MaterialCommunityIcons name="delete-alert" size={30} color="#e53935" />}
           iconColor="#e53935"
           title="Tout supprimer"
-          description="Cela va supprimer tous les mots du lexique. Continuer ?"
-          onClose={() => setConfirmDeleteAll(false)}
-          onConfirm={handleConfirmDeleteAll}
+          description={`Cela va supprimer ${lexicon.length} mots du lexique. Continuer ?`}
+          onClose={() => setConfirmDeleteSeverals(false)}
+          onConfirm={handleConfirmDeleteSeveral}
           confirmText="Supprimer tout"
           cancelText="Annuler"
         />
