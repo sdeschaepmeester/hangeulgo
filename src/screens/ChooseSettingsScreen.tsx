@@ -1,40 +1,20 @@
-import React, { useState, useEffect, JSX } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Dimensions } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
 import type { Difficulty } from "@/types/Difficulty";
 import type { GameSettings, InputMode } from "@/types/GameSettings";
-import SelectPill from "@/components/SelectPill";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import IconCardSelectMultiple from "@/components/IconCardSelectMultiple";
 import { getAllUniqueTags } from "@/services/tags";
-import TagSelector from "@/components/tags/TagSelector";
 import { getSavedSettings, saveSettings } from "@/services/settings";
+import StepStructure from "@/components/chooseSettings/StepStructure";
+import StepDifficulty from "@/components/chooseSettings/StepDifficulty";
+import StepDuration from "@/components/chooseSettings/StepDuration";
+import StepThemes from "@/components/chooseSettings/StepThemes";
+import SelectPill from "@/components/SelectPill";
 
-const difficultyOptions: { label: string; value: Difficulty; icon: JSX.Element }[] = [
-  {
-    label: "Facile",
-    value: "easy",
-    icon: <MaterialCommunityIcons name="emoticon-happy" size={32} color="green" />,
-  },
-  {
-    label: "Moyen",
-    value: "medium",
-    icon: <MaterialCommunityIcons name="emoticon-neutral" size={32} color="orange" />,
-  },
-  {
-    label: "Difficile",
-    value: "hard",
-    icon: <MaterialCommunityIcons name="emoticon-sad" size={32} color="red" />,
-  },
-];
+const screenWidth = Dimensions.get("window").width;
 
-const lengths = [
-  { label: "Court", value: "10", color: "#b3b3ff" },
-  { label: "Normal", value: "20", color: "#b3b3ff" },
-  { label: "Long", value: "30", color: "#b3b3ff" },
-  //{ label: "Sans fin", value: "unlimited", color: "#b3b3ff" }, // ! TODO 
-];
+const arcadeBg = require("../../assets/arcade.png");
 
 const modes = [
   { label: "QCM", value: "multiple", color: "#9da7ff" },
@@ -45,14 +25,14 @@ type Props = NativeStackScreenProps<RootStackParamList, "ChooseSettings">;
 
 export default function ChooseSettingsScreen({ route, navigation }: Props) {
   const { type } = route.params;
+  const [step, setStep] = useState(0);
   const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
-  const [length, setLength] = useState<number | "unlimited">(10);
+  const [length, setLength] = useState<number>(10);
   const [inputMode, setInputMode] = useState<InputMode>("multiple");
   const [rememberSettings, setRememberSettings] = useState(false);
   const [allTags, setAllTags] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  {/* ----------------- Get tags and previously saved settings ----------------- */ }
   useEffect(() => {
     getAllUniqueTags().then(setAllTags);
     getSavedSettings().then((saved) => {
@@ -64,7 +44,6 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
     });
   }, []);
 
-  {/* ----------------- Launch quiz with selected parameters ----------------- */ }
   const startGame = () => {
     const settings: GameSettings = {
       type,
@@ -79,53 +58,41 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
     navigation.navigate("Quiz", { settings });
   };
 
+  const next = () => setStep((s) => s + 1);
+  const back = () => setStep((s) => Math.max(0, s - 1));
   const isDisabled = selectedDifficulties.length === 0;
 
+  const renderStep = () => {
+    switch (step) {
+      case 0:
+        return (
+          <StepStructure step={step}>
+            <StepDifficulty selected={selectedDifficulties} onChange={setSelectedDifficulties} />
+          </StepStructure>
+        );
+      case 1:
+        return (
+          <StepStructure step={step}>
+            <StepDuration selected={length} onSelect={setLength} />
+          </StepStructure>
+        );
+      case 2:
+        return (
+          <StepStructure step={step}>
+            <StepThemes selectedTags={selectedTags} onChange={setSelectedTags} allTags={allTags} />
+          </StepStructure>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Choix du mode de jeu</Text>
-      {/* ----------------- Select difficulty ----------------- */}
-      <Text style={styles.label}>Difficulté des mots</Text>
-      <IconCardSelectMultiple<Difficulty>
-        options={difficultyOptions}
-        selectedValues={selectedDifficulties}
-        onToggle={(val) =>
-          setSelectedDifficulties((prev) =>
-            prev.includes(val) ? prev.filter((d) => d !== val) : [...prev, val]
-          )
-        }
-      />
-
-      {/* ----------------- Time of game ----------------- */}
-      <Text style={styles.label}>Durée de jeu</Text>
-      <SelectPill
-        options={lengths}
-        selectedValue={String(length)}
-        onSelect={(val) => setLength(val === "unlimited" ? "unlimited" : parseInt(val.toString()))}
-      />
-
-      {/* ----------------- Filter by tags ----------------- */}
-      <TagSelector
-        mode="select"
-        allTags={allTags}
-        selectedTags={selectedTags}
-        onChange={setSelectedTags}
-      />
-
-      {/* ----------------- Subtype of game (currently 2 for translation game, 0 for comprehension game) ----------------- */}
-      {type === "translation" && (
-        <>
-          <Text style={styles.label}>Mode de réponse</Text>
-          <SelectPill
-            options={modes}
-            selectedValue={inputMode}
-            onSelect={(val) => setInputMode(val as InputMode)}
-          />
-        </>
-      )}
-
-      {/* ----------------- Checkbox save parameters ----------------- */}
-      <View style={styles.checkboxRow}>
+    <ImageBackground source={arcadeBg} style={styles.background} resizeMode="cover">
+      <View style={styles.topContainer}>
+        <Text style={styles.quizType}>
+          Quiz de {type === "translation" ? "traduction" : "compréhension"}
+        </Text>
         <TouchableOpacity
           style={styles.checkbox}
           onPress={() => setRememberSettings((prev) => !prev)}
@@ -135,37 +102,104 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
         </TouchableOpacity>
       </View>
 
-      {/* ----------------- Start button ----------------- */}
-      <TouchableOpacity
-        style={[styles.fullButton, isDisabled && styles.disabled]}
-        onPress={startGame}
-        disabled={isDisabled}
-      >
-        <Text style={styles.fullButtonText}>🎮 Commencer la partie 🎮</Text>
-      </TouchableOpacity>
-    </View>
+      <View style={styles.middleContainer}>{renderStep()}</View>
+
+      <View style={styles.bottomContainer}>
+        {step < 2 ? (
+          <View style={styles.stepButtonsRow}>
+            <TouchableOpacity onPress={back} style={[styles.button, styles.leftButton, step === 0 && styles.disabled]}>
+              <Text style={styles.text}>←</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={next}
+              disabled={isDisabled}
+              style={[styles.button, styles.rightButton, isDisabled && styles.disabled]}>
+              <Text style={styles.text}>▶ NEXT</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <>
+            {type === "translation" && (
+              <SelectPill
+                options={modes}
+                selectedValue={inputMode}
+                onSelect={(val) => setInputMode(val as InputMode)}
+              />
+            )}
+            <View style={styles.stepButtonsRow}>
+              <TouchableOpacity onPress={back} style={[styles.button, styles.leftButton]}>
+                <Text style={styles.text}>←</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={startGame}
+                disabled={isDisabled}
+                style={[styles.button, styles.rightButton, isDisabled && styles.disabled]}>
+                <Text style={styles.text}>▶ START</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+      </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    padding: 24,
-    gap: 20,
+    justifyContent: "space-between",
+    padding: 20,
   },
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 12,
-  },
-  label: {
-    fontWeight: "bold",
-  },
-  checkboxRow: {
-    flexDirection: "row",
+  topContainer: {
     alignItems: "center",
-    marginTop: 12,
+    paddingTop: 16,
+    gap: 8,
+  },
+  quizType: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#fff",
+    backgroundColor: "#000",
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderRadius: 10,
+    overflow: "hidden",
+    marginTop: 12
+  },
+  middleContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 24
+  },
+  bottomContainer: {
+    alignItems: "center",
+    marginBottom: 24,
+    gap: 16,
+  },
+  navButton: {
+    backgroundColor: "#8884ff",
+    paddingVertical: 14,
+    paddingHorizontal: 30,
+    borderRadius: 12,
+    elevation: 4,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  playButton: {
+    backgroundColor: "#ff4770",
+    paddingVertical: 14,
+    borderRadius: 12,
+    elevation: 4,
+  },
+  playText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  disabled: {
+    opacity: 0.5,
   },
   checkbox: {
     flexDirection: "row",
@@ -176,7 +210,7 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: "#999",
+    borderColor: "#fff",
     marginRight: 8,
   },
   boxChecked: {
@@ -184,26 +218,37 @@ const styles = StyleSheet.create({
   },
   checkboxLabel: {
     fontSize: 14,
+    color: "#fff",
   },
-  fullButton: {
-    marginTop: 28,
-    backgroundColor: "#9da7ff",
-    paddingVertical: 16,
+  stepButtonsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 12,
+    width: "100%",
+  },
+  container: {
+    flexDirection: "row",
+    width: "100%",
+  },
+  button: {
+    width: screenWidth / 2.2,
+    paddingVertical: 24,
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 8,
   },
-  fullButtonText: {
-    textAlign: "center",
+  leftButton: {
+    backgroundColor: "#003478",
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+  rightButton: {
+    backgroundColor: "#C60C30",
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+  },
+  text: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 16,
   },
-  disabled: {
-    opacity: 0.4,
-  },
-  tagItem: {
-    padding: 8,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: "#ccc",
-  }
 });

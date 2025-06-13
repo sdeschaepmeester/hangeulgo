@@ -16,7 +16,7 @@ export default function Pill({ label, color, selected = false, onClick }: PillPr
                 styles.pill,
                 {
                     borderColor: color,
-                    backgroundColor: selected ? color : "transparent",
+                    backgroundColor: selected ? color : "white",
                 },
             ]}
         >
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 12,
         alignItems: "center",
-        marginHorizontal: 4,
+        marginHorizontal: 4
     },
     label: {
         fontWeight: "bold",

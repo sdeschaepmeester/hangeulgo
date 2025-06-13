@@ -6,7 +6,8 @@ const KEY = "gameSettings";
 
 export const getSavedSettings = async (): Promise<{
     difficulties: Difficulty[];
-    length: number | "unlimited";
+    //length: number | "unlimited";
+    length: number;
     inputMode?: InputMode;
 } | null> => {
     const data = await Storage.getItem(KEY);
@@ -15,7 +16,8 @@ export const getSavedSettings = async (): Promise<{
 
 export const saveSettings = async (
     difficulties: Difficulty[],
-    length: number | "unlimited",
+    //length: number | "unlimited",
+    length: number,
     inputMode?: InputMode
 ) => {
     return Storage.setItem(
