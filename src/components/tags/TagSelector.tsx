@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, Keyboard, FlatList, } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, Keyboard, ScrollView, } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 type Props = {
@@ -11,7 +11,14 @@ type Props = {
     label?: string;
 };
 
-export default function TagSelector({ mode, allTags, selectedTags, onChange, placeholder = "Ajouter ou rechercher un mot-clé...", label = "Mots-clés", }: Props) {
+export default function TagSelector({
+    mode,
+    allTags,
+    selectedTags,
+    onChange,
+    placeholder = "Ajouter ou rechercher un mot-clé...",
+    label = "Mots-clés",
+}: Props) {
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState("");
     const [isTouchingList, setIsTouchingList] = useState(false);
@@ -23,7 +30,6 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, pla
 
     const handleToggle = (tag: string) => {
         const isSelected = selectedTags.includes(tag);
-
         const newTags = isSelected
             ? selectedTags.filter((t) => t !== tag)
             : [...selectedTags, tag];
@@ -56,15 +62,15 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, pla
     };
 
     return (
-        <View style={{ marginBottom: 16 }}>
+        <View style={{ marginBottom: 16, width: "100%", position: "relative", zIndex: 10 }}>
             {label && <Text style={styles.label}>{label}</Text>}
 
-            {/* -------------------- Input select tags -------------------- */}
+            {/* --------------- Input zone --------------- */}
             <TouchableOpacity
                 activeOpacity={1}
                 disabled={mode === "edit"}
                 onPress={() => setOpen((prev) => !prev)}
-                style={[styles.selectorInput, { flexDirection: "row", justifyContent: "space-between" }]}
+                style={styles.selectorInput}
             >
                 {mode === "edit" ? (
                     <TextInput
@@ -86,56 +92,63 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, pla
                     />
                 ) : (
                     <Text style={{ color: "#333" }}>
-                        {selectedTags.length > 0 ? selectedTags.join(", ") : "Aucun mot clé sélectionné"}
+                        {selectedTags.length > 0
+                            ? selectedTags.join(", ")
+                            : "Aucun mot clé sélectionné"}
                     </Text>
                 )}
 
                 {mode === "select" && (
-                    <MaterialCommunityIcons name={open ? "chevron-up" : "chevron-down"} size={20} />
+                    <MaterialCommunityIcons
+                        name={open ? "chevron-up" : "chevron-down"}
+                        size={20}
+                    />
                 )}
             </TouchableOpacity>
 
-            {/* -------------------- List of tags or create new tag -------------------- */}
+            {/* --------------- Tag list --------------- */}
             {open && (
                 <View
+                    style={styles.dropdown}
                     onTouchStart={() => setIsTouchingList(true)}
                     onTouchEnd={() => setTimeout(() => setIsTouchingList(false), 100)}
                 >
-                    <FlatList
-                        data={filteredTags}
-                        keyExtractor={(tag) => tag}
-                        style={{ marginTop: 8, borderTopWidth: 1, borderTopColor: "#eee" }}
-                        scrollEnabled={false}
-                        renderItem={({ item: tag }) => (
+                    <ScrollView
+                        keyboardShouldPersistTaps="handled"
+                        style={{ maxHeight: 200 }}
+                        contentContainerStyle={{ paddingVertical: 4 }}
+                    >
+                        {filteredTags.map((tag) => (
                             <TouchableOpacity
+                                key={tag}
                                 style={[
                                     styles.tagItemFlat,
                                     selectedTags.includes(tag) && styles.tagItemSelected,
                                 ]}
                                 onPress={() => handleToggle(tag)}
                             >
-                                <Text style={{ color: selectedTags.includes(tag) ? "#fff" : "#333" }}>
+                                <Text
+                                    style={{
+                                        color: selectedTags.includes(tag) ? "#fff" : "#333",
+                                    }}
+                                >
                                     {tag}
                                 </Text>
                             </TouchableOpacity>
-                        )}
-                        ItemSeparatorComponent={() => (
-                            <View style={{ height: 1, backgroundColor: "#eee" }} />
-                        )}
-                        ListEmptyComponent={
-                            mode === "edit" &&
-                                input.trim() !== "" &&
-                                !allTags.includes(input.trim()) ? (
+                        ))}
+
+                        {mode === "edit" &&
+                            input.trim() !== "" &&
+                            !allTags.includes(input.trim()) && (
                                 <TouchableOpacity onPress={handleAdd} style={styles.newTagButton}>
                                     <Text style={{ color: "#333" }}>➕ Ajouter "{input.trim()}"</Text>
                                 </TouchableOpacity>
-                            ) : null
-                        }
-                    />
+                            )}
+                    </ScrollView>
                 </View>
             )}
 
-            {/* -------------------- Selected tags -------------------- */}
+            {/* Selected tags */}
             {selectedTags.filter(Boolean).length > 0 && (
                 <View style={styles.selectedTagsContainer}>
                     {selectedTags.filter(Boolean).map((tag) => (
@@ -163,13 +176,14 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#ccc",
         backgroundColor: "#fff",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
     },
-    tagItem: {
-        padding: 8,
-        borderRadius: 6,
-        borderWidth: 1,
-        borderColor: "#ccc",
-        marginBottom: 6,
+    tagItemFlat: {
+        paddingVertical: 10,
+        paddingHorizontal: 8,
+        backgroundColor: "#fff",
     },
     tagItemSelected: {
         backgroundColor: "#9da7ff",
@@ -182,6 +196,7 @@ const styles = StyleSheet.create({
         borderColor: "#aaa",
         backgroundColor: "#f2f2f2",
         marginTop: 6,
+        marginHorizontal: 8,
     },
     selectedTagsContainer: {
         flexDirection: "row",
@@ -204,9 +219,16 @@ const styles = StyleSheet.create({
         color: "#333",
         marginRight: 6,
     },
-    tagItemFlat: {
-        paddingVertical: 10,
-        paddingHorizontal: 8,
+    dropdown: {
+        position: "absolute",
+        top: 48,
+        left: 0,
+        right: 0,
         backgroundColor: "#fff",
+        borderWidth: 1,
+        borderColor: "#eee",
+        borderRadius: 6,
+        zIndex: 10,
+        elevation: 5,
     },
 });

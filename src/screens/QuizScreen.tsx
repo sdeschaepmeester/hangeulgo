@@ -146,11 +146,13 @@ export default function QuizScreen({ route, navigation }: Props) {
 
         {/* ----------------- Feedback with icon and eventual correct answer ----------------- */}
         {showResult && (
-          <Feedback
-            feedback={feedback}
-            correctAnswer={current.correctAnswer}
-            phonetic={current.phonetic}
-          />
+          <View style={styles.feedbackContainer}>
+            <Feedback
+              feedback={feedback}
+              correctAnswer={current.correctAnswer}
+              phonetic={current.phonetic}
+            />
+          </View>
         )}
 
         {/* ----------------- Quiz with unlimited time: terminate button ----------------- */}
@@ -267,5 +269,11 @@ const styles = StyleSheet.create({
     left: 10,
     padding: 8,
     zIndex: 20,
+  },
+  feedbackContainer: {
+    position: "absolute",
+    bottom: "20%",
+    left: 20,
+    right: 20,
   },
 });

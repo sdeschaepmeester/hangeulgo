@@ -27,11 +27,10 @@ export default function Feedback({ feedback, correctAnswer, phonetic }: Feedback
 
 const styles = StyleSheet.create({
     container: {
-        position: "absolute",
-        top: 100,
         alignSelf: "center",
         alignItems: "center",
         zIndex: 10,
+        width: "100%"
     },
     text: {
         marginTop: 12,

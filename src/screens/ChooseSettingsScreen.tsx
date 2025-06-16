@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#fff",
-    backgroundColor: "#000",
+    backgroundColor: "#003478",
     paddingHorizontal: 16,
     paddingVertical: 6,
     borderRadius: 10,
@@ -169,9 +169,11 @@ const styles = StyleSheet.create({
   },
   middleContainer: {
     flex: 1,
-    alignItems: "center",
+    marginTop: "20%",
+    marginBottom: "30%",
+    paddingHorizontal: 24,
     justifyContent: "center",
-    marginHorizontal: 24
+    width: "100%",
   },
   bottomContainer: {
     alignItems: "center",
@@ -214,11 +216,11 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   boxChecked: {
-    backgroundColor: "#9da7ff",
+    backgroundColor: "#C60C30",
   },
   checkboxLabel: {
-    fontSize: 14,
-    color: "#fff",
+    fontSize: 16,
+    color: "#C60C30",
   },
   stepButtonsRow: {
     flexDirection: "row",

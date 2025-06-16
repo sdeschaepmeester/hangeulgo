@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 
 type Props = {
     children: ReactNode;
@@ -8,17 +8,20 @@ type Props = {
 
 export default function StepStructure({ children }: Props) {
     return (
-        <View style={styles.container}>
-            {children}
-        </View>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <View style={styles.innerContainer}>{children}</View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        alignItems: "center",
+    scrollContainer: {
+        flexGrow: 1,
         justifyContent: "center",
-        flex: 1,
+        paddingHorizontal: 20,
+    },
+    innerContainer: {
+        alignItems: "center",
         gap: 20,
     },
 });
