@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import type { ReactNode } from "react";
 
@@ -16,6 +16,16 @@ interface Props<T> {
 }
 
 export default function IconCardSelectMultiple<T>({ options, selectedValues, onToggle, disabledValues = [], }: Props<T>) {
+    // Automatically select the only enabled option if there's only one available
+    useEffect(() => {
+        const enabledOptions = options.filter(
+            (opt) => !disabledValues.includes(opt.value)
+        );
+        if (enabledOptions.length === 1 && !selectedValues.includes(enabledOptions[0].value)) {
+            onToggle(enabledOptions[0].value);
+        }
+    }, [options, disabledValues]);
+
     return (
         <View style={styles.container}>
             {options.map((opt) => {

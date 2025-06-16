@@ -10,18 +10,12 @@ import StepStructure from "@/components/chooseSettings/StepStructure";
 import StepDifficulty from "@/components/chooseSettings/StepDifficulty";
 import StepDuration from "@/components/chooseSettings/StepDuration";
 import StepThemes from "@/components/chooseSettings/StepThemes";
-import SelectPill from "@/components/SelectPill";
 import StepType from "@/components/chooseSettings/StepType";
-import { getAvailableDifficultiesFromTags, getFilteredLexicon } from "@/services/lexicon";
+import { getAvailableDifficultiesFromTags } from "@/services/lexicon";
 
-const screenWidth = Dimensions.get("window").width;
-
+const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get("window").width;
 const arcadeBg = require("../../assets/arcade.png");
-
-const modes = [
-  { label: "QCM", value: "multiple", color: "#9da7ff" },
-  { label: "Saisie", value: "input", color: "#9da7ff" },
-];
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChooseSettings">;
 
@@ -35,6 +29,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
   const [allTags, setAllTags] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [disabledDifficulties, setDisabledDifficulties] = useState<Difficulty[]>([]);
+
   const steps = type === "translation"
     ? [
       () => <StepType inputMode={inputMode} onChange={setInputMode} />,
@@ -47,6 +42,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
       () => <StepDifficulty selected={selectedDifficulties} onChange={setSelectedDifficulties} disabledDifficultyList={disabledDifficulties} />,
       () => <StepDuration selected={length} onSelect={setLength} />
     ];
+
   const maxStep = steps.length - 1;
   const isLastStep = step === maxStep;
   const stepIsDifficulty = type === "translation" ? step === 2 : step === 1;
@@ -54,21 +50,16 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
 
   useEffect(() => {
     getAllUniqueTags().then(setAllTags);
-
     getSavedSettings().then((saved) => {
       if (!saved) return;
-
       setSelectedDifficulties(saved.difficulties);
       setLength(saved.length);
       if (saved.inputMode) setInputMode(saved.inputMode);
       if (saved.tags) setSelectedTags(saved.tags);
-
-      // Put remmemberSettings to true AFTER loading saved settings
       setTimeout(() => setRememberSettings(true), 0);
     });
   }, []);
 
-  // Get available difficulties based on selected tags
   useEffect(() => {
     const updateAvailableDifficulties = async () => {
       const available = await getAvailableDifficultiesFromTags(selectedTags);
@@ -95,16 +86,11 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
 
   const next = () => setStep((s) => s + 1);
   const back = () => setStep((s) => Math.max(0, s - 1));
-
   const toggleRememberSettings = () => {
     const newValue = !rememberSettings;
     setRememberSettings(newValue);
-
-    if (!newValue) {
-      clearSettings();
-    } else {
-      saveSettings(selectedDifficulties, length, inputMode, selectedTags);
-    }
+    if (!newValue) clearSettings();
+    else saveSettings(selectedDifficulties, length, inputMode, selectedTags);
   };
 
   const renderStep = () => (
@@ -114,72 +100,91 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
   );
 
   return (
-    <ImageBackground source={arcadeBg} style={styles.background} resizeMode="cover">
-      {/* ----------------- Container quiz type and save settings ----------------- */}
-      <View style={styles.topContainer}>
-        <Text style={styles.quizType}>
-          Quiz de {type === "translation" ? "traduction" : "compréhension"}
-        </Text>
-        <TouchableOpacity
-          style={styles.checkbox}
-          onPress={toggleRememberSettings}
-        >
-          <View style={[styles.box, rememberSettings && styles.boxChecked]} />
-          <Text style={styles.checkboxLabel}>Conserver les réglages</Text>
-        </TouchableOpacity>
-      </View>
+    <View style={styles.container}>
+      <ImageBackground source={arcadeBg} style={styles.background} resizeMode="cover">
+        {/* TOP - 15% */}
+        <View style={styles.top}>
+          <Text style={styles.quizType}>
+            Quiz de {type === "translation" ? "traduction" : "compréhension"}
+          </Text>
+          <TouchableOpacity style={styles.checkbox} onPress={toggleRememberSettings}>
+            <View style={[styles.box, rememberSettings && styles.boxChecked]} />
+            <Text style={styles.checkboxLabel}>Conserver les réglages</Text>
+          </TouchableOpacity>
+        </View>
 
-      {/* ----------------- Step specific content ----------------- */}
-      <View style={styles.middleContainer}>{renderStep()}</View>
+        {/* MIDDLE - 60% */}
+        <View style={styles.middle} >
+          {renderStep()}
+        </View>
 
-      {/* ----------------- Buttons start and back ----------------- */}
-      <View style={styles.bottomContainer}>
-        {!isLastStep ? (
-          <View style={styles.stepButtonsRow}>
-            <TouchableOpacity
-              onPress={step === 0 ? () => navigation.navigate("Home") : back}
-              style={[styles.button, styles.leftButton]}
-            >
-              <Text style={styles.text}>
-                {step === 0 ? "← Quitter" : "←"}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={next}
-              disabled={isDisabled}
-              style={[styles.button, styles.rightButton, isDisabled && styles.disabled]}>
-              <Text style={styles.text}>▶ NEXT</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <View style={styles.stepButtonsRow}>
-            <TouchableOpacity onPress={back} style={[styles.button, styles.leftButton]}>
-              <Text style={styles.text}>←</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={startGame}
-              disabled={isDisabled}
-              style={[styles.button, styles.rightButton, isDisabled && styles.disabled]}>
-              <Text style={styles.text}>▶ START</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
-    </ImageBackground>
+        {/* BOTTOM - 25% */}
+        <View style={styles.bottom}>
+          {!isLastStep ? (
+            <View style={styles.stepButtonsRow}>
+              <TouchableOpacity
+                onPress={step === 0 ? () => navigation.navigate("Home") : back}
+                style={[styles.button, styles.leftButton]}
+              >
+                <Text style={styles.text}>
+                  {step === 0 ? "← Quitter" : "←"}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={next}
+                disabled={isDisabled}
+                style={[styles.button, styles.rightButton, isDisabled && styles.disabled]}
+              >
+                <Text style={styles.text}>▶ NEXT</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.stepButtonsRow}>
+              <TouchableOpacity onPress={back} style={[styles.button, styles.leftButton]}>
+                <Text style={styles.text}>←</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={startGame}
+                disabled={isDisabled}
+                style={[styles.button, styles.rightButton, isDisabled && styles.disabled]}
+              >
+                <Text style={styles.text}>▶ START</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      </ImageBackground >
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    justifyContent: "space-between",
-    padding: 20,
   },
-  topContainer: {
+  container: {
+    width: "100%",
+    height: "100%",
+  },
+  top: {
+    height: windowHeight * 0.15,
     alignItems: "center",
-    paddingTop: 16,
+    justifyContent: "center",
     gap: 8,
+  },
+  middle: {
+    height: windowHeight * 0.60,
+    paddingHorizontal: 24,
+    justifyContent: "center",
+  },
+  bottom: {
+    height: windowHeight * 0.25,
+    alignItems: "center",
+  },
+  stepButtonsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: "15%",
   },
   quizType: {
     fontSize: 18,
@@ -190,43 +195,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 10,
     overflow: "hidden",
-    marginTop: 12
-  },
-  middleContainer: {
-    flex: 1,
-    marginTop: "20%",
-    marginBottom: "30%",
-    paddingHorizontal: 24,
-    justifyContent: "center",
-    width: "100%",
-  },
-  bottomContainer: {
-    alignItems: "center",
-    marginBottom: 24,
-    gap: 16,
-  },
-  navButton: {
-    backgroundColor: "#8884ff",
-    paddingVertical: 14,
-    paddingHorizontal: 30,
-    borderRadius: 12,
-    elevation: 4,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  playButton: {
-    backgroundColor: "#ff4770",
-    paddingVertical: 14,
-    borderRadius: 12,
-    elevation: 4,
-  },
-  playText: {
-    fontSize: 18,
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  disabled: {
-    opacity: 0.5,
+    marginTop: 12,
   },
   checkbox: {
     flexDirection: "row",
@@ -247,18 +216,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#C60C30",
   },
-  stepButtonsRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 12,
-    width: "100%",
-  },
-  container: {
-    flexDirection: "row",
-    width: "100%",
-  },
   button: {
-    width: screenWidth / 2.2,
+    width: windowWidth / 2.2,
     paddingVertical: 24,
     justifyContent: "center",
     alignItems: "center",
@@ -277,5 +236,8 @@ const styles = StyleSheet.create({
   text: {
     color: "white",
     fontWeight: "bold",
+  },
+  disabled: {
+    opacity: 0.5,
   },
 });
