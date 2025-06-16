@@ -25,8 +25,6 @@ export async function getFilteredLexicon(
         params.push(...selectedTags.map((tag) => `%${tag}%`));
     }
 
-    const whereSQL = whereClauses.length > 0 ? `WHERE ${whereClauses.join(" AND ")}` : "";
-
     const rows = await db.getAllAsync<(LexiconEntry & { tags: string | null })>(
         `
     SELECT l.*, GROUP_CONCAT(t.tag, ', ') AS tags
@@ -78,4 +76,56 @@ export async function resetLexicon(): Promise<void> {
     const db = await dbPromise;
     await db.runAsync("DELETE FROM lexicon");
     await db.runAsync("DELETE FROM lexicon_tags");
+}
+
+/**
+ * Add a new entry to lexicon
+ */
+export async function saveWord({ fr, ko, phonetic, difficulty, tags, edit, id, }: {
+    fr: string;
+    ko: string;
+    phonetic: string;
+    difficulty: Difficulty;
+    tags: string[];
+    edit: boolean;
+    id?: number;
+}) {
+    const db = await dbPromise;
+
+    if (edit && id != null) {
+        await db.runAsync(
+            `UPDATE lexicon SET fr = ?, ko = ?, phonetic = ?, difficulty = ? WHERE id = ?`,
+            fr,
+            ko,
+            phonetic,
+            difficulty,
+            id
+        );
+        await db.runAsync(`DELETE FROM lexicon_tags WHERE lexicon_id = ?`, [id]);
+        for (const tag of tags) {
+            await db.runAsync(
+                `INSERT INTO lexicon_tags (lexicon_id, tag) VALUES (?, ?)`,
+                [id, tag]
+            );
+        }
+    } else {
+        await db.runAsync(
+            `INSERT INTO lexicon (fr, ko, phonetic, difficulty, active) VALUES (?, ?, ?, ?, 1)`,
+            fr,
+            ko,
+            phonetic,
+            difficulty
+        );
+        const lastInsert = await db.getFirstAsync<{ id: number }>(
+            `SELECT last_insert_rowid() as id`
+        );
+        if (lastInsert?.id) {
+            for (const tag of tags) {
+                await db.runAsync(
+                    `INSERT INTO lexicon_tags (lexicon_id, tag) VALUES (?, ?)`,
+                    [lastInsert.id, tag]
+                );
+            }
+        }
+    }
 }

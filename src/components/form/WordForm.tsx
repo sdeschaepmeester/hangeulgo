@@ -1,18 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    Keyboard,
-    StyleSheet,
-} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Keyboard, StyleSheet } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
-import { dbPromise } from "@/db/database";
 import SelectPill from "@/components/SelectPill";
 import type { Difficulty } from "@/types/Difficulty";
-import { AZURE_TRANSLATOR_KEY, AZURE_TRANSLATOR_REGION, AZURE_TRANSLATOR_ENDPOINT } from "@env";
 import TagSelector from "../tags/TagSelector";
+import { getAllUniqueTags } from "@/services/tags";
+import { suggestKoreanTranslation } from "@/services/translator";
+import { saveWord } from "@/services/lexicon";
 
 const difficulties = [
     { label: "Facile", value: "easy", color: "green" },
@@ -52,32 +46,11 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
     const isValid = fr.trim() && ko.trim();
 
     useEffect(() => {
-        const fetchTags = async () => {
-            const db = await dbPromise;
-            const rows = await db.getAllAsync<{ tag: string }>(
-                `SELECT DISTINCT tag FROM lexicon_tags`
-            );
-            setAllTags(rows.map((r) => r.tag));
-        };
-        fetchTags();
-
+        getAllUniqueTags().then(setAllTags);
         NetInfo.fetch().then((state) => {
             setIsConnected(state.isConnected === true);
         });
     }, []);
-
-    const handleTagChange = (text: string) => {
-        setTags(text);
-        const lastPart = text.split(",").pop()?.trim().toLowerCase() ?? "";
-        if (lastPart.length >= 2) {
-            const matching = allTags.filter((tag) =>
-                tag.toLowerCase().startsWith(lastPart)
-            );
-            setSuggestions(matching);
-        } else {
-            setSuggestions([]);
-        }
-    };
 
     const applySuggestion = (tag: string) => {
         const parts = tags.split(",").map((t) => t.trim());
@@ -86,78 +59,32 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         setSuggestions([]);
     };
 
-    const onSubmit = async () => {
+    const handleSubmit = async () => {
         if (!isValid) return;
-        const db = await dbPromise;
         const cleanTags = tags.split(",").map((t) => t.trim()).filter(Boolean);
 
-        if (edit && initialData) {
-            await db.runAsync(
-                `UPDATE lexicon SET fr = ?, ko = ?, phonetic = ?, difficulty = ? WHERE id = ?`,
-                fr.trim(),
-                ko.trim(),
-                phonetic.trim(),
-                difficulty,
-                initialData.id
-            );
-            await db.runAsync(`DELETE FROM lexicon_tags WHERE lexicon_id = ?`, [initialData.id]);
-            for (const tag of cleanTags) {
-                await db.runAsync(
-                    `INSERT INTO lexicon_tags (lexicon_id, tag) VALUES (?, ?)`,
-                    [initialData.id, tag]
-                );
-            }
-        } else {
-            await db.runAsync(
-                `INSERT INTO lexicon (fr, ko, phonetic, difficulty, active) VALUES (?, ?, ?, ?, 1)`,
-                fr.trim(),
-                ko.trim(),
-                phonetic.trim(),
-                difficulty
-            );
-            const lastInsert = await db.getFirstAsync<{ id: number }>(
-                `SELECT last_insert_rowid() as id`
-            );
-            if (lastInsert?.id) {
-                for (const tag of cleanTags) {
-                    await db.runAsync(
-                        `INSERT INTO lexicon_tags (lexicon_id, tag) VALUES (?, ?)`,
-                        [lastInsert.id, tag]
-                    );
-                }
-            }
-        }
+        await saveWord({
+            fr: fr.trim(),
+            ko: ko.trim(),
+            phonetic: phonetic.trim(),
+            difficulty,
+            tags: cleanTags,
+            edit,
+            id: initialData?.id,
+        });
 
         onSuccess();
     };
 
-    const fetchKoreanSuggestion = async () => {
+    const handleKoreanSuggestion = async () => {
         if (!fr.trim() || !isConnected) return;
-
-        try {
-            const res = await fetch(
-                `${AZURE_TRANSLATOR_ENDPOINT}?api-version=3.0&from=fr&to=ko`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Ocp-Apim-Subscription-Key": AZURE_TRANSLATOR_KEY,
-                        "Ocp-Apim-Subscription-Region": AZURE_TRANSLATOR_REGION,
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify([{ Text: fr }]),
-                }
-            );
-
-            const json = await res.json();
-            const korean = json[0]?.translations?.[0]?.text;
-            setKoSuggested(korean);
-        } catch (err) {
-            console.warn(err);
-        }
+        const suggestion = await suggestKoreanTranslation(fr.trim());
+        if (suggestion) setKoSuggested(suggestion);
     };
 
     return (
         <View style={styles.form}>
+            {/* ----------------- French input ----------------- */}
             <View style={styles.field}>
                 <Text style={styles.label}>🇫🇷 Français</Text>
                 <TextInput
@@ -174,8 +101,9 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 />
             </View>
 
+            {/* ----------------- Azure korean suggestion if online ----------------- */}
             {isConnected && fr.trim().length > 0 && !koSuggested && (
-                <TouchableOpacity style={styles.suggestionButton} onPress={fetchKoreanSuggestion}>
+                <TouchableOpacity style={styles.suggestionButton} onPress={handleKoreanSuggestion}>
                     <Text style={styles.suggestionText}>💡 Suggérer une traduction coréenne</Text>
                 </TouchableOpacity>
             )}
@@ -188,6 +116,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 </TouchableOpacity>
             )}
 
+            {/* ----------------- Korean input ----------------- */}
             <View style={styles.field}>
                 <Text style={styles.label}>🇰🇷 Coréen</Text>
                 <TextInput
@@ -204,6 +133,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 />
             </View>
 
+            {/* ----------------- Phonetic input ----------------- */}
             <View style={styles.field}>
                 <Text style={styles.label}>Phonétique</Text>
                 <TextInput
@@ -219,6 +149,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 />
             </View>
 
+            {/* ----------------- Tags input ----------------- */}
             <TagSelector
                 mode="edit"
                 allTags={allTags}
@@ -236,6 +167,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 </View>
             )}
 
+            {/* ----------------- Select word difficulty input ----------------- */}
             <Text style={[styles.label, { marginTop: 16 }]}>Difficulté</Text>
             <SelectPill
                 options={difficulties}
@@ -243,9 +175,10 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 onSelect={(val) => setDifficulty(val as Difficulty)}
             />
 
+            {/* ----------------- Submit button ----------------- */}
             <TouchableOpacity
                 style={[styles.fullButton, !isValid && styles.disabled]}
-                onPress={onSubmit}
+                onPress={handleSubmit}
                 disabled={!isValid}
             >
                 <Text style={styles.fullButtonText}>

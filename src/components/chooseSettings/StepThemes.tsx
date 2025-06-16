@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, StyleSheet } from "react-native";
 import TagSelector from "@/components/tags/TagSelector";
 
@@ -6,9 +6,17 @@ type Props = {
     allTags: string[];
     selectedTags: string[];
     onChange: (tags: string[]) => void;
+    preselectedTags?: string[];
 };
 
-export default function StepThemes({ allTags, selectedTags, onChange }: Props) {
+export default function StepThemes({ allTags, selectedTags, onChange, preselectedTags, }: Props) {
+
+    useEffect(() => {
+        if (selectedTags.length === 0 && preselectedTags?.length) {
+            onChange(preselectedTags);
+        }
+    }, []);
+
     return (
         <TextWrapper>
             <Text style={styles.label}>Thèmes</Text>
@@ -30,13 +38,6 @@ const styles = StyleSheet.create({
     label: {
         fontWeight: "bold",
         color: "grey",
-        fontSize: 24
-    },
-    wrapper: {
-        position: "absolute",
-        top: "25%",
-        left: 20,
-        right: 20,
-        alignItems: "center",
+        fontSize: 24,
     },
 });

@@ -5,7 +5,7 @@ import type { RootStackParamList } from "@/App";
 import type { Difficulty } from "@/types/Difficulty";
 import type { GameSettings, InputMode } from "@/types/GameSettings";
 import { getAllUniqueTags } from "@/services/tags";
-import { getSavedSettings, saveSettings } from "@/services/settings";
+import { getSavedSettings, saveSettings, clearSettings } from "@/services/settings";
 import StepStructure from "@/components/chooseSettings/StepStructure";
 import StepDifficulty from "@/components/chooseSettings/StepDifficulty";
 import StepDuration from "@/components/chooseSettings/StepDuration";
@@ -35,12 +35,17 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
 
   useEffect(() => {
     getAllUniqueTags().then(setAllTags);
+
     getSavedSettings().then((saved) => {
       if (!saved) return;
+
       setSelectedDifficulties(saved.difficulties);
       setLength(saved.length);
       if (saved.inputMode) setInputMode(saved.inputMode);
-      setRememberSettings(true);
+      if (saved.tags) setSelectedTags(saved.tags);
+
+      // Put remmemberSettings to true AFTER loading saved settings
+      setTimeout(() => setRememberSettings(true), 0);
     });
   }, []);
 
@@ -53,7 +58,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
       ...(selectedTags.length > 0 && { tags: selectedTags }),
     };
     if (rememberSettings) {
-      saveSettings(selectedDifficulties, length, inputMode);
+      saveSettings(selectedDifficulties, length, inputMode, selectedTags);
     }
     navigation.navigate("Quiz", { settings });
   };
@@ -61,6 +66,17 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
   const next = () => setStep((s) => s + 1);
   const back = () => setStep((s) => Math.max(0, s - 1));
   const isDisabled = selectedDifficulties.length === 0;
+
+  const toggleRememberSettings = () => {
+    const newValue = !rememberSettings;
+    setRememberSettings(newValue);
+
+    if (!newValue) {
+      clearSettings();
+    } else {
+      saveSettings(selectedDifficulties, length, inputMode, selectedTags);
+    }
+  };
 
   const renderStep = () => {
     switch (step) {
@@ -79,7 +95,12 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
       case 2:
         return (
           <StepStructure step={step}>
-            <StepThemes selectedTags={selectedTags} onChange={setSelectedTags} allTags={allTags} />
+            <StepThemes
+              selectedTags={selectedTags}
+              onChange={setSelectedTags}
+              allTags={allTags}
+              preselectedTags={rememberSettings ? selectedTags : undefined}
+            />
           </StepStructure>
         );
       default:
@@ -95,7 +116,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
         </Text>
         <TouchableOpacity
           style={styles.checkbox}
-          onPress={() => setRememberSettings((prev) => !prev)}
+          onPress={toggleRememberSettings}
         >
           <View style={[styles.box, rememberSettings && styles.boxChecked]} />
           <Text style={styles.checkboxLabel}>Conserver les réglages</Text>
