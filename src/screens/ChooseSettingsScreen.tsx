@@ -11,6 +11,7 @@ import StepDifficulty from "@/components/chooseSettings/StepDifficulty";
 import StepDuration from "@/components/chooseSettings/StepDuration";
 import StepThemes from "@/components/chooseSettings/StepThemes";
 import SelectPill from "@/components/SelectPill";
+import StepType from "@/components/chooseSettings/StepType";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -32,6 +33,8 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
   const [rememberSettings, setRememberSettings] = useState(false);
   const [allTags, setAllTags] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const maxStep = type === "translation" ? 3 : 2;
+  const isLastStep = step === maxStep;
 
   useEffect(() => {
     getAllUniqueTags().then(setAllTags);
@@ -78,21 +81,29 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
     }
   };
 
+  // Render the current step: Step content
   const renderStep = () => {
-    switch (step) {
+    const actualStep = type === "translation" ? step : step + 1;
+    switch (actualStep) {
       case 0:
         return (
           <StepStructure step={step}>
-            <StepDifficulty selected={selectedDifficulties} onChange={setSelectedDifficulties} />
+            <StepType inputMode={inputMode} onChange={setInputMode} />
           </StepStructure>
         );
       case 1:
         return (
           <StepStructure step={step}>
-            <StepDuration selected={length} onSelect={setLength} />
+            <StepDifficulty selected={selectedDifficulties} onChange={setSelectedDifficulties} />
           </StepStructure>
         );
       case 2:
+        return (
+          <StepStructure step={step}>
+            <StepDuration selected={length} onSelect={setLength} />
+          </StepStructure>
+        );
+      case 3:
         return (
           <StepStructure step={step}>
             <StepThemes
@@ -110,6 +121,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
 
   return (
     <ImageBackground source={arcadeBg} style={styles.background} resizeMode="cover">
+      {/* ----------------- Container quiz type and save settings ----------------- */}
       <View style={styles.topContainer}>
         <Text style={styles.quizType}>
           Quiz de {type === "translation" ? "traduction" : "compréhension"}
@@ -123,10 +135,12 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
         </TouchableOpacity>
       </View>
 
+      {/* ----------------- Step specific content ----------------- */}
       <View style={styles.middleContainer}>{renderStep()}</View>
 
+      {/* ----------------- Buttons start and back ----------------- */}
       <View style={styles.bottomContainer}>
-        {step < 2 ? (
+        {!isLastStep ? (
           <View style={styles.stepButtonsRow}>
             <TouchableOpacity onPress={back} style={[styles.button, styles.leftButton, step === 0 && styles.disabled]}>
               <Text style={styles.text}>←</Text>
@@ -140,26 +154,17 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
             </TouchableOpacity>
           </View>
         ) : (
-          <>
-            {type === "translation" && (
-              <SelectPill
-                options={modes}
-                selectedValue={inputMode}
-                onSelect={(val) => setInputMode(val as InputMode)}
-              />
-            )}
-            <View style={styles.stepButtonsRow}>
-              <TouchableOpacity onPress={back} style={[styles.button, styles.leftButton]}>
-                <Text style={styles.text}>←</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={startGame}
-                disabled={isDisabled}
-                style={[styles.button, styles.rightButton, isDisabled && styles.disabled]}>
-                <Text style={styles.text}>▶ START</Text>
-              </TouchableOpacity>
-            </View>
-          </>
+          <View style={styles.stepButtonsRow}>
+            <TouchableOpacity onPress={back} style={[styles.button, styles.leftButton]}>
+              <Text style={styles.text}>←</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={startGame}
+              disabled={isDisabled}
+              style={[styles.button, styles.rightButton, isDisabled && styles.disabled]}>
+              <Text style={styles.text}>▶ START</Text>
+            </TouchableOpacity>
+          </View>
         )}
       </View>
     </ImageBackground>
