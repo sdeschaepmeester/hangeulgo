@@ -25,9 +25,10 @@ const difficultyOptions = [
 type Props = {
     selected: Difficulty[];
     onChange: (difficulties: Difficulty[]) => void;
+    disabledDifficultyList?: Difficulty[];
 };
 
-export default function StepDifficulty({ selected, onChange }: Props) {
+export default function StepDifficulty({ selected, onChange, disabledDifficultyList }: Props) {
     return (
         <>
             <Text style={styles.label}>Difficulté des questions</Text>
@@ -41,6 +42,7 @@ export default function StepDifficulty({ selected, onChange }: Props) {
                             : [...selected, val]
                     )
                 }
+                disabledValues={disabledDifficultyList ?? []}
             />
         </>
     );

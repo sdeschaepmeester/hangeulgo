@@ -36,6 +36,7 @@ export async function generateQuestions(settings: GameSettings): Promise<Questio
             ...settings.difficulties,
             ...settings.tags
         );
+        console.log("ROWS:", rows);
     } else {
         const placeholders = settings.difficulties.map(() => "?").join(",");
         rows = await db.getAllAsync(

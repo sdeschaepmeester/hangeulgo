@@ -12,18 +12,25 @@ interface Props<T> {
     options: Option<T>[];
     selectedValues: T[];
     onToggle: (value: T) => void;
+    disabledValues?: T[];
 }
 
-export default function IconCardSelectMultiple<T>({ options, selectedValues, onToggle }: Props<T>) {
+export default function IconCardSelectMultiple<T>({ options, selectedValues, onToggle, disabledValues = [], }: Props<T>) {
     return (
         <View style={styles.container}>
             {options.map((opt) => {
                 const selected = selectedValues.includes(opt.value);
+                const isDisabled = disabledValues.includes(opt.value);
                 return (
                     <TouchableOpacity
                         key={String(opt.value)}
-                        style={[styles.card, selected && styles.selectedCard]}
-                        onPress={() => onToggle(opt.value)}
+                        style={[
+                            styles.card,
+                            selected && styles.selectedCard,
+                            isDisabled && styles.disabledCard,
+                        ]}
+                        onPress={!isDisabled ? () => onToggle(opt.value) : undefined}
+                        activeOpacity={isDisabled ? 1 : 0.7}
                     >
                         <View style={styles.icon}>{opt.icon}</View>
                         <Text style={styles.label}>{opt.label}</Text>
@@ -53,6 +60,9 @@ const styles = StyleSheet.create({
     },
     selectedCard: {
         backgroundColor: "#d4dbff",
+    },
+    disabledCard: {
+        opacity: 0.4,
     },
     icon: {
         marginBottom: 8,

@@ -12,6 +12,7 @@ import StepDuration from "@/components/chooseSettings/StepDuration";
 import StepThemes from "@/components/chooseSettings/StepThemes";
 import SelectPill from "@/components/SelectPill";
 import StepType from "@/components/chooseSettings/StepType";
+import { getAvailableDifficultiesFromTags, getFilteredLexicon } from "@/services/lexicon";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -33,8 +34,23 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
   const [rememberSettings, setRememberSettings] = useState(false);
   const [allTags, setAllTags] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const maxStep = type === "translation" ? 3 : 2;
+  const [disabledDifficulties, setDisabledDifficulties] = useState<Difficulty[]>([]);
+  const steps = type === "translation"
+    ? [
+      () => <StepType inputMode={inputMode} onChange={setInputMode} />,
+      () => <StepThemes selectedTags={selectedTags} onChange={setSelectedTags} allTags={allTags} preselectedTags={rememberSettings ? selectedTags : undefined} />,
+      () => <StepDifficulty selected={selectedDifficulties} onChange={setSelectedDifficulties} disabledDifficultyList={disabledDifficulties} />,
+      () => <StepDuration selected={length} onSelect={setLength} />
+    ]
+    : [
+      () => <StepThemes selectedTags={selectedTags} onChange={setSelectedTags} allTags={allTags} preselectedTags={rememberSettings ? selectedTags : undefined} />,
+      () => <StepDifficulty selected={selectedDifficulties} onChange={setSelectedDifficulties} disabledDifficultyList={disabledDifficulties} />,
+      () => <StepDuration selected={length} onSelect={setLength} />
+    ];
+  const maxStep = steps.length - 1;
   const isLastStep = step === maxStep;
+  const stepIsDifficulty = type === "translation" ? step === 2 : step === 1;
+  const isDisabled = stepIsDifficulty && selectedDifficulties.length === 0;
 
   useEffect(() => {
     getAllUniqueTags().then(setAllTags);
@@ -52,6 +68,17 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
     });
   }, []);
 
+  // Get available difficulties based on selected tags
+  useEffect(() => {
+    const updateAvailableDifficulties = async () => {
+      const available = await getAvailableDifficultiesFromTags(selectedTags);
+      const allDifficulties: Difficulty[] = ["easy", "medium", "hard"];
+      const disabled = allDifficulties.filter((d) => !available.includes(d));
+      setDisabledDifficulties(disabled);
+    };
+    updateAvailableDifficulties();
+  }, [selectedTags]);
+
   const startGame = () => {
     const settings: GameSettings = {
       type,
@@ -68,7 +95,6 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
 
   const next = () => setStep((s) => s + 1);
   const back = () => setStep((s) => Math.max(0, s - 1));
-  const isDisabled = selectedDifficulties.length === 0;
 
   const toggleRememberSettings = () => {
     const newValue = !rememberSettings;
@@ -81,43 +107,11 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
     }
   };
 
-  // Render the current step: Step content
-  const renderStep = () => {
-    const actualStep = type === "translation" ? step : step + 1;
-    switch (actualStep) {
-      case 0:
-        return (
-          <StepStructure step={step}>
-            <StepType inputMode={inputMode} onChange={setInputMode} />
-          </StepStructure>
-        );
-      case 1:
-        return (
-          <StepStructure step={step}>
-            <StepDifficulty selected={selectedDifficulties} onChange={setSelectedDifficulties} />
-          </StepStructure>
-        );
-      case 2:
-        return (
-          <StepStructure step={step}>
-            <StepDuration selected={length} onSelect={setLength} />
-          </StepStructure>
-        );
-      case 3:
-        return (
-          <StepStructure step={step}>
-            <StepThemes
-              selectedTags={selectedTags}
-              onChange={setSelectedTags}
-              allTags={allTags}
-              preselectedTags={rememberSettings ? selectedTags : undefined}
-            />
-          </StepStructure>
-        );
-      default:
-        return null;
-    }
-  };
+  const renderStep = () => (
+    <StepStructure step={step}>
+      {steps[step]()}
+    </StepStructure>
+  );
 
   return (
     <ImageBackground source={arcadeBg} style={styles.background} resizeMode="cover">
@@ -142,8 +136,13 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
       <View style={styles.bottomContainer}>
         {!isLastStep ? (
           <View style={styles.stepButtonsRow}>
-            <TouchableOpacity onPress={back} style={[styles.button, styles.leftButton, step === 0 && styles.disabled]}>
-              <Text style={styles.text}>←</Text>
+            <TouchableOpacity
+              onPress={step === 0 ? () => navigation.navigate("Home") : back}
+              style={[styles.button, styles.leftButton]}
+            >
+              <Text style={styles.text}>
+                {step === 0 ? "← Quitter" : "←"}
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
