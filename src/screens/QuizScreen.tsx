@@ -3,9 +3,10 @@ import { View, Text, ActivityIndicator, TouchableOpacity, TextInput, ImageBackgr
 import { MaterialIcons } from "@expo/vector-icons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
-import { generateQuestions, type Question } from "@/services/quizGenerator";
+import { generateQuestions } from "@/services/quizGenerator";
 import PromptBox from "@/components/quiz/PromptBox";
 import Feedback from "@/components/quiz/Feedback";
+import { Question } from "@/types/Question";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Quiz">;
 
@@ -155,8 +156,8 @@ export default function QuizScreen({ route, navigation }: Props) {
           </View>
         )}
 
-        {/* ----------------- Quiz with unlimited time: terminate button ----------------- */}
-        {settings.length === "unlimited" && !showResult && (
+        {/* ----------------- Quiz with unlimited time: terminate button: For future update ----------------- */}
+        {/* {settings.length === "unlimited" && !showResult && (
           <TouchableOpacity
             style={styles.quitButton}
             onPress={() => {
@@ -172,7 +173,7 @@ export default function QuizScreen({ route, navigation }: Props) {
           >
             <Text style={styles.quitText}>Terminer</Text>
           </TouchableOpacity>
-        )}
+        )} */}
 
         {/* ----------------- Bottom button next or check answer ----------------- */}
         {settings.type === "translation" && settings.inputMode === "input" ? (
@@ -191,7 +192,11 @@ export default function QuizScreen({ route, navigation }: Props) {
             disabled={!userInput && !showResult}
           >
             <Text style={styles.nextButtonText}>
-              {showResult ? "Prochaine question »" : "Valider ma réponse"}
+              {showResult
+                ? currentIndex + 1 >= questions.length
+                  ? "Voir les résultats"
+                  : "Prochaine question »"
+                : "Valider ma réponse"}
             </Text>
           </TouchableOpacity>
         ) : (

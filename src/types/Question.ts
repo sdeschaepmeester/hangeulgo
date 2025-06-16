@@ -7,4 +7,5 @@ export interface Question {
     difficulty: Difficulty;
     correctAnswer: string;
     choices?: string[];
+    tags: string[];
 }

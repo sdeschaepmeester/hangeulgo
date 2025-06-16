@@ -1,15 +1,7 @@
 import { dbPromise } from "@/db/database";
 import type { GameSettings } from "@/types/GameSettings";
 import type { LexiconEntry } from "@/types/LexiconEntry";
-
-export interface Question {
-    fr: string;
-    ko: string;
-    phonetic: string;
-    difficulty: "easy" | "medium" | "hard";
-    correctAnswer: string;
-    choices?: string[];
-}
+import { Question } from "@/types/Question";
 
 function shuffle<T>(array: T[]): T[] {
     return [...array].sort(() => Math.random() - 0.5);
@@ -18,28 +10,43 @@ function shuffle<T>(array: T[]): T[] {
 export async function generateQuestions(settings: GameSettings): Promise<Question[]> {
     const db = await dbPromise;
 
-    let rows: LexiconEntry[] = [];
+    let rows: (LexiconEntry & { tags: string | null })[] = [];
 
     if (settings.tags && settings.tags.length > 0) {
         const diffPlaceholders = settings.difficulties.map(() => "?").join(",");
         const tagPlaceholders = settings.tags.map(() => "?").join(",");
 
-        rows = await db.getAllAsync<LexiconEntry>(
+        // Fetch lexicon entries filtered by difficulties and tags
+        // Add their tags for each entry
+        rows = await db.getAllAsync(
             `
-    SELECT l.* FROM lexicon l
-    JOIN lexicon_tags t ON l.id = t.lexicon_id
-    WHERE l.difficulty IN (${diffPlaceholders})
-      AND l.active = 1
-      AND t.tag IN (${tagPlaceholders})
-    GROUP BY l.id
+    SELECT filtered.*, GROUP_CONCAT(t_all.tag) AS tags
+    FROM (
+        SELECT l.id as id, l.fr, l.ko, l.phonetic, l.difficulty, l.active
+        FROM lexicon l
+        JOIN lexicon_tags t_filter ON l.id = t_filter.lexicon_id
+        WHERE l.difficulty IN (${diffPlaceholders})
+          AND l.active = 1
+          AND t_filter.tag IN (${tagPlaceholders})
+        GROUP BY l.id
+    ) AS filtered
+    LEFT JOIN lexicon_tags t_all ON filtered.id = t_all.lexicon_id
+    GROUP BY filtered.id
     `,
             ...settings.difficulties,
             ...settings.tags
         );
     } else {
         const placeholders = settings.difficulties.map(() => "?").join(",");
-        rows = await db.getAllAsync<LexiconEntry>(
-            `SELECT * FROM lexicon WHERE difficulty IN (${placeholders}) AND active = 1`,
+        rows = await db.getAllAsync(
+            `
+    SELECT l.*, GROUP_CONCAT(t.tag) AS tags
+    FROM lexicon l
+    LEFT JOIN lexicon_tags t ON l.id = t.lexicon_id
+    WHERE l.difficulty IN (${placeholders})
+      AND l.active = 1
+    GROUP BY l.id
+    `,
             ...settings.difficulties
         );
     }
@@ -47,8 +54,8 @@ export async function generateQuestions(settings: GameSettings): Promise<Questio
     const baseSet = shuffle(rows);
     const needed = settings.length === "unlimited" ? baseSet.length : settings.length;
 
-    // Duplication propre pour atteindre le total
-    let extended: LexiconEntry[] = [];
+    // Clean duplicates to ensure we have enough unique questions
+    let extended: typeof rows = [];
     while (extended.length < needed) {
         extended = extended.concat(shuffle(baseSet));
     }
@@ -63,6 +70,7 @@ export async function generateQuestions(settings: GameSettings): Promise<Questio
             phonetic: entry.phonetic,
             difficulty: entry.difficulty,
             correctAnswer: settings.type === "translation" ? entry.ko : entry.fr,
+            tags: entry.tags?.split(",").map((tag) => tag.trim()).filter(Boolean) ?? [],
         };
 
         if (settings.type === "translation" && settings.inputMode === "multiple") {
