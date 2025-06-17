@@ -53,6 +53,16 @@ export async function getFilteredLexicon(
 }
 
 /**
+ * Check if a Korean word already exists in the lexicon (not french input as it is not unique)
+ */
+export async function checkIfKoreanWordExists(korean: string): Promise<boolean> {
+    const db = await dbPromise;
+    const query = `SELECT COUNT(*) as count FROM lexicon WHERE ko = ?`;
+    const result = await db.getFirstAsync<{ count: number }>(query, [korean.trim()]);
+    return !!result?.count;
+}
+
+/**
  * Activate or deactivate a single entry from lexicon
  */
 export async function toggleLexiconActive(id: number, current: number): Promise<void> {

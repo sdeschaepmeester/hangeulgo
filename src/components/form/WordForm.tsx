@@ -6,7 +6,7 @@ import type { Difficulty } from "@/types/Difficulty";
 import TagSelector from "../tags/TagSelector";
 import { getAllUniqueTags } from "@/services/tags";
 import { suggestKoreanTranslation } from "@/services/translator";
-import { saveWord } from "@/services/lexicon";
+import { saveWord, checkIfKoreanWordExists } from "@/services/lexicon";
 
 const difficulties = [
     { label: "Facile", value: "easy", color: "green" },
@@ -32,16 +32,16 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
     const [ko, setKo] = useState(initialData?.ko || "");
     const [koSuggested, setKoSuggested] = useState<string | null>(null);
     const [phonetic, setPhonetic] = useState(initialData?.phonetic || "");
-    const [difficulty, setDifficulty] = useState<Difficulty>(
-        initialData?.difficulty || "easy"
-    );
+    const [difficulty, setDifficulty] = useState<Difficulty>(initialData?.difficulty || "easy");
     const [tags, setTags] = useState(initialData?.tags || "");
     const [allTags, setAllTags] = useState<string[]>([]);
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [isConnected, setIsConnected] = useState(false);
+    const [koreanExists, setKoreanExists] = useState(false);
 
-    const phoneticRef = useRef<TextInput>(null);
+    const frRef = useRef<TextInput>(null);
     const koRef = useRef<TextInput>(null);
+    const phoneticRef = useRef<TextInput>(null);
 
     const isValid = fr.trim() && ko.trim();
 
@@ -52,15 +52,24 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         });
     }, []);
 
-    const applySuggestion = (tag: string) => {
+    const applySuggestion = async (tag: string) => {
         const parts = tags.split(",").map((t) => t.trim());
         parts[parts.length - 1] = tag;
         setTags(parts.join(", ") + ", ");
         setSuggestions([]);
     };
 
+    const handleKoBlur = async () => {
+        if (!ko.trim()) {
+            setKoreanExists(false);
+            return;
+        }
+        const exists = await checkIfKoreanWordExists(ko.trim());
+        setKoreanExists(exists);
+    };
+
     const handleSubmit = async () => {
-        if (!isValid) return;
+        if (!isValid || koreanExists) return;
         const cleanTags = tags.split(",").map((t) => t.trim()).filter(Boolean);
 
         await saveWord({
@@ -73,6 +82,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
             id: initialData?.id,
         });
 
+        clearForm();
         onSuccess();
     };
 
@@ -82,12 +92,24 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         if (suggestion) setKoSuggested(suggestion);
     };
 
+    const clearForm = () => {
+        setFr("");
+        setKo("");
+        setKoSuggested(null);
+        setPhonetic("");
+        setDifficulty("easy");
+        setTags("");
+        setSuggestions([]);
+        setKoreanExists(false);
+    };
+
     return (
         <View style={styles.form}>
             {/* ----------------- French input ----------------- */}
             <View style={styles.field}>
                 <Text style={styles.label}>🇫🇷 Français</Text>
                 <TextInput
+                    ref={frRef}
                     value={fr}
                     onChangeText={(text) => {
                         setFr(text);
@@ -95,9 +117,8 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     }}
                     style={styles.input}
                     placeholder="Ex : Bonjour"
-                    returnKeyType="done"
-                    keyboardType="default"
-                    textContentType="givenName"
+                    returnKeyType="next"
+                    onSubmitEditing={() => koRef.current?.focus()}
                 />
             </View>
 
@@ -109,7 +130,13 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
             )}
 
             {koSuggested && !ko && (
-                <TouchableOpacity onPress={() => setKo(koSuggested)}>
+                <TouchableOpacity
+                    onPress={async () => {
+                        setKo(koSuggested);
+                        const exists = await checkIfKoreanWordExists(koSuggested);
+                        setKoreanExists(exists);
+                    }}
+                >
                     <Text style={styles.suggestionBox}>
                         👉 Appuyer pour remplir avec : {koSuggested}
                     </Text>
@@ -122,15 +149,23 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 <TextInput
                     ref={koRef}
                     value={ko}
-                    onChangeText={setKo}
+                    onChangeText={(text) => {
+                        setKo(text);
+                        setKoreanExists(false);
+                    }}
+                    onBlur={handleKoBlur}
                     style={styles.input}
-                    placeholderTextColor="#000"
                     placeholder="Ex : 안녕하세요"
                     keyboardType="default"
                     textContentType="none"
                     returnKeyType="next"
                     onSubmitEditing={() => phoneticRef.current?.focus()}
                 />
+                {koreanExists && (
+                    <Text style={styles.warningText}>
+                        ⚠️ Ce mot existe déjà dans votre lexique. Modifiez-le si besoin.
+                    </Text>
+                )}
             </View>
 
             {/* ----------------- Phonetic input ----------------- */}
@@ -141,7 +176,6 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     value={phonetic}
                     onChangeText={setPhonetic}
                     style={styles.input}
-                    placeholderTextColor="#000"
                     placeholder="Ex : annyeonghaseyo"
                     returnKeyType="done"
                     keyboardType="default"
@@ -177,9 +211,9 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
 
             {/* ----------------- Submit button ----------------- */}
             <TouchableOpacity
-                style={[styles.fullButton, !isValid && styles.disabled]}
+                style={[styles.fullButton, (!isValid || koreanExists) && styles.disabled]}
                 onPress={handleSubmit}
-                disabled={!isValid}
+                disabled={!isValid || koreanExists}
             >
                 <Text style={styles.fullButtonText}>
                     {edit ? "Confirmer la modification" : "Ajouter au lexique"}
@@ -245,5 +279,11 @@ const styles = StyleSheet.create({
     suggestionText: {
         color: "#333",
         fontSize: 14,
+    },
+    warningText: {
+        color: "#cc0000",
+        marginTop: 4,
+        fontSize: 13,
+        fontStyle: "italic",
     },
 });
