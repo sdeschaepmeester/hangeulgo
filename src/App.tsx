@@ -12,6 +12,7 @@ import ResultScreen from "./screens/ResultScreen";
 import ScoreScreen from "./screens/ScoreScreen";
 import { GameSettings } from "./types/GameSettings";
 import { injectPreviewLexicon } from "@/data/injectPreviewLexicon";
+import { isFirstLaunch } from "./services/firstLaunch";
 
 export type RootStackParamList = {
   Home: undefined;
@@ -30,9 +31,16 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+
   useEffect(() => {
     initDatabase().catch(console.error);
-    injectPreviewLexicon();
+
+    // Inject the preview lexicon only on the first launch
+    isFirstLaunch().then((firstTime) => {
+      if (firstTime) {
+        injectPreviewLexicon();
+      }
+    });
   }, []);
 
   return (
