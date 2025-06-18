@@ -21,7 +21,7 @@ export default function FilterBarToggle({
                 style={[styles.box, isSortOpen && styles.boxActive]}
                 onPress={onToggleSort}
             >
-                <Text style={[styles.text, isSortOpen && styles.textActive]}>Trier</Text>
+                <Text style={[styles.text, isSortOpen && styles.textActive]}>Ordre</Text>
             </TouchableOpacity>
             <View style={styles.divider} />
             <TouchableOpacity

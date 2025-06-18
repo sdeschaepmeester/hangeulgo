@@ -1,13 +1,11 @@
 import React from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import MultiSelectPill from "./MultiSelectPill";
 import type { Difficulty } from "@/types/Difficulty";
 
 interface FilterBarProps {
     selectedDifficulties: Difficulty[];
     onToggleDifficulty: (diff: Difficulty) => void;
-    sortOrder: "asc" | "desc";
-    onToggleSortOrder: () => void;
 }
 
 const difficultyOptions: { label: string; value: Difficulty; color: string }[] = [
@@ -18,12 +16,11 @@ const difficultyOptions: { label: string; value: Difficulty; color: string }[] =
 
 export default function FilterBar({
     selectedDifficulties,
-    onToggleDifficulty,
-    sortOrder,
-    onToggleSortOrder,
+    onToggleDifficulty
 }: FilterBarProps) {
     return (
         <View style={styles.container}>
+            {/* Filter by difficulty */}
             <MultiSelectPill
                 options={difficultyOptions}
                 selectedValues={selectedDifficulties}

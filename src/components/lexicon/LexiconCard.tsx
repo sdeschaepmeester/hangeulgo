@@ -17,8 +17,7 @@ type Props = {
     onDelete: () => void;
     onUpdate: (id: number) => void;
 };
-
-export default function LexiconCard({ id, fr, ko, phonetic, tags, difficulty, active, onToggle, onDelete, onUpdate, }: Props) {
+export default React.memo(function LexiconCard({ id, fr, ko, phonetic, tags, difficulty, active, onToggle, onDelete, onUpdate, }: Props) {
     const [showEdit, setShowEdit] = useState(false);
     const [isSpeaking, setIsSpeaking] = React.useState(false);
 
@@ -139,7 +138,7 @@ export default function LexiconCard({ id, fr, ko, phonetic, tags, difficulty, ac
             </Modal>
         </View>
     );
-}
+})
 
 function difficultyColor(difficulty: Difficulty) {
     switch (difficulty) {

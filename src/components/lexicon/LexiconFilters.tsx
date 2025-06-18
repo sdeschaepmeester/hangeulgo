@@ -7,22 +7,18 @@ import type { Difficulty } from "@/types/Difficulty";
 type Props = {
     selectedDifficulties: Difficulty[];
     onToggleDifficulty: (diff: Difficulty) => void;
-    sortOrder: "asc" | "desc";
-    onToggleSortOrder: () => void;
     allTags: string[];
     selectedTags: string[];
     onToggleTag: (tag: string) => void;
 };
 
-export default function LexiconFilters({ selectedDifficulties, onToggleDifficulty, sortOrder, onToggleSortOrder, allTags, selectedTags, onToggleTag, }: Props) {
+export default function LexiconFilters({ selectedDifficulties, onToggleDifficulty, allTags, selectedTags, onToggleTag, }: Props) {
     return (
         <View style={styles.container}>
             {/* ----------------- Filter by difficulty and sort ----------------- */}
             <FilterBar
                 selectedDifficulties={selectedDifficulties}
                 onToggleDifficulty={onToggleDifficulty}
-                sortOrder={sortOrder}
-                onToggleSortOrder={onToggleSortOrder}
             />
 
             {/* ----------------- Filter by tags ----------------- */}

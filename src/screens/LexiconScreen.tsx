@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Platform, UIManager } from "react-native";
+import { View, StyleSheet, Platform, UIManager, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { Difficulty } from "@/types/Difficulty";
@@ -28,11 +28,20 @@ export default function LexiconScreen() {
   const [confirmDeleteSeverals, setConfirmDeleteSeverals] = useState(false);
   const [allTags, setAllTags] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchLexicon = async () => {
     const rows = await getFilteredLexicon(selectedDifficulties, selectedTags, sortOrder);
-    setLexicon(rows);
+    // Search by french word
+    if (searchTerm.trim()) {
+      setLexicon(rows.filter((entry) =>
+        entry.fr.toLowerCase().includes(searchTerm.toLowerCase())
+      ));
+    } else {
+      setLexicon(rows);
+    }
   };
+
 
   // Fetch all unique tags for filters
   useEffect(() => {
@@ -41,7 +50,7 @@ export default function LexiconScreen() {
 
   useEffect(() => {
     fetchLexicon().catch(console.error);
-  }, [selectedDifficulties, sortOrder, selectedTags]);
+  }, [selectedDifficulties, sortOrder, selectedTags, searchTerm]);
 
   // Fetch all tags
   const refreshTags = async () => {
@@ -96,7 +105,19 @@ export default function LexiconScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['bottom']}>
+      {/* ----------------- Searchbar french word ----------------- */}
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Recherche par mot"
+          value={searchTerm}
+          onChangeText={(text) => {
+            setSearchTerm(text);
+          }}
+          placeholderTextColor="#888"
+        />
+      </View>
       {/* ----------------- Filters section ----------------- */}
       <View style={styles.filtersSection}>
         <FilterBarToggle
@@ -121,10 +142,6 @@ export default function LexiconScreen() {
               setSelectedDifficulties((prev) =>
                 prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d]
               )
-            }
-            sortOrder={sortOrder}
-            onToggleSortOrder={() =>
-              setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
             }
             allTags={allTags}
             selectedTags={selectedTags}
@@ -199,6 +216,7 @@ const styles = StyleSheet.create({
   listSection: {
     flex: 1,
     padding: 12,
+    marginBottom: 24
   },
   listHeader: {
     flexDirection: "row",
@@ -210,4 +228,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
+  searchContainer: {
+    padding: 12,
+    backgroundColor: "#fff",
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  searchInput: {
+    backgroundColor: "#f1f1f1",
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 8,
+    fontSize: 16,
+  }
 });
