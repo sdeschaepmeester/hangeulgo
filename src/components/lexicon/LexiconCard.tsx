@@ -15,7 +15,7 @@ type Props = {
     active: number;
     onToggle: () => void;
     onDelete: () => void;
-    onUpdate: () => void;
+    onUpdate: (id: number) => void;
 };
 
 export default function LexiconCard({ id, fr, ko, phonetic, tags, difficulty, active, onToggle, onDelete, onUpdate, }: Props) {
@@ -131,7 +131,7 @@ export default function LexiconCard({ id, fr, ko, phonetic, tags, difficulty, ac
                             }}
                             onSuccess={() => {
                                 setShowEdit(false);
-                                onUpdate();
+                                onUpdate(id);
                             }}
                         />
                     </ScrollView>

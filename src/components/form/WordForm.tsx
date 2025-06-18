@@ -58,6 +58,11 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         });
     }, []);
 
+    const refreshTags = async () => {
+        const tags = await getAllUniqueTags();
+        setAllTags(tags);
+    };
+
     const applySuggestion = async (tag: string) => {
         const parts = tags.split(",").map((t) => t.trim());
         parts[parts.length - 1] = tag;
@@ -89,6 +94,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         });
 
         clearForm();
+        refreshTags();
         onSuccess();
     };
 

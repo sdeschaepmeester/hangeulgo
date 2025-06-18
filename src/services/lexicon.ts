@@ -89,7 +89,73 @@ export async function resetLexicon(): Promise<void> {
 }
 
 /**
- * Add a new entry to lexicon
+ * Add phonetic to existing duplicate fr entries (if not already formatted)
+ */
+export async function handleFrenchDuplicates(fr: string, phonetic: string): Promise<string> {
+    const db = await dbPromise;
+    const frBase = fr.trim().split("(")[0].trim().toLowerCase();
+    const rows = await db.getAllAsync<{ id: number; fr: string; phonetic: string | null }>(
+        `SELECT id, fr, phonetic FROM lexicon`
+    );
+
+    for (const row of rows) {
+        const rowBase = row.fr.split("(")[0].trim().toLowerCase();
+        if (rowBase === frBase) {
+            const alreadyFormatted = row.fr.includes("(");
+            if (!alreadyFormatted && row.phonetic?.trim()) {
+                const updatedFr = `${row.fr.trim()} (${row.phonetic.trim()})`;
+                await db.runAsync(`UPDATE lexicon SET fr = ? WHERE id = ?`, [updatedFr, row.id]);
+            }
+            return `${fr.trim()} (${phonetic.trim()})`;
+        }
+    }
+    return fr.trim();
+}
+
+
+/**
+ * Ensure consistency for fr entries on edit (in case of phonetic update or fr update)
+ */
+export async function updateFrenchDuplicateFormatting(updatedId: number): Promise<void> {
+    const db = await dbPromise;
+
+    const current = await db.getFirstAsync<{ id: number; fr: string; phonetic: string | null }>(
+        `SELECT id, fr, phonetic FROM lexicon WHERE id = ?`,
+        [updatedId]
+    );
+    if (!current) return;
+
+    const frBase = current.fr.split("(")[0].trim().toLowerCase();
+
+    const rows = await db.getAllAsync<{ id: number; fr: string; phonetic: string | null }>(
+        `SELECT id, fr, phonetic FROM lexicon WHERE id != ?`,
+        [updatedId]
+    );
+
+    const duplicateRows = rows.filter((row) => {
+        const rowBase = row.fr.split("(")[0].trim().toLowerCase();
+        return rowBase === frBase;
+    });
+
+    // If entry is unique, no need to format
+    if (duplicateRows.length === 0) return;
+
+    // Else, format all duplicates
+    for (const row of duplicateRows) {
+        if (!row.fr.includes("(") && row.phonetic?.trim()) {
+            const updatedFr = `${row.fr.trim()} (${row.phonetic.trim()})`;
+            await db.runAsync(`UPDATE lexicon SET fr = ? WHERE id = ?`, [updatedFr, row.id]);
+        }
+    }
+
+    if (!current.fr.includes("(") && current.phonetic?.trim()) {
+        const updatedFr = `${current.fr.trim()} (${current.phonetic.trim()})`;
+        await db.runAsync(`UPDATE lexicon SET fr = ? WHERE id = ?`, [updatedFr, current.id]);
+    }
+}
+
+/**
+ * Add a new entry to lexicon or update existing one
  */
 export async function saveWord({ fr, ko, phonetic, difficulty, tags, edit, id, }: {
     fr: string;
@@ -118,7 +184,11 @@ export async function saveWord({ fr, ko, phonetic, difficulty, tags, edit, id, }
                 [id, tag]
             );
         }
+        await updateFrenchDuplicateFormatting(id);
     } else {
+        // Vérifie doublon FR et modifie si besoin
+        fr = await handleFrenchDuplicates(fr, phonetic);
+
         await db.runAsync(
             `INSERT INTO lexicon (fr, ko, phonetic, difficulty, active) VALUES (?, ?, ?, ?, 1)`,
             fr,

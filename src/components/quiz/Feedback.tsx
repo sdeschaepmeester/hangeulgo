@@ -18,7 +18,6 @@ export default function Feedback({ feedback, correctAnswer, phonetic }: Feedback
             {feedback === "wrong" && correctAnswer && (
                 <Text style={styles.text}>
                     Bonne réponse : {correctAnswer}
-                    {phonetic ? ` (${phonetic})` : ""}
                 </Text>
             )}
         </View>

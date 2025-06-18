@@ -1,6 +1,5 @@
 import React from "react";
-import { FlatList, StyleSheet, View, Text, TouchableOpacity } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { FlatList, StyleSheet, View, Text } from "react-native";
 import type { LexiconEntry } from "@/types/LexiconEntry";
 import LexiconCard from "@/components/lexicon/LexiconCard";
 import IconButton from "../IconButton";
@@ -10,7 +9,7 @@ type Props = {
     onToggle: (id: number, current: number) => void;
     onDelete: (id: number) => void;
     onDeleteAll: () => void;
-    onUpdate: () => void;
+    onUpdate: (id: number) => void;
 };
 
 export default function LexiconList({ data, onToggle, onDelete, onDeleteAll, onUpdate }: Props) {

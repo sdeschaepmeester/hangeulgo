@@ -9,7 +9,7 @@ import FilterBarToggle from "@/components/lexicon/FilterBarToggle";
 import SortOptions from "@/components/lexicon/SortOptions";
 import LexiconFilters from "@/components/lexicon/LexiconFilters";
 import AlertCustom from "@/components/AlertCustom";
-import { getFilteredLexicon, toggleLexiconActive, deleteLexiconEntry } from "@/services/lexicon";
+import { getFilteredLexicon, toggleLexiconActive, deleteLexiconEntry, updateFrenchDuplicateFormatting } from "@/services/lexicon";
 import { getAllUniqueTags } from "@/services/tags";
 import LexiconList from "@/components/lexicon/LexiconList";
 
@@ -90,6 +90,11 @@ export default function LexiconScreen() {
     refreshTags();
   };
 
+  const updateLexicon = async (id: number) => {
+    await updateFrenchDuplicateFormatting(id);
+    await fetchLexicon();
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       {/* ----------------- Filters section ----------------- */}
@@ -139,7 +144,9 @@ export default function LexiconScreen() {
           onToggle={handleToggleActive}
           onDelete={handleDeleteWord}
           onDeleteAll={() => setConfirmDeleteSeverals(true)}
-          onUpdate={fetchLexicon}
+          onUpdate={async (id) => {
+            updateLexicon(id)
+          }}
         />
       </View>
 
