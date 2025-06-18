@@ -7,6 +7,9 @@ import TagSelector from "../tags/TagSelector";
 import { getAllUniqueTags } from "@/services/tags";
 import { suggestKoreanTranslation } from "@/services/translator";
 import { saveWord, checkIfKoreanWordExists } from "@/services/lexicon";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "@/App";
 
 const difficulties = [
     { label: "Facile", value: "easy", color: "green" },
@@ -38,6 +41,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [isConnected, setIsConnected] = useState(false);
     const [koreanExists, setKoreanExists] = useState(false);
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     const frRef = useRef<TextInput>(null);
     const koRef = useRef<TextInput>(null);
@@ -124,7 +128,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
             </View>
 
             {/* ----------------- Azure korean suggestion if online ----------------- */}
-            {isConnected && fr.trim().length > 0 && !koSuggested && (
+            {isConnected && fr.trim().length > 0 && !koSuggested && !edit && (
                 <TouchableOpacity style={styles.suggestionButton} onPress={handleKoreanSuggestion}>
                     <Text style={styles.suggestionText}>💡 Suggérer une traduction coréenne</Text>
                 </TouchableOpacity>
@@ -212,16 +216,26 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 onSelect={(val) => setDifficulty(val as Difficulty)}
             />
 
-            {/* ----------------- Submit button ----------------- */}
-            <TouchableOpacity
-                style={[styles.fullButton, (!isValid || koreanExists) && styles.disabled]}
-                onPress={handleSubmit}
-                disabled={!isValid || koreanExists}
-            >
-                <Text style={styles.fullButtonText}>
-                    {edit ? "Confirmer la modification" : "Ajouter au lexique"}
-                </Text>
-            </TouchableOpacity>
+            {/* ----------------- Buttons row ----------------- */}
+            <View style={styles.buttonsRow}>
+                <TouchableOpacity
+                    onPress={() => navigation.goBack()}
+                    style={styles.cancelButton}
+                >
+                    <Text style={styles.cancelButtonText}>Annuler</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={[styles.confirmButton, (!isValid || koreanExists) && styles.disabled]}
+                    onPress={handleSubmit}
+                    disabled={!isValid || koreanExists}
+                >
+                    <Text style={styles.confirmButtonText}>
+                        {edit ? "Confirmer" : "Ajouter"}
+                    </Text>
+                </TouchableOpacity>
+            </View>
+
         </View>
     );
 }
@@ -288,5 +302,35 @@ const styles = StyleSheet.create({
         marginTop: 4,
         fontSize: 13,
         fontStyle: "italic",
+    },
+    buttonsRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: 12,
+        marginTop: 28,
+    },
+    cancelButton: {
+        flex: 1,
+        paddingVertical: 14,
+        backgroundColor: "#eee",
+        borderRadius: 8,
+    },
+    cancelButtonText: {
+        textAlign: "center",
+        fontSize: 16,
+        color: "#555",
+    },
+    confirmButton: {
+        flex: 1,
+        paddingVertical: 14,
+        backgroundColor: "#9da7ff",
+        borderRadius: 8,
+    },
+    confirmButtonText: {
+        textAlign: "center",
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 16,
     },
 });

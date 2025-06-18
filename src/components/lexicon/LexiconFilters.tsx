@@ -39,7 +39,6 @@ export default function LexiconFilters({ selectedDifficulties, onToggleDifficult
                         if (!tags.includes(tag)) onToggleTag(tag);
                     });
                 }}
-                label="Types de mots"
                 placeholder="Rechercher ou sélectionner..."
             />
         </View>

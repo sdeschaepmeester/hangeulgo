@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Switch, Pressable, StyleSheet, TouchableOpacity, Modal, } from "react-native";
+import { View, Text, Switch, Pressable, StyleSheet, TouchableOpacity, Modal, KeyboardAvoidingView, ScrollView, Platform, } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import WordForm from "../form/WordForm";
 import type { Difficulty } from "@/types/Difficulty";
@@ -113,23 +113,29 @@ export default function LexiconCard({ id, fr, ko, phonetic, tags, difficulty, ac
 
             {/* ----------------- Edit word modale  ----------------- */}
             <Modal visible={showEdit} animationType="slide" presentationStyle="formSheet">
-                <View style={{ flex: 1, padding: 20 }}>
-                    <WordForm
-                        edit
-                        initialData={{
-                            id,
-                            fr,
-                            ko,
-                            phonetic: phonetic ?? "",
-                            tags: tags ?? "",
-                            difficulty,
-                        }}
-                        onSuccess={() => {
-                            setShowEdit(false);
-                            onUpdate();
-                        }}
-                    />
-                </View>
+                <KeyboardAvoidingView
+                    style={{ flex: 1 }}
+                    behavior={Platform.OS === "ios" ? "padding" : undefined}
+                >
+                    <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 40 }}>
+                        <Text style={styles.title}>Modifier un mot</Text>
+                        <WordForm
+                            edit
+                            initialData={{
+                                id,
+                                fr,
+                                ko,
+                                phonetic: phonetic ?? "",
+                                tags: tags ?? "",
+                                difficulty,
+                            }}
+                            onSuccess={() => {
+                                setShowEdit(false);
+                                onUpdate();
+                            }}
+                        />
+                    </ScrollView>
+                </KeyboardAvoidingView>
             </Modal>
         </View>
     );
@@ -249,4 +255,5 @@ const styles = StyleSheet.create({
         gap: 16,
         marginTop: 8,
     },
+    title: { fontSize: 22, fontWeight: "bold" },
 });
