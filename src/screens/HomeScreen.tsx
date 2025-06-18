@@ -34,8 +34,8 @@ export default function HomeScreen() {
 
             {/* ----------------- Main content ----------------- */}
             <View style={styles.content}>
-                <View style={styles.section}>
-                    {/* ----------------- Exercices section ----------------- */}
+                {/* Exercices section */}
+                <View>
                     <SectionCardGame title="Exercices">
                         <SquareButton
                             icon={<MaterialCommunityIcons name="brain" style={styles.icon} />}
@@ -51,8 +51,9 @@ export default function HomeScreen() {
                         />
                     </SectionCardGame>
                 </View>
-                {/* ----------------- Lexicon section ----------------- */}
-                <View style={styles.section}>
+
+                {/* Lexique section */}
+                <View style={styles.lexiconSection}>
                     <SectionCardGame title="Lexique">
                         <SquareButton
                             icon={<MaterialCommunityIcons name="book-open-variant" style={styles.icon} />}
@@ -70,6 +71,7 @@ export default function HomeScreen() {
                 </View>
             </View>
         </View>
+
     );
 }
 
@@ -113,15 +115,12 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         padding: 20,
-        justifyContent: "space-evenly",
-        marginBottom: 24
-    },
-    section: {
-        flex: 1,
-        justifyContent: "center",
     },
     icon: {
         fontSize: screenWidth * 0.18,
         color: "#595959",
+    },
+    lexiconSection: {
+        marginTop: 32,
     },
 });

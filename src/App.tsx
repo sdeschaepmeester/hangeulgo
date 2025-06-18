@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -81,9 +81,13 @@ export default function App() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: "" }}
+          options={{
+            title: "",
+            headerLeft: () => null,
+            headerRight: () => null,
+            headerTitle: () => null,
+          }}
         />
-
         {screens.map(({ name, component, title }) => (
           <Stack.Screen
             key={name}
@@ -92,10 +96,16 @@ export default function App() {
             options={({ navigation }) => ({
               title,
               headerLeft: () => goHomeButton(navigation),
+              headerTitle: () => (
+                <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+                  <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
+                    {title}
+                  </Text>
+                </TouchableOpacity>
+              ),
             })}
           />
         ))}
-
         <Stack.Screen
           name="Quiz"
           component={QuizScreen}

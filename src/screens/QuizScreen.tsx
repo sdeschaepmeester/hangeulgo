@@ -131,9 +131,9 @@ export default function QuizScreen({ route, navigation }: Props) {
               ) : (
                 // ----------------- Comprehension: several choices box ----------------- 
                 <View style={styles.choices}>
-                  {current.choices?.map((choice: string) => (
+                  {current.choices?.map((choice: string, index: number) => (
                     <TouchableOpacity
-                      key={choice}
+                      key={`${choice}-${index}`}
                       style={[
                         styles.choice,
                         selected === choice && {
