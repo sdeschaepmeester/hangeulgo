@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -8,13 +8,14 @@ import SquareButton from "@/components/SquareButton";
 import SectionCardGame from "@/components/sections/SectionCardGame";
 
 const screenHeight = Dimensions.get("window").height;
+const screenWidth = Dimensions.get("window").width;
 
 export default function HomeScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     return (
         <View style={styles.container}>
-            {/* ----------------- Header section with score ----------------- */}
+            {/* ----------------- Header image and scores ----------------- */}
             <View style={styles.imageWrapper}>
                 <Image
                     source={require("../../assets/background_home.png")}
@@ -31,39 +32,42 @@ export default function HomeScreen() {
                 </View>
             </View>
 
-            {/* ----------------- Content ----------------- */}
-            <View style={{ padding: 20 }}>
-                {/* ----------------- Exercises section ----------------- */}
-                <SectionCardGame title="Exercices">
-                    <SquareButton
-                        icon={<MaterialCommunityIcons name="brain" style={styles.icon} color="#333" />}
-                        label="Compréhension"
-                        bgColor="#f6c6c6"
-                        onClick={() => navigation.navigate("ChooseSettings", { type: "comprehension" })}
-                    />
-                    <SquareButton
-                        icon={<MaterialCommunityIcons name="translate" style={styles.icon} color="#333" />}
-                        label="Traduction"
-                        bgColor="#f6c6c6"
-                        onClick={() => navigation.navigate("ChooseSettings", { type: "translation" })}
-                    />
-                </SectionCardGame>
-
+            {/* ----------------- Main content ----------------- */}
+            <View style={styles.content}>
+                <View style={styles.section}>
+                    {/* ----------------- Exercices section ----------------- */}
+                    <SectionCardGame title="Exercices">
+                        <SquareButton
+                            icon={<MaterialCommunityIcons name="brain" style={styles.icon} />}
+                            label="Compréhension"
+                            bgColor="#f6c6c6"
+                            onClick={() => navigation.navigate("ChooseSettings", { type: "comprehension" })}
+                        />
+                        <SquareButton
+                            icon={<MaterialCommunityIcons name="translate" style={styles.icon} />}
+                            label="Traduction"
+                            bgColor="#f6c6c6"
+                            onClick={() => navigation.navigate("ChooseSettings", { type: "translation" })}
+                        />
+                    </SectionCardGame>
+                </View>
                 {/* ----------------- Lexicon section ----------------- */}
-                <SectionCardGame title="Lexique">
-                    <SquareButton
-                        icon={<MaterialCommunityIcons name="book-open-variant" style={styles.icon} color="#333" />}
-                        label="Réviser"
-                        bgColor="#c6cbf6"
-                        onClick={() => navigation.navigate("Lexicon")}
-                    />
-                    <SquareButton
-                        icon={<MaterialCommunityIcons name="layers-plus" style={styles.icon} color="#333" />}
-                        label="Ajouter un mot"
-                        bgColor="#c6cbf6"
-                        onClick={() => navigation.navigate("AddWord")}
-                    />
-                </SectionCardGame>
+                <View style={styles.section}>
+                    <SectionCardGame title="Lexique">
+                        <SquareButton
+                            icon={<MaterialCommunityIcons name="book-open-variant" style={styles.icon} />}
+                            label="Réviser"
+                            bgColor="#c6cbf6"
+                            onClick={() => navigation.navigate("Lexicon")}
+                        />
+                        <SquareButton
+                            icon={<MaterialCommunityIcons name="layers-plus" style={styles.icon} />}
+                            label="Ajouter un mot"
+                            bgColor="#c6cbf6"
+                            onClick={() => navigation.navigate("AddWord")}
+                        />
+                    </SectionCardGame>
+                </View>
             </View>
         </View>
     );
@@ -72,11 +76,10 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 0,
     },
     imageWrapper: {
+        height: screenHeight * 0.35,
         width: "100%",
-        height: (504 / 770) * Dimensions.get("window").width,
         overflow: "hidden",
     },
     image: {
@@ -87,7 +90,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         width: "100%",
-        height: screenHeight * 0.05,
+        height: 50,
         backgroundColor: "#e5e8ff",
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
@@ -99,7 +102,7 @@ const styles = StyleSheet.create({
         paddingVertical: 6,
         backgroundColor: "#d0d3ff",
         borderRadius: 12,
-        width: "95%",
+        width: "90%",
     },
     scoreText: {
         fontWeight: "bold",
@@ -107,8 +110,18 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 18,
     },
+    content: {
+        flex: 1,
+        padding: 20,
+        justifyContent: "space-evenly",
+        marginBottom: 24
+    },
+    section: {
+        flex: 1,
+        justifyContent: "center",
+    },
     icon: {
-        fontSize: Dimensions.get("window").width * 0.2,
+        fontSize: screenWidth * 0.18,
         color: "#595959",
     },
 });

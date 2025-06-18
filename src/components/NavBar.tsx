@@ -11,7 +11,7 @@ export default function NavBar() {
     const insets = useSafeAreaInsets();
 
     return (
-        <View style={[styles.container, { paddingBottom: insets.bottom }]}>
+        <View style={[styles.container, { bottom: insets.bottom || 8 }]}>
             <TouchableOpacity style={styles.fab} onPress={() => navigation.navigate("Home")}>
                 <MaterialCommunityIcons name="home" size={28} color="white" />
             </TouchableOpacity>
@@ -22,15 +22,14 @@ export default function NavBar() {
 const styles = StyleSheet.create({
     container: {
         position: "absolute",
-        bottom: 0,
         left: 0,
         right: 0,
-        height: 60,
         backgroundColor: "white",
         borderTopWidth: 1,
         borderTopColor: "#ccc",
         alignItems: "center",
         justifyContent: "center",
+        height: 60,
     },
     fab: {
         position: "absolute",

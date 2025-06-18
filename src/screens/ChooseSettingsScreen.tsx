@@ -12,6 +12,7 @@ import StepDuration from "@/components/chooseSettings/StepDuration";
 import StepThemes from "@/components/chooseSettings/StepThemes";
 import StepType from "@/components/chooseSettings/StepType";
 import { getAvailableDifficultiesFromTags } from "@/services/lexicon";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -127,7 +128,10 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
                 style={[styles.button, styles.leftButton]}
               >
                 <Text style={styles.text}>
-                  {step === 0 ? "← Quitter" : "←"}
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <MaterialCommunityIcons name="chevron-left" size={18} color="white" style={{ marginRight: 4 }} />
+                    {step === 0 && <Text style={{ fontSize: 16, color: "white" }}>Quitter</Text>}
+                  </View>
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -135,7 +139,10 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
                 disabled={isDisabled}
                 style={[styles.button, styles.rightButton, isDisabled && styles.disabled]}
               >
-                <Text style={styles.text}>▶ NEXT</Text>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <MaterialCommunityIcons name="chevron-right" size={18} color="white" style={{ marginRight: 4 }} />
+                  <Text style={{ fontSize: 16, color: "white" }}>Suivant</Text>
+                </View>
               </TouchableOpacity>
             </View>
           ) : (
@@ -148,7 +155,10 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
                 disabled={isDisabled}
                 style={[styles.button, styles.rightButton, isDisabled && styles.disabled]}
               >
-                <Text style={styles.text}>▶ START</Text>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <MaterialCommunityIcons name="gamepad-variant" size={18} color="white" style={{ marginRight: 4 }} />
+                  <Text style={{ fontSize: 16, color: "white" }}>Start</Text>
+                </View>
               </TouchableOpacity>
             </View>
           )}
