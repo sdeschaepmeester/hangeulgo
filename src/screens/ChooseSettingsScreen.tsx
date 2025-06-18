@@ -157,7 +157,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
               >
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <MaterialCommunityIcons name="gamepad-variant" size={18} color="white" style={{ marginRight: 4 }} />
-                  <Text style={{ fontSize: 16, color: "white" }}>Start</Text>
+                  <Text style={{ fontSize: 16, color: "white" }}>Commencer</Text>
                 </View>
               </TouchableOpacity>
             </View>
