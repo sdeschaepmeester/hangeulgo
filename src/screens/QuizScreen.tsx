@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator, TouchableOpacity, TextInput, ImageBackground, PanResponder, Vibration, Platform, UIManager, StyleSheet, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { View, Text, ActivityIndicator, TouchableOpacity, TextInput, ImageBackground, PanResponder, Vibration, Platform, UIManager, StyleSheet, TouchableWithoutFeedback, Keyboard, Dimensions } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
@@ -11,6 +11,7 @@ import { Question } from "@/types/Question";
 type Props = NativeStackScreenProps<RootStackParamList, "Quiz">;
 
 export default function QuizScreen({ route, navigation }: Props) {
+  const screenHeight = Dimensions.get("window").height;
   const { settings } = route.params;
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -96,97 +97,87 @@ export default function QuizScreen({ route, navigation }: Props) {
 
   return (
     <ImageBackground source={bgImage} style={styles.background} imageStyle={{ opacity: 0.8 }}>
-      <View style={styles.container} {...panResponder.panHandlers}>
-        {/* ----------------- Dismiss keyboard on touch outside ----------------- */}
+      <View style={[styles.innerContainer, { height: screenHeight }]} {...panResponder.panHandlers}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          {/* ----------------- Icon close ----------------- */}
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => navigation.replace("Home")}
-          >
-            <MaterialIcons name="close" size={28} color="black" />
-          </TouchableOpacity>
+          <View style={styles.touchableWrapper}>
+            {/* ----------------- Icon close ----------------- */}
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => navigation.replace("Home")}
+            >
+              <MaterialIcons name="close" size={28} color="black" />
+            </TouchableOpacity>
 
-          {/* ----------------- Number of questions ----------------- */}
-          <View style={styles.counterBar}>
-            <Text style={styles.counterText}>
-              Question {currentIndex + 1} / {questions.length}
-            </Text>
-          </View>
+            {/* ----------------- Number of questions ----------------- */}
+            <View style={styles.counterBar}>
+              <Text style={styles.counterText}>
+                Question {currentIndex + 1} / {questions.length}
+              </Text>
+            </View>
 
-          <View style={{ marginTop: "15%" }}>
-            {/* ----------------- Prompt box ----------------- */}
-            <PromptBox settings={settings} currentQuestion={current} />
+            <View style={{ marginTop: "15%" }}>
+              {/* ----------------- Prompt box ----------------- */}
+              <PromptBox settings={settings} currentQuestion={current} />
 
-            {/* ----------------- Translation input: enter korean answer  ----------------- */}
-            {settings.type === "translation" && settings.inputMode === "input" ? (
-              <TextInput
-                style={[styles.input, { backgroundColor: "#ccc" }]}
-                placeholder="Votre réponse en coréen"
-                value={userInput}
-                onChangeText={setUserInput}
-                editable={!showResult}
-              />
-            ) : (
-              // ----------------- Comprehension: several choices box ----------------- 
-              <View style={styles.choices}>
-                {current.choices?.map((choice: string) => (
-                  <TouchableOpacity
-                    key={choice}
-                    style={[
-                      styles.choice,
-                      selected === choice && {
-                        backgroundColor:
-                          choice === current.correctAnswer ? "#c6f6d5" : "#feb2b2",
-                      },
-                    ]}
-                    onPress={() => !showResult && checkAnswer(choice)}
-                    disabled={!!selected}
-                  >
-                    <Text>{choice}</Text>
-                  </TouchableOpacity>
-                ))}
+              {/* ----------------- Translation input: enter korean answer  ----------------- */}
+              {settings.type === "translation" && settings.inputMode === "input" ? (
+                <TextInput
+                  style={[styles.input, { backgroundColor: "#ccc" }]}
+                  placeholder="Votre réponse en coréen"
+                  value={userInput}
+                  onChangeText={setUserInput}
+                  editable={!showResult}
+                />
+              ) : (
+                // ----------------- Comprehension: several choices box ----------------- 
+                <View style={styles.choices}>
+                  {current.choices?.map((choice: string) => (
+                    <TouchableOpacity
+                      key={choice}
+                      style={[
+                        styles.choice,
+                        selected === choice && {
+                          backgroundColor:
+                            choice === current.correctAnswer ? "#c6f6d5" : "#feb2b2",
+                        },
+                      ]}
+                      onPress={() => !showResult && checkAnswer(choice)}
+                      disabled={!!selected}
+                    >
+                      <Text>{choice}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+            </View>
+
+            {/* ----------------- Feedback with icon and eventual correct answer ----------------- */}
+            {showResult && (
+              <View style={styles.feedbackContainer}>
+                <Feedback
+                  feedback={feedback}
+                  correctAnswer={current.correctAnswer}
+                  phonetic={current.phonetic}
+                />
               </View>
             )}
-          </View>
 
-          {/* ----------------- Feedback with icon and eventual correct answer ----------------- */}
-          {showResult && (
-            <View style={styles.feedbackContainer}>
-              <Feedback
-                feedback={feedback}
-                correctAnswer={current.correctAnswer}
-                phonetic={current.phonetic}
-              />
-            </View>
-          )}
-          {/* ----------------- Bottom button next or check answer ----------------- */}
-          {settings.type === "translation" && settings.inputMode === "input" ? (
-            <TouchableOpacity
-              style={[
-                styles.nextButton,
-                (!userInput && !showResult) && { opacity: 0.4 },
-              ]}
-              onPress={() => {
-                if (showResult) {
-                  next();
-                } else {
-                  checkAnswer(userInput);
-                }
-              }}
-              disabled={!userInput && !showResult}
-            >
-              <Text style={styles.nextButtonText}>
-                {showResult
-                  ? currentIndex + 1 >= questions.length
-                    ? "Voir les résultats"
-                    : "Prochaine question »"
-                  : "Valider ma réponse"}
-              </Text>
-            </TouchableOpacity>
-          ) : (
-            showResult && (
-              <TouchableOpacity style={styles.nextButton} onPress={next}>
+            {/* ----------------- Bottom button next or check answer ----------------- */}
+            {settings.type === "translation" && settings.inputMode === "input" ? (
+              <TouchableOpacity
+                style={[
+                  styles.nextButton,
+                  (!userInput && !showResult) && { opacity: 0.4 },
+                ]}
+                onPress={() => {
+                  if (showResult) {
+                    next();
+                  } else {
+                    checkAnswer(userInput);
+                  }
+                }}
+                disabled={!userInput && !showResult}
+              >
                 <Text style={styles.nextButtonText}>
                   {showResult
                     ? currentIndex + 1 >= questions.length
@@ -195,16 +186,30 @@ export default function QuizScreen({ route, navigation }: Props) {
                     : "Valider ma réponse"}
                 </Text>
               </TouchableOpacity>
-            )
-          )}
+            ) : (
+              showResult && (
+                <TouchableOpacity style={styles.nextButton} onPress={next}>
+                  <Text style={styles.nextButtonText}>
+                    {currentIndex + 1 >= questions.length
+                      ? "Voir les résultats"
+                      : "Prochaine question »"}
+                  </Text>
+                </TouchableOpacity>
+              )
+            )}
+          </View>
         </TouchableWithoutFeedback>
       </View>
     </ImageBackground>
   );
+
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20 },
+  innerContainer: {
+    padding: 20,
+  },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   counterBar: {
     position: "absolute",
@@ -273,4 +278,7 @@ const styles = StyleSheet.create({
     left: 20,
     right: 20,
   },
+  touchableWrapper: {
+    flex: 1,
+  }
 });

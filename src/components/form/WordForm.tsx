@@ -41,6 +41,8 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [isConnected, setIsConnected] = useState(false);
     const [koreanExists, setKoreanExists] = useState(false);
+    const [loadingSuggestion, setLoadingSuggestion] = useState(false);
+    const [noSuggestionFound, setNoSuggestionFound] = useState(false);
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     const frRef = useRef<TextInput>(null);
@@ -90,10 +92,19 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         onSuccess();
     };
 
+    // Call Azure suggestion API when the user types in the French input
     const handleKoreanSuggestion = async () => {
         if (!fr.trim() || !isConnected) return;
+        setLoadingSuggestion(true);
+        setNoSuggestionFound(false);
         const suggestion = await suggestKoreanTranslation(fr.trim());
-        if (suggestion) setKoSuggested(suggestion);
+        setLoadingSuggestion(false);
+
+        if (suggestion) {
+            setKoSuggested(suggestion);
+        } else {
+            setNoSuggestionFound(true);
+        }
     };
 
     const clearForm = () => {
@@ -128,24 +139,37 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
             </View>
 
             {/* ----------------- Azure korean suggestion if online ----------------- */}
-            {isConnected && fr.trim().length > 0 && !koSuggested && !edit && (
-                <TouchableOpacity style={styles.suggestionButton} onPress={handleKoreanSuggestion}>
-                    <Text style={styles.suggestionText}>💡 Suggérer une traduction coréenne</Text>
-                </TouchableOpacity>
-            )}
-
-            {koSuggested && !ko && (
-                <TouchableOpacity
-                    onPress={async () => {
-                        setKo(koSuggested);
-                        const exists = await checkIfKoreanWordExists(koSuggested);
-                        setKoreanExists(exists);
-                    }}
-                >
-                    <Text style={styles.suggestionBox}>
-                        👉 Appuyer pour remplir avec : {koSuggested}
-                    </Text>
-                </TouchableOpacity>
+            {isConnected && fr.trim().length > 0 && !edit && (
+                <>
+                    {!koSuggested && !noSuggestionFound && (
+                        <TouchableOpacity
+                            style={styles.suggestionButton}
+                            onPress={handleKoreanSuggestion}
+                            disabled={loadingSuggestion}
+                        >
+                            <Text style={styles.suggestionText}>
+                                {loadingSuggestion ? "⏳ Recherche en cours..." : "💡 Suggérer une traduction coréenne"}
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+                    {noSuggestionFound && !loadingSuggestion && (
+                        <Text style={styles.warningText}>❌ Aucune suggestion trouvée pour ce mot.</Text>
+                    )}
+                    {koSuggested && !loadingSuggestion && (
+                        <TouchableOpacity
+                            onPress={async () => {
+                                setKo(koSuggested);
+                                setKoSuggested(null);
+                                const exists = await checkIfKoreanWordExists(koSuggested);
+                                setKoreanExists(exists);
+                            }}
+                        >
+                            <Text style={styles.suggestionBox}>
+                                👉 Appuyer pour remplir avec : {koSuggested}
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+                </>
             )}
 
             {/* ----------------- Korean input ----------------- */}
