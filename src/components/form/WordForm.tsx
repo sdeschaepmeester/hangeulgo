@@ -117,6 +117,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     }}
                     style={styles.input}
                     placeholder="Ex : Bonjour"
+                    placeholderTextColor={"#696969"}
                     returnKeyType="next"
                     onSubmitEditing={() => koRef.current?.focus()}
                 />
@@ -156,6 +157,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     onBlur={handleKoBlur}
                     style={styles.input}
                     placeholder="Ex : 안녕하세요"
+                    placeholderTextColor={"#696969"}
                     keyboardType="default"
                     textContentType="none"
                     returnKeyType="next"
@@ -177,6 +179,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     onChangeText={setPhonetic}
                     style={styles.input}
                     placeholder="Ex : annyeonghaseyo"
+                    placeholderTextColor={"#696969"}
                     returnKeyType="done"
                     keyboardType="default"
                     onSubmitEditing={Keyboard.dismiss}

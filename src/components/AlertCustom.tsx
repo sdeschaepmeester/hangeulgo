@@ -1,12 +1,5 @@
 import React from "react";
-import {
-    View,
-    Text,
-    StyleSheet,
-    TouchableOpacity,
-    Modal,
-    Dimensions,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback, } from "react-native";
 import type { ReactNode } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -22,60 +15,51 @@ interface AlertCustomProps {
     cancelText?: string;
 }
 
-export default function AlertCustom({
-    visible,
-    icon,
-    iconColor = "#333",
-    title,
-    description,
-    onClose,
-    onConfirm,
-    confirmText = "Confirmer",
-    cancelText = "Annuler",
-}: AlertCustomProps) {
+export default function AlertCustom({ visible, icon, iconColor = "#333", title, description, onClose, onConfirm, confirmText = "Confirmer", cancelText = "Annuler", }: AlertCustomProps) {
     return (
         <Modal visible={visible} transparent animationType="fade">
-            <View style={styles.overlay}>
-                <View style={styles.container}>
-                    {/* ----------------- Close modale  ----------------- */}
-                    <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                        <MaterialCommunityIcons name="close" size={22} color="#999" />
-                    </TouchableOpacity>
-
-                    <View style={[styles.iconCircle, { borderColor: iconColor }]}>
-                        {icon}
-                    </View>
-
-                    <Text style={styles.title}>{title}</Text>
-                    <Text style={styles.description}>{description}</Text>
-
-                    {onConfirm ? (
-                        <View style={styles.buttonRow}>
-                            <TouchableOpacity
-                                onPress={onClose}
-                                style={[styles.button, styles.cancel]}
-                            >
-                                <Text style={styles.buttonText}>{cancelText}</Text>
+            <TouchableWithoutFeedback onPress={onClose}>
+                <View style={styles.overlay}>
+                    <TouchableWithoutFeedback onPress={() => { }}>
+                        <View style={styles.container}>
+                            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+                                <MaterialCommunityIcons name="close" size={22} color="#999" />
                             </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={onConfirm}
-                                style={[styles.button, styles.confirm]}
-                            >
-                                <Text style={styles.buttonText}>{confirmText}</Text>
-                            </TouchableOpacity>
+
+                            <View style={[styles.iconCircle, { borderColor: iconColor }]}>
+                                {icon}
+                            </View>
+
+                            <Text style={styles.title}>{title}</Text>
+                            <Text style={styles.description}>{description}</Text>
+
+                            {onConfirm ? (
+                                <View style={styles.buttonRow}>
+                                    <TouchableOpacity
+                                        onPress={onClose}
+                                        style={[styles.button, styles.cancel]}
+                                    >
+                                        <Text style={styles.buttonText}>{cancelText}</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={onConfirm}
+                                        style={[styles.button, styles.confirm]}
+                                    >
+                                        <Text style={styles.buttonText}>{confirmText}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            ) : (
+                                <TouchableOpacity onPress={onClose} style={styles.okButton}>
+                                    <Text style={styles.okText}>Ok</Text>
+                                </TouchableOpacity>
+                            )}
                         </View>
-                    ) : (
-                        <TouchableOpacity onPress={onClose} style={styles.okButton}>
-                            <Text style={styles.okText}>Ok</Text>
-                        </TouchableOpacity>
-                    )}
+                    </TouchableWithoutFeedback>
                 </View>
-            </View>
+            </TouchableWithoutFeedback>
         </Modal>
     );
 }
-
-const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
     overlay: {

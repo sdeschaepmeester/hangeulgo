@@ -62,10 +62,10 @@ export default function TagSelector({
     };
 
     return (
-        <View style={{ marginBottom: 16, width: "100%", position: "relative", zIndex: 10 }}>
+        <View style={{ marginBottom: 16, width: "100%" }}>
             {label && <Text style={styles.label}>{label}</Text>}
 
-            {/* --------------- Input zone --------------- */}
+            {/* --------- Input  --------- */}
             <TouchableOpacity
                 activeOpacity={1}
                 disabled={mode === "edit"}
@@ -106,7 +106,7 @@ export default function TagSelector({
                 )}
             </TouchableOpacity>
 
-            {/* --------------- Tag list --------------- */}
+            {/* --------- Dropdown options  --------- */}
             {open && (
                 <View
                     style={styles.dropdown}
@@ -148,7 +148,7 @@ export default function TagSelector({
                 </View>
             )}
 
-            {/* Selected tags */}
+            {/* --------- Selected tags  --------- */}
             {selectedTags.filter(Boolean).length > 0 && (
                 <View style={styles.selectedTagsContainer}>
                     {selectedTags.filter(Boolean).map((tag) => (
@@ -220,15 +220,12 @@ const styles = StyleSheet.create({
         marginRight: 6,
     },
     dropdown: {
-        position: "absolute",
-        top: 48,
-        left: 0,
-        right: 0,
+        marginTop: 6,
         backgroundColor: "#fff",
         borderWidth: 1,
         borderColor: "#eee",
         borderRadius: 6,
-        zIndex: 10,
-        elevation: 5,
-    },
+        zIndex: 1,
+        elevation: 3,
+    }
 });
