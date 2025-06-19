@@ -85,21 +85,6 @@ export default function QuizScreen({ route, navigation }: Props) {
     setSelected(answer);
   };
 
-  const getDirectionLabel = () => {
-    switch (settings.subType) {
-      case "frToKo":
-        return "Fr → Ko";
-      case "koToFr":
-        return "Ko → Fr";
-      case "koToKo":
-        return "Ko → Ko";
-      case "order":
-        return "Remettre en ordre";
-      default:
-        return "";
-    }
-  };
-
   if (questions.length === 0) {
     return (
       <View style={styles.center}>
@@ -127,12 +112,7 @@ export default function QuizScreen({ route, navigation }: Props) {
 
             <View style={{ marginTop: "15%" }}>
               <PromptBox settings={settings} currentQuestion={current} />
-              {(settings.type === "comprehension" || settings.type === "ecoute") && (
-                <Text style={{ textAlign: "center", fontWeight: "bold", marginVertical: 8 }}>
-                  {getDirectionLabel()}
-                </Text>
-              )}
-
+       
               {/* INPUT MODE */}
               {settings.inputMode === "input" && (
                 <TextInput

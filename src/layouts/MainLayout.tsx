@@ -1,7 +1,7 @@
 import React from "react";
-import { View, StyleSheet, Dimensions, ViewStyle } from "react-native";
+import { ScrollView, StyleSheet, Dimensions, ViewStyle } from "react-native";
 
-const screenWidth = Dimensions.get("window").width;
+const { width, height } = Dimensions.get("window");
 
 type Props = {
     children: React.ReactNode;
@@ -11,18 +11,25 @@ type Props = {
 
 export default function MainLayout({ children, style, noPadding = false }: Props) {
     return (
-        <View style={[styles.container, !noPadding && styles.padded, style]}>
+        <ScrollView
+            contentContainerStyle={[
+                styles.container,
+                !noPadding && styles.padded,
+                style,
+            ]}
+            showsVerticalScrollIndicator={false}
+        >
             {children}
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        minHeight: height,
         backgroundColor: "white",
     },
     padded: {
-        paddingHorizontal: 20,
+        paddingHorizontal: 5,
     },
 });
