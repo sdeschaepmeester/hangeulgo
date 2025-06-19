@@ -32,8 +32,8 @@ export async function injectPreviewLexicon() {
             { fr: "Merci (soutenu)", ko: "감사합니다", phonetic: "gamsahamnida", difficulty: "easy", tags: ["soutenu", "présentation"] },
             { fr: "Derien", ko: "아니에요", phonetic: "anieyo", difficulty: "easy", tags: ["courant"] },
             { fr: "Pas de problèmes", ko: "괜찮아요", phonetic: "gwaenchanayo", difficulty: "easy", tags: ["courant"] },
-            { fr: "Pardon", ko: "미안합니다", phonetic: "mianhamnida", difficulty: "easy", tags: ["soutenu"] },
-            { fr: "Pardon", ko: "미안해", phonetic: "mianhae", difficulty: "easy", tags: ["familier"] },
+            { fr: "Pardon (soutenu)", ko: "미안합니다", phonetic: "mianhamnida", difficulty: "easy", tags: ["soutenu"] },
+            { fr: "Pardon (familier)", ko: "미안해", phonetic: "mianhae", difficulty: "easy", tags: ["familier"] },
             { fr: "Oui", ko: "네", phonetic: "ne", difficulty: "easy", tags: ["basique"] },
             { fr: "Non", ko: "아니요", phonetic: "aniyo", difficulty: "easy", tags: ["basique"] },
         ];
