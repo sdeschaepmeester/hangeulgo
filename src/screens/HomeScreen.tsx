@@ -1,5 +1,13 @@
 import React from "react";
-import { View, StyleSheet, Dimensions, ScrollView, Image, TouchableOpacity, Text } from "react-native";
+import {
+    View,
+    StyleSheet,
+    Dimensions,
+    Image,
+    TouchableOpacity,
+    Text,
+    ScrollView,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
@@ -10,6 +18,7 @@ const screenWidth = Dimensions.get("window").width;
 
 export default function HomeScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
     return (
         <View style={styles.container}>
             {/* ---------- Header image + scores ---------- */}
@@ -29,10 +38,10 @@ export default function HomeScreen() {
                 </View>
             </View>
 
-            {/* ---------- Scrollable main content ---------- */}
+            {/* ---------- Main content ---------- */}
             <ScrollView
                 style={styles.body}
-                contentContainerStyle={styles.bodyContent}
+                contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
             >
                 <HomeSections />
@@ -50,15 +59,6 @@ const styles = StyleSheet.create({
         height: screenHeight * 0.35,
         width: "100%",
         overflow: "hidden",
-    },
-    body: {
-        width: "100%",
-        height: screenHeight * 0.65,
-    },
-    bodyContent: {
-        padding: 20,
-        paddingBottom: 40,
-        justifyContent: "space-evenly",
     },
     image: {
         width: "100%",
@@ -87,5 +87,14 @@ const styles = StyleSheet.create({
         color: "white",
         textAlign: "center",
         fontSize: 18,
-    }
+    },
+    body: {
+        width: "100%",
+        height: screenHeight * 0.65,
+    },
+    scrollContent: {
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 40,
+    },
 });

@@ -10,9 +10,9 @@ type Props = {
 };
 
 const labelMap: Record<GameSubType, string> = {
-    frToKo: "Fr → Ko",
-    koToFr: "Ko → Fr",
-    koToKo: "Ko → Ko (écoute)",
+    frToKo: "🇫🇷\u00A0→\u00A0🇰🇷",
+    koToFr: "🇰🇷\u00A0→\u00A0🇫🇷",
+    koToKo: "🇰🇷",
     order: "Remettre en ordre",
 };
 
