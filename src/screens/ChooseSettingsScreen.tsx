@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Dimensions }
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
 import type { Difficulty } from "@/types/Difficulty";
-import type { GameSettings, InputMode } from "@/types/GameSettings";
+import type { GameSettings, GameType, GameSubType, InputMode } from "@/types/GameSettings";
 import { getAllUniqueTags } from "@/services/tags";
 import { getSavedSettings, saveSettings, clearSettings } from "@/services/settings";
 import StepStructure from "@/components/chooseSettings/StepStructure";
@@ -20,34 +20,40 @@ const arcadeBg = require("../../assets/arcade.png");
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChooseSettings">;
 
+const fixedConfigByType: Record<"arrangement" | "ecriture", { subType: GameSubType; inputMode: InputMode }> = {
+  arrangement: { subType: "order", inputMode: "order" },
+  ecriture: { subType: "frToKo", inputMode: "input" },
+};
+
+const multipleSubTypes: Record<"comprehension" | "ecoute", GameSubType[]> = {
+  comprehension: ["frToKo", "koToFr"],
+  ecoute: ["koToKo", "koToFr"],
+};
+
 export default function ChooseSettingsScreen({ route, navigation }: Props) {
   const { type } = route.params;
+
+  const [subType, setSubType] = useState<GameSubType | null>(null);
+  const [inputMode, setInputMode] = useState<InputMode>("multiple");
   const [step, setStep] = useState(0);
   const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
   const [length, setLength] = useState<number>(10);
-  const [inputMode, setInputMode] = useState<InputMode>("multiple");
   const [rememberSettings, setRememberSettings] = useState(false);
   const [allTags, setAllTags] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [disabledDifficulties, setDisabledDifficulties] = useState<Difficulty[]>([]);
 
-  const steps = type === "translation"
-    ? [
-      () => <StepType inputMode={inputMode} onChange={setInputMode} />,
-      () => <StepThemes selectedTags={selectedTags} onChange={setSelectedTags} allTags={allTags} preselectedTags={rememberSettings ? selectedTags : undefined} />,
-      () => <StepDifficulty selected={selectedDifficulties} onChange={setSelectedDifficulties} disabledDifficultyList={disabledDifficulties} />,
-      () => <StepDuration selected={length} onSelect={setLength} />
-    ]
-    : [
-      () => <StepThemes selectedTags={selectedTags} onChange={setSelectedTags} allTags={allTags} preselectedTags={rememberSettings ? selectedTags : undefined} />,
-      () => <StepDifficulty selected={selectedDifficulties} onChange={setSelectedDifficulties} disabledDifficultyList={disabledDifficulties} />,
-      () => <StepDuration selected={length} onSelect={setLength} />
-    ];
+  const shouldAskSubType = type === "comprehension" || type === "ecoute";
 
-  const maxStep = steps.length - 1;
-  const isLastStep = step === maxStep;
-  const stepIsDifficulty = type === "translation" ? step === 2 : step === 1;
-  const isDisabled = stepIsDifficulty && selectedDifficulties.length === 0;
+  useEffect(() => {
+    if (type === "comprehension" || type === "ecoute") {
+      setInputMode("multiple");
+    } else {
+      const config = fixedConfigByType[type];
+      setSubType(config.subType);
+      setInputMode(config.inputMode);
+    }
+  }, [type]);
 
   useEffect(() => {
     getAllUniqueTags().then(setAllTags);
@@ -55,7 +61,6 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
       if (!saved) return;
       setSelectedDifficulties(saved.difficulties);
       setLength(saved.length);
-      if (saved.inputMode) setInputMode(saved.inputMode);
       if (saved.tags) setSelectedTags(saved.tags);
       setTimeout(() => setRememberSettings(true), 0);
     });
@@ -71,12 +76,29 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
     updateAvailableDifficulties();
   }, [selectedTags]);
 
+  const steps = [
+    ...(shouldAskSubType
+      ? [() => <StepType available={multipleSubTypes[type]} selected={subType} onChange={setSubType} />]
+      : []),
+    () => <StepThemes selectedTags={selectedTags} onChange={setSelectedTags} allTags={allTags} preselectedTags={rememberSettings ? selectedTags : undefined} />,
+    () => <StepDifficulty selected={selectedDifficulties} onChange={setSelectedDifficulties} disabledDifficultyList={disabledDifficulties} />,
+    () => <StepDuration selected={length} onSelect={setLength} />,
+  ];
+
+  const maxStep = steps.length - 1;
+  const isLastStep = step === maxStep;
+  const stepIsDifficulty = step === (shouldAskSubType ? 2 : 1);
+  const isDisabled = stepIsDifficulty && selectedDifficulties.length === 0;
+
   const startGame = () => {
+    if (!subType) return;
+
     const settings: GameSettings = {
       type,
+      subType,
+      inputMode,
       difficulties: selectedDifficulties,
       length,
-      ...(type === "translation" && { inputMode }),
       ...(selectedTags.length > 0 && { tags: selectedTags }),
     };
     if (rememberSettings) {
@@ -103,28 +125,23 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
   return (
     <View style={styles.container}>
       <ImageBackground source={arcadeBg} style={styles.background} resizeMode="cover">
-        {/* TOP - 15% */}
         <View style={styles.top}>
-          <Text style={styles.quizType}>
-            Quiz de {type === "translation" ? "traduction" : "compréhension"}
-          </Text>
+          <Text style={styles.quizType}>Quiz de {type}</Text>
           <TouchableOpacity style={styles.checkbox} onPress={toggleRememberSettings}>
             <View style={[styles.box, rememberSettings && styles.boxChecked]} />
             <Text style={styles.checkboxLabel}>Conserver les réglages</Text>
           </TouchableOpacity>
         </View>
 
-        {/* MIDDLE - 60% */}
-        <View style={styles.middle} >
+        <View style={styles.middle}>
           {renderStep()}
         </View>
 
-        {/* BOTTOM - 25% */}
         <View style={styles.bottom}>
           {!isLastStep ? (
             <View style={styles.stepButtonsRow}>
               <TouchableOpacity
-                onPress={step === 0 ? () => navigation.navigate("Home") : back}
+                onPress={step === 0 ? () => navigation.navigate("QuizList") : back}
                 style={[styles.button, styles.leftButton]}
               >
                 <Text style={styles.text}>
@@ -152,8 +169,8 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={startGame}
-                disabled={isDisabled}
-                style={[styles.button, styles.rightButton, isDisabled && styles.disabled]}
+                disabled={isDisabled || !subType}
+                style={[styles.button, styles.rightButton, (isDisabled || !subType) && styles.disabled]}
               >
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <MaterialCommunityIcons name="gamepad-variant" size={18} color="white" style={{ marginRight: 4 }} />
@@ -163,7 +180,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
             </View>
           )}
         </View>
-      </ImageBackground >
+      </ImageBackground>
     </View>
   );
 }

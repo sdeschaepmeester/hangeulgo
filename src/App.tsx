@@ -11,8 +11,10 @@ import ChooseSettingsScreen from "./screens/ChooseSettingsScreen";
 import QuizScreen from "./screens/QuizScreen";
 import ResultScreen from "./screens/ResultScreen";
 import ScoreScreen from "./screens/ScoreScreen";
+import QuizListScreen from "./screens/QuizListScreen";
+import SavedQuizScreen from "./screens/SavedQuizScreen";
 
-import { GameSettings } from "./types/GameSettings";
+import { GameSettings, GameType } from "./types/GameSettings";
 import { injectPreviewLexicon } from "@/data/injectPreviewLexicon";
 import { isFirstLaunch } from "./services/firstLaunch";
 import { initDatabase } from "@/db/database";
@@ -21,7 +23,7 @@ export type RootStackParamList = {
   Home: undefined;
   AddWord: undefined;
   Lexicon: undefined;
-  ChooseSettings: { type: "translation" | "comprehension" };
+  ChooseSettings: { type: GameType };
   Quiz: { settings: GameSettings };
   Result: {
     score: number;
@@ -29,6 +31,8 @@ export type RootStackParamList = {
     settings: Pick<GameSettings, "type" | "inputMode">;
   };
   Score: undefined;
+  QuizList: undefined;
+  SavedQuiz: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -66,6 +70,8 @@ export default function App() {
       { name: "Lexicon", component: LexiconScreen, title: "Réviser" },
       { name: "ChooseSettings", component: ChooseSettingsScreen, title: "Paramètres du jeu" },
       { name: "Score", component: ScoreScreen, title: "Mes scores" },
+      { name: "QuizList", component: QuizListScreen, title: "Types de quiz" },
+      { name: "SavedQuiz", component: SavedQuizScreen, title: "Quiz enregistrés" },
     ];
 
   return (
@@ -114,7 +120,6 @@ export default function App() {
             headerLeft: () => null,
           }}
         />
-
         <Stack.Screen
           name="Result"
           component={ResultScreen}

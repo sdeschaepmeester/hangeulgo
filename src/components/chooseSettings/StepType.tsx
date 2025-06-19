@@ -1,26 +1,35 @@
 import React from "react";
 import { Text, StyleSheet } from "react-native";
 import SelectPill from "@/components/SelectPill";
-import type { InputMode } from "@/types/GameSettings";
-
-const modes = [
-    { label: "QCM", value: "multiple", color: "#9da7ff" },
-    { label: "Saisie", value: "input", color: "#9da7ff" },
-];
+import type { GameSubType } from "@/types/GameSettings";
 
 type Props = {
-    inputMode: InputMode;
-    onChange: (mode: InputMode) => void;
+    available: GameSubType[];
+    selected: GameSubType | null;
+    onChange: (subType: GameSubType) => void;
 };
 
-export default function StepType({ inputMode, onChange }: Props) {
+const labelMap: Record<GameSubType, string> = {
+    frToKo: "Fr → Ko",
+    koToFr: "Ko → Fr",
+    koToKo: "Ko → Ko (écoute)",
+    order: "Remettre en ordre",
+};
+
+export default function StepType({ available, selected, onChange }: Props) {
+    const options = available.map((value) => ({
+        label: labelMap[value],
+        value,
+        color: "#9da7ff",
+    }));
+
     return (
         <>
-            <Text style={styles.label}>Mode de réponse</Text>
+            <Text style={styles.label}>Dans quel sens ?</Text>
             <SelectPill
-                options={modes}
-                selectedValue={inputMode}
-                onSelect={(val) => onChange(val as InputMode)}
+                options={options}
+                selectedValue={selected ?? ""}
+                onSelect={(val) => onChange(val as GameSubType)}
             />
         </>
     );

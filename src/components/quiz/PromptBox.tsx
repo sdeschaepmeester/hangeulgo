@@ -16,11 +16,12 @@ export default function PromptBox({ settings, currentQuestion }: PromptBoxProps)
 
     const shouldShowSpeaker =
         settings.type === "comprehension" ||
-        (settings.type === "translation" && settings.inputMode === "input");
+        settings.type === "ecoute" ||
+        settings.subType === "frToKo";
 
     const handleSpeak = () => {
         setIsSpeaking(true);
-        Speech.speak(currentQuestion.ko, {
+        Speech.speak(currentQuestion.prompt, {
             language: "ko-KR",
             rate: 0.9,
             pitch: 1.0,
@@ -30,7 +31,6 @@ export default function PromptBox({ settings, currentQuestion }: PromptBoxProps)
         });
     };
 
-    // Close question details when question changes
     useEffect(() => {
         setShowTags(false);
     }, [currentQuestion]);
@@ -38,11 +38,7 @@ export default function PromptBox({ settings, currentQuestion }: PromptBoxProps)
     return (
         <View style={styles.promptWrapper}>
             <View style={styles.promptBox}>
-                <Text style={styles.prompt}>
-                    {settings.type === "translation"
-                        ? currentQuestion.fr
-                        : currentQuestion.ko}
-                </Text>
+                <Text style={styles.prompt}>{currentQuestion.prompt}</Text>
 
                 <View style={styles.iconGroup}>
                     {currentQuestion.tags?.length > 0 && (
@@ -59,7 +55,7 @@ export default function PromptBox({ settings, currentQuestion }: PromptBoxProps)
                             <MaterialCommunityIcons
                                 name="volume-high"
                                 size={28}
-                                color={isSpeaking ? "#fff" : "#333"}
+                                color={isSpeaking ? "#7f8bff" : "#333"}
                             />
                         </TouchableOpacity>
                     )}

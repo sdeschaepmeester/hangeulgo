@@ -1,12 +1,20 @@
-import type { Difficulty } from "./Difficulty";
+import { Difficulty } from "./Difficulty";
 
-export type GameType = "translation" | "comprehension";
-export type InputMode = "multiple" | "input";
+export type GameType = "comprehension" | "ecriture" | "arrangement" | "ecoute";
+
+export type GameSubType =
+    | "koToFr"
+    | "frToKo"
+    | "order"
+    | "koToKo";
+
+export type InputMode = "multiple" | "input" | "order"; // QCM, Saisie, Remettre en ordre
 
 export interface GameSettings {
     type: GameType;
+    subType: GameSubType;
+    inputMode: InputMode;
     difficulties: Difficulty[];
     length: number | "unlimited";
     tags?: string[];
-    inputMode?: InputMode; // Only for traduction game
 }
