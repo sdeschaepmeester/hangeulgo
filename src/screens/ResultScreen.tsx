@@ -40,7 +40,7 @@ export default function ResultScreen({ route, navigation }: Props) {
   return (
     <ImageBackground
       source={require("../../assets/bg_pattern.png")}
-      resizeMode="repeat"
+      resizeMode="cover"
       style={styles.container}
     >
       <View style={styles.medalWrapper}>

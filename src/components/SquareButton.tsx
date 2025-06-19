@@ -1,12 +1,5 @@
 import React from "react";
-import {
-    TouchableOpacity,
-    Text,
-    View,
-    StyleSheet,
-    GestureResponderEvent,
-    Dimensions,
-} from "react-native";
+import { TouchableOpacity, Text, View, StyleSheet, GestureResponderEvent, Dimensions, } from "react-native";
 import type { ReactNode } from "react";
 
 interface Props {
@@ -16,9 +9,19 @@ interface Props {
     onClick: (event: GestureResponderEvent) => void;
 }
 
+const screenWidth = Dimensions.get("window").width;
+const isTablet = screenWidth >= 600;
+
 export default function SquareButton({ icon, label, bgColor = "#eee", onClick }: Props) {
     return (
-        <TouchableOpacity style={[styles.button, { backgroundColor: bgColor }]} onPress={onClick}>
+        <TouchableOpacity
+            style={[
+                styles.button,
+                isTablet ? styles.buttonTablet : styles.buttonMobile,
+                { backgroundColor: bgColor },
+            ]}
+            onPress={onClick}
+        >
             <View style={styles.content}>
                 <View style={styles.iconContainer}>{icon}</View>
                 <Text style={styles.label}>{label}</Text>
@@ -30,16 +33,22 @@ export default function SquareButton({ icon, label, bgColor = "#eee", onClick }:
 const styles = StyleSheet.create({
     button: {
         flex: 1,
-        aspectRatio: 1,
         marginHorizontal: 4,
         borderRadius: 8,
         justifyContent: "center",
         alignItems: "center",
     },
+    buttonMobile: {
+        aspectRatio: 1,
+    },
+    buttonTablet: { // Avoid square because it's too big on tablets
+        paddingVertical: 16, 
+    },
     content: {
         alignItems: "center",
         gap: 6,
         width: "100%",
+        paddingVertical: 8,
     },
     iconContainer: {
         width: "50%",
