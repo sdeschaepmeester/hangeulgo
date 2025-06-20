@@ -168,11 +168,8 @@ export default function QuizScreen({ route, navigation }: Props) {
                 <OrderInput
                   correctAnswer={currentQuestion.correctAnswer}
                   onChange={(val) => setUserInput(val)}
-                  onSubmit={(val) => {
-                    setUserInput(val);
-                    checkAnswer(val);
-                  }}
                   disabled={showResult}
+                  questionKey={currentIndex}
                 />
               )}
             </View>

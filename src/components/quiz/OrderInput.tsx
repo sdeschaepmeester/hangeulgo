@@ -5,14 +5,15 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 type Props = {
     correctAnswer: string;
     onChange: (userAnswer: string) => void;
-    onSubmit: (userAnswer: string) => void;
+    questionKey: string | number;
     disabled: boolean;
 };
 
-export default function OrderInput({ correctAnswer, onChange, onSubmit, disabled }: Props) {
+export default function OrderInput({ correctAnswer, onChange, questionKey, disabled }: Props) {
     const pieces = useMemo(() => {
         const clean = correctAnswer.trim();
-        return clean.length <= 4 ? clean.split("") : clean.split(" ");
+        const split = clean.length <= 4 ? clean.split("") : clean.split(" ");
+        return split.length >= 2 ? split : [];
     }, [correctAnswer]);
 
     const [shuffled, setShuffled] = useState<string[]>([]);
@@ -23,7 +24,7 @@ export default function OrderInput({ correctAnswer, onChange, onSubmit, disabled
         setShuffled(shuffledArray);
         setUserPieces([]);
         onChange("");
-    }, [correctAnswer]);
+    }, [correctAnswer, pieces, questionKey]);
 
     const remaining = shuffled.filter((p, idx, arr) =>
         userPieces.filter((x) => x === p).length < arr.filter((x, i) => x === p && i <= idx).length
