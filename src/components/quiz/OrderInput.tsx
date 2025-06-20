@@ -12,7 +12,7 @@ type Props = {
 export default function OrderInput({ correctAnswer, onChange, questionKey, disabled }: Props) {
     const pieces = useMemo(() => {
         const clean = correctAnswer.trim();
-        const split = clean.length <= 4 ? clean.split("") : clean.split(" ");
+        const split = clean.split("");
         return split.length >= 2 ? split : [];
     }, [correctAnswer]);
 
@@ -26,9 +26,11 @@ export default function OrderInput({ correctAnswer, onChange, questionKey, disab
         onChange("");
     }, [correctAnswer, pieces, questionKey]);
 
-    const remaining = shuffled.filter((p, idx, arr) =>
-        userPieces.filter((x) => x === p).length < arr.filter((x, i) => x === p && i <= idx).length
-    );
+    const remaining = shuffled.filter((p, idx, arr) => {
+        const usedCount = userPieces.filter((x) => x === p).length;
+        const totalCountBefore = arr.slice(0, idx + 1).filter((x) => x === p).length;
+        return usedCount < totalCountBefore;
+    });
 
     const assembledAnswer = userPieces.join(correctAnswer.length <= 4 ? "" : " ");
 

@@ -7,14 +7,12 @@ function shuffle<T>(array: T[]): T[] {
     return [...array].sort(() => Math.random() - 0.5);
 }
 
-function isTooShortForOrderQuiz(word: string): boolean {
-    const clean = word.trim();
-    if (clean.includes(" ")) {
-        return clean.split(" ").length <= 1;
-    } else {
-        return clean.length <= 1;
-    }
+// Valid for puzzle game
+function isValidForArrangement(word: string): boolean {
+    const pieces = word.trim().split("");
+    return pieces.length >= 2;
 }
+
 
 export async function generateQuestions(settings: GameSettings): Promise<Question[]> {
     const db = await dbPromise;
@@ -57,9 +55,9 @@ export async function generateQuestions(settings: GameSettings): Promise<Questio
         );
     }
 
-    // exclude words that are too short for the puzzle quiz
+    // For puzzle game, filter out entries that are too short or don't have spaces
     if (settings.type === "arrangement") {
-        rows = rows.filter((entry) => !isTooShortForOrderQuiz(entry.ko));
+        rows = rows.filter((entry) => isValidForArrangement(entry.ko));
     }
 
     const baseSet = shuffle(rows);
@@ -107,12 +105,6 @@ export async function generateQuestions(settings: GameSettings): Promise<Questio
                 q.prompt = entry.fr;
                 q.correctAnswer = entry.ko;
                 break;
-
-            case "arrangement":
-                q.prompt = entry.fr;
-                q.correctAnswer = entry.ko;
-                break;
-
             case "ecoute":
                 if (settings.subType === "koToFr") {
                     q.prompt = entry.ko;
@@ -130,8 +122,15 @@ export async function generateQuestions(settings: GameSettings): Promise<Questio
                     ]);
                 }
                 break;
+            case "arrangement":
+                q.prompt = entry.fr;
+                q.correctAnswer = entry.ko;
+                q.choices = shuffle([
+                    entry.ko,
+                    ...shuffle(rows.map((e) => e.ko).filter((v) => v !== entry.ko)).slice(0, 3),
+                ]);
+                break;
         }
-
         return q;
     });
 

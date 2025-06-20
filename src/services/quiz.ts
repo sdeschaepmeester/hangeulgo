@@ -1,6 +1,7 @@
 import { dbPromise } from "@/db/database";
 import type { GameSettings } from "@/types/GameSettings";
 import type { SavedQuizEntry } from "@/types/SavedQuizEntry";
+import { generateQuestions } from "./quizGenerator";
 
 /**
  * Save a custom quiz to the database.
@@ -72,4 +73,16 @@ export async function getSavedQuizCount(): Promise<number> {
     SELECT COUNT(*) as count FROM saved_quiz
   `);
     return result?.count ?? 0;
+}
+
+/**
+ * Check if a quiz is valid by generating questions based on the settings.
+ */
+export async function isQuizValid(settings: GameSettings): Promise<boolean> {
+    try {
+        const questions = await generateQuestions(settings);
+        return questions.length > 0;
+    } catch (error) {
+        return false;
+    }
 }

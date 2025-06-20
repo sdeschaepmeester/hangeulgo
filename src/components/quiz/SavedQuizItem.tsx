@@ -46,6 +46,16 @@ export default function SavedQuizItem({ quiz, onDelete, onSelect }: Props) {
                         <MaterialCommunityIcons name="circle" size={14} color="red" />
                     )}
                 </View>
+
+                {Array.isArray(quiz.tags) && quiz.tags.length > 0 && (
+                    <View style={styles.tagRow}>
+                        {quiz.tags.map((tag) => (
+                            <View key={tag} style={styles.tag}>
+                                <Text style={styles.tagText}>{tag}</Text>
+                            </View>
+                        ))}
+                    </View>
+                )}
             </View>
 
             <View style={styles.actions}>
@@ -87,6 +97,22 @@ const styles = StyleSheet.create({
     difficultyRow: {
         flexDirection: "row",
         gap: 6,
+        marginBottom: 6,
+    },
+    tagRow: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: 6,
+    },
+    tag: {
+        backgroundColor: "#e0e0e0",
+        paddingHorizontal: 8,
+        paddingVertical: 2,
+        borderRadius: 6,
+    },
+    tagText: {
+        fontSize: 12,
+        color: "#444",
     },
     actions: {
         flexDirection: "row",

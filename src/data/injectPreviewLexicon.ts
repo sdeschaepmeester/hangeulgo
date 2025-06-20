@@ -2,12 +2,17 @@ import { dbPromise } from "@/db/database";
 
 export async function injectPreviewLexicon() {
     const db = await dbPromise;
-
-    // If lexicon table already has entries, skip the injection
-    const existing = await db.getFirstAsync<{ count: number }>("SELECT COUNT(*) as count FROM lexicon");
-    if (existing?.count && existing.count > 0) {
-        return;
-    }
+    
+    await db.runAsync(`
+    CREATE TABLE IF NOT EXISTS lexicon (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      fr TEXT NOT NULL,
+      ko TEXT NOT NULL,
+      phonetic TEXT,
+      difficulty TEXT CHECK(difficulty IN ('easy', 'medium', 'hard')),
+      active INTEGER NOT NULL DEFAULT 1
+    );
+  `);
 
     await db.runAsync(`
     CREATE TABLE IF NOT EXISTS lexicon_tags (
@@ -15,7 +20,7 @@ export async function injectPreviewLexicon() {
       lexicon_id INTEGER,
       tag TEXT,
       FOREIGN KEY (lexicon_id) REFERENCES lexicon(id)
-    )
+    );
   `);
 
     await db.runAsync(`
@@ -28,7 +33,7 @@ export async function injectPreviewLexicon() {
       length TEXT,
       difficulties TEXT,
       tags TEXT
-    )
+    );
   `);
 
     const entries: {
@@ -46,7 +51,6 @@ export async function injectPreviewLexicon() {
             { fr: "Merci (soutenu)", ko: "감사합니다", phonetic: "gamsahamnida", difficulty: "easy", tags: ["Soutenu"] },
             { fr: "Oui", ko: "네", phonetic: "ne", difficulty: "easy", tags: [] },
             { fr: "Non", ko: "아니요", phonetic: "aniyo", difficulty: "easy", tags: [] },
-
             // Famille
             { fr: "Maman", ko: "엄마", phonetic: "eomma", difficulty: "easy", tags: ["Famille"] },
             { fr: "Papa", ko: "아빠", phonetic: "appa", difficulty: "easy", tags: ["Famille"] },
@@ -56,10 +60,8 @@ export async function injectPreviewLexicon() {
             { fr: "Sœur aînée (pour fille)", ko: "언니", phonetic: "eonni", difficulty: "medium", tags: ["Famille"] },
             { fr: "Parents", ko: "부모님", phonetic: "bumonim", difficulty: "medium", tags: ["Famille"] },
             { fr: "Cousin", ko: "사촌", phonetic: "sachon", difficulty: "medium", tags: ["Famille"] },
-            { fr: "Cousine", ko: "사촌", phonetic: "sachon", difficulty: "medium", tags: ["Famille"] },
             { fr: "Grand-père", ko: "할아버지", phonetic: "harabeoji", difficulty: "medium", tags: ["Famille"] },
             { fr: "Grand-mère", ko: "할머니", phonetic: "halmeoni", difficulty: "medium", tags: ["Famille"] },
-
             // Nourriture
             { fr: "Riz", ko: "밥", phonetic: "bap", difficulty: "easy", tags: ["Nourriture"] },
             { fr: "Soupe", ko: "국", phonetic: "guk", difficulty: "easy", tags: ["Nourriture"] },
@@ -67,7 +69,6 @@ export async function injectPreviewLexicon() {
             { fr: "Poulet frit", ko: "치킨", phonetic: "chikin", difficulty: "easy", tags: ["Nourriture"] },
             { fr: "Barbecue coréen", ko: "불고기", phonetic: "bulgogi", difficulty: "medium", tags: ["Nourriture"] },
             { fr: "Piment", ko: "고추", phonetic: "gochu", difficulty: "medium", tags: ["Nourriture"] },
-
             // Pays
             { fr: "Corée", ko: "한국", phonetic: "hanguk", difficulty: "easy", tags: ["Pays"] },
             { fr: "France", ko: "프랑스", phonetic: "peurangseu", difficulty: "easy", tags: ["Pays"] },
@@ -76,7 +77,6 @@ export async function injectPreviewLexicon() {
             { fr: "États-Unis", ko: "미국", phonetic: "miguk", difficulty: "easy", tags: ["Pays"] },
         ];
 
-    // Insert words and their tags into the lexicon
     for (const entry of entries) {
         try {
             const inserted = await db.getFirstAsync<{ id: number }>(
@@ -94,20 +94,33 @@ export async function injectPreviewLexicon() {
                 }
             }
         } catch (err) {
-            console.error(`Error: "${entry.fr}"`, err);
+            console.error(`Error inserting: "${entry.fr}"`, err);
         }
     }
 
-    // Insert two sample quizzes
+    // Quiz Famille
     await db.runAsync(
         `INSERT INTO saved_quiz (name, type, subType, inputMode, length, difficulties, tags)
      VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        ["Quiz Famille", "comprehension", "koToFr", "multiple", "normal", JSON.stringify(["easy", "medium"]), JSON.stringify(["Famille"])]
+        "Quiz Famille",
+        "comprehension",
+        "koToFr",
+        "multiple",
+        "20",
+        JSON.stringify(["easy", "medium"]),
+        JSON.stringify(["Famille"])
     );
 
+    // Quiz Pays
     await db.runAsync(
         `INSERT INTO saved_quiz (name, type, subType, inputMode, length, difficulties, tags)
      VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        ["Quiz Pays", "comprehension", "koToFr", "multiple", "normal", JSON.stringify(["easy"]), JSON.stringify(["Pays"])]
+        "Quiz Pays",
+        "comprehension",
+        "koToFr",
+        "multiple",
+        "20",
+        JSON.stringify(["easy"]),
+        JSON.stringify(["Pays"])
     );
 }

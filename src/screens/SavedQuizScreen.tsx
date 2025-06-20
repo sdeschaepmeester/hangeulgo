@@ -4,21 +4,20 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import NavBar from "@/components/NavBar";
 import AlertCustom from "@/components/AlertCustom";
-import { getAllSavedQuizzes, deleteSavedQuiz } from "@/services/quiz";
+import { getAllSavedQuizzes, deleteSavedQuiz, isQuizValid } from "@/services/quiz";
 import SavedQuizList from "@/components/quiz/SavedQuizList";
 import type { SavedQuizEntry } from "@/types/SavedQuizEntry";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
 import IconButton from "@/components/IconButton";
-import { ScrollView } from "react-native-gesture-handler";
 
 if (Platform.OS === "android") {
     UIManager.setLayoutAnimationEnabledExperimental?.(true);
 }
 
 export default function SavedQuizScreen() {
-    const [quizzes, setQuizzes] = useState<SavedQuizEntry[]>([]);
+    const [quizzes, setQuizzes] = useState<(SavedQuizEntry & { disabled?: boolean })[]>([]);
     const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
     const [confirmDeleteAll, setConfirmDeleteAll] = useState(false);
 
@@ -26,7 +25,17 @@ export default function SavedQuizScreen() {
 
     const fetchQuizzes = async () => {
         const all = await getAllSavedQuizzes();
-        setQuizzes(all);
+
+        const withValidity = await Promise.all(
+            all.map(async (quiz) => {
+                const valid = await isQuizValid(quiz);
+                console.log(`Quiz ${quiz.id} validity: ${valid}`);
+                console.log(quiz);
+                return { ...quiz, disabled: !valid };
+            })
+        );
+
+        setQuizzes(withValidity);
     };
 
     useEffect(() => {
@@ -49,7 +58,9 @@ export default function SavedQuizScreen() {
         fetchQuizzes();
     };
 
-    const handleSelect = (quiz: SavedQuizEntry) => {
+    const handleSelect = (quiz: SavedQuizEntry & { disabled?: boolean }) => {
+        if (quiz.disabled) return;
+
         navigation.navigate("Quiz", {
             settings: {
                 type: quiz.type,
@@ -150,5 +161,5 @@ const styles = StyleSheet.create({
         marginTop: 40,
         fontSize: 16,
         color: "#666",
-    }
+    },
 });
