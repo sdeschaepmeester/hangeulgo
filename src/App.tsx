@@ -40,7 +40,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function App() {
   useEffect(() => {
     initDatabase().catch(console.error);
-
     isFirstLaunch().then((firstTime) => {
       if (firstTime) {
         injectPreviewLexicon();

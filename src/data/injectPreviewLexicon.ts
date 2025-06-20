@@ -94,7 +94,7 @@ export async function injectPreviewLexicon() {
                 }
             }
         } catch (err) {
-            console.error(`Erreur lors de l'insertion de "${entry.fr}"`, err);
+            console.error(`Error: "${entry.fr}"`, err);
         }
     }
 
@@ -102,12 +102,12 @@ export async function injectPreviewLexicon() {
     await db.runAsync(
         `INSERT INTO saved_quiz (name, type, subType, inputMode, length, difficulties, tags)
      VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        ["Quiz Famille", "comprehension", "koToFr", "multiple", "normal", "easy,medium", "Famille"]
+        ["Quiz Famille", "comprehension", "koToFr", "multiple", "normal", JSON.stringify(["easy", "medium"]), JSON.stringify(["Famille"])]
     );
 
     await db.runAsync(
         `INSERT INTO saved_quiz (name, type, subType, inputMode, length, difficulties, tags)
      VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        ["Quiz Pays", "comprehension", "koToFr", "multiple", "normal", "easy", "Pays"]
+        ["Quiz Pays", "comprehension", "koToFr", "multiple", "normal", JSON.stringify(["easy"]), JSON.stringify(["Pays"])]
     );
 }
