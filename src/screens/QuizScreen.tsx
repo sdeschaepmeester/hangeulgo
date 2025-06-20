@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator, TouchableOpacity, TextInput, ImageBackground, PanResponder, Vibration, Platform, UIManager, StyleSheet, TouchableWithoutFeedback, Keyboard, Dimensions, } from "react-native";
+import { View, Text, ActivityIndicator, TouchableOpacity, TextInput, ImageBackground, PanResponder, Vibration, Platform, UIManager, StyleSheet, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
@@ -13,7 +14,6 @@ import OrderInput from "@/components/quiz/OrderInput";
 type Props = NativeStackScreenProps<RootStackParamList, "Quiz">;
 
 export default function QuizScreen({ route, navigation }: Props) {
-  const screenHeight = Dimensions.get("window").height;
   const { settings } = route.params;
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -107,144 +107,153 @@ export default function QuizScreen({ route, navigation }: Props) {
 
   return (
     <ImageBackground source={bgImage} style={styles.background} imageStyle={{ opacity: 0.8 }}>
-      <View style={[styles.innerContainer, { height: screenHeight }]} {...panResponder.panHandlers}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <View style={styles.touchableWrapper}>
-            {/* ----------- Close button ----------- */}
-            <TouchableOpacity style={styles.closeButton} onPress={() => navigation.replace("Home")}>
-              <MaterialIcons name="close" size={28} color="black" />
-            </TouchableOpacity>
+      <SafeAreaView style={styles.safeContainer} edges={["bottom"]}>
+        {/* ----------- Header ----------- */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.replace("Home")} style={styles.closeButton}>
+            <MaterialIcons name="close" size={28} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.counterText}>
+            Question {currentIndex + 1} / {questions.length}
+          </Text>
+        </View>
 
-            {/* ----------- Counter -----------*/}
-            <View style={styles.counterBar}>
-              <Text style={styles.counterText}>
-                Question {currentIndex + 1} / {questions.length}
+        {/* ----------- Scrollable Middle Section ----------- */}
+        <ScrollView
+          contentContainerStyle={styles.middle}
+          keyboardShouldPersistTaps="handled"
+          {...panResponder.panHandlers}
+        >
+          {settings.type === "ecoute" ? (
+            <ListenPrompt prompt={currentQuestion.prompt} tags={currentQuestion.tags} />
+          ) : (
+            <PromptBox currentQuestion={currentQuestion} settings={settings} />
+          )}
+
+          {settings.inputMode === "input" && (
+            <TextInput
+              style={[styles.input, { backgroundColor: "#ccc" }]}
+              placeholder="Votre réponse en coréen"
+              value={userInput}
+              onChangeText={setUserInput}
+              editable={!showResult}
+            />
+          )}
+
+          {settings.inputMode === "multiple" && (
+            <View style={styles.choices}>
+              {currentQuestion.choices?.map((choice, index) => (
+                <TouchableOpacity
+                  key={`${choice}-${index}`}
+                  style={[
+                    styles.choice,
+                    selected === choice && {
+                      backgroundColor:
+                        choice === currentQuestion.correctAnswer ? "#c6f6d5" : "#feb2b2",
+                    },
+                  ]}
+                  onPress={() => !showResult && checkAnswer(choice)}
+                  disabled={!!selected}
+                >
+                  <Text>{choice}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+
+          {isPuzzle && (
+            <OrderInput
+              correctAnswer={currentQuestion.correctAnswer}
+              onChange={setUserInput}
+              disabled={showResult}
+              questionKey={currentIndex}
+            />
+          )}
+        </ScrollView>
+
+        {/* ----------- Bottom Section ----------- */}
+        <View style={styles.footer}>
+          {showResult && (
+            <Feedback feedback={feedback} correctAnswer={currentQuestion.correctAnswer} />
+          )}
+          {(settings.inputMode === "input" || settings.inputMode === "order") ? (
+            <TouchableOpacity
+              style={[styles.nextButton, isDisabled && { opacity: 0.4 }]}
+              onPress={() => {
+                if (showResult) {
+                  next();
+                } else {
+                  checkAnswer(userInput);
+                }
+              }}
+              disabled={isDisabled}
+            >
+              <Text style={styles.nextButtonText}>
+                {showResult
+                  ? currentIndex + 1 >= questions.length
+                    ? "Voir les résultats"
+                    : "Prochaine question »"
+                  : "Valider ma réponse"}
               </Text>
-            </View>
-
-            <View style={{ marginTop: "15%" }}>
-              {/* ----------- Prompt ----------- */}
-              {settings.type === "ecoute" ? (
-                <ListenPrompt prompt={currentQuestion.prompt} tags={currentQuestion.tags} />
-              ) : (
-                <PromptBox currentQuestion={currentQuestion} settings={settings} />
-              )}
-
-              {/* ----------- Input free form ----------- */}
-              {settings.inputMode === "input" && (
-                <TextInput
-                  style={[styles.input, { backgroundColor: "#ccc" }]}
-                  placeholder="Votre réponse en coréen"
-                  value={userInput}
-                  onChangeText={setUserInput}
-                  editable={!showResult}
-                />
-              )}
-
-              {/* ----------- Multiple choice ----------- */}
-              {settings.inputMode === "multiple" && (
-                <View style={styles.choices}>
-                  {currentQuestion.choices?.map((choice, index) => (
-                    <TouchableOpacity
-                      key={`${choice}-${index}`}
-                      style={[
-                        styles.choice,
-                        selected === choice && {
-                          backgroundColor:
-                            choice === currentQuestion.correctAnswer ? "#c6f6d5" : "#feb2b2",
-                        },
-                      ]}
-                      onPress={() => !showResult && checkAnswer(choice)}
-                      disabled={!!selected}
-                    >
-                      <Text>{choice}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              )}
-
-              {/* ----------- Puzzle input ----------- */}
-              {isPuzzle && (
-                <OrderInput
-                  correctAnswer={currentQuestion.correctAnswer}
-                  onChange={(val) => setUserInput(val)}
-                  disabled={showResult}
-                  questionKey={currentIndex}
-                />
-              )}
-            </View>
-
-            {/* ----------- Feedback ----------- */}
-            {showResult && (
-              <View style={styles.feedbackContainer}>
-                <Feedback
-                  feedback={feedback}
-                  correctAnswer={currentQuestion.correctAnswer}
-                />
-              </View>
-            )}
-
-            {/* ----------- Validate / Next button ----------- */}
-            {(settings.inputMode === "input" || settings.inputMode === "order") ? (
-              <TouchableOpacity
-                style={[styles.nextButton, isDisabled && { opacity: 0.4 }]}
-                onPress={() => {
-                  if (showResult) {
-                    next();
-                  } else {
-                    checkAnswer(userInput);
-                  }
-                }}
-                disabled={isDisabled}
-              >
+            </TouchableOpacity>
+          ) : (
+            showResult && (
+              <TouchableOpacity style={styles.nextButton} onPress={next}>
                 <Text style={styles.nextButtonText}>
-                  {showResult
-                    ? currentIndex + 1 >= questions.length
-                      ? "Voir les résultats"
-                      : "Prochaine question »"
-                    : "Valider ma réponse"}
+                  {currentIndex + 1 >= questions.length
+                    ? "Voir les résultats"
+                    : "Prochaine question »"}
                 </Text>
               </TouchableOpacity>
-            ) : (
-              showResult && (
-                <TouchableOpacity style={styles.nextButton} onPress={next}>
-                  <Text style={styles.nextButtonText}>
-                    {currentIndex + 1 >= questions.length
-                      ? "Voir les résultats"
-                      : "Prochaine question »"}
-                  </Text>
-                </TouchableOpacity>
-              )
-            )}
-          </View>
-        </TouchableWithoutFeedback>
-      </View>
+            )
+          )}
+        </View>
+      </SafeAreaView>
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  background: { flex: 1, width: "100%", height: "100%" },
-  center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  innerContainer: { padding: 20 },
-  counterBar: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    padding: 10,
-    backgroundColor: "rgba(255,255,255,0.5)",
+  background: { flex: 1 },
+  safeContainer: { flex: 1 },
+  header: {
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "rgba(255,255,255,0.4)",
   },
-  counterText: { fontSize: 16, fontWeight: "600" },
   closeButton: {
-    position: "absolute",
-    top: 0,
-    left: 10,
     padding: 8,
-    zIndex: 20,
   },
-  touchableWrapper: { flex: 1 },
+  counterText: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  middle: {
+    flexGrow: 1,
+    padding: 20,
+    paddingBottom: 40,
+  },
+  footer: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    backgroundColor: "transparent",
+  },
+  nextButton: {
+    marginTop: 16,
+    backgroundColor: "#7f8bff",
+    paddingVertical: 14,
+    borderRadius: 8,
+  },
+  nextButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 16,
+  },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -252,8 +261,12 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 18,
     textAlign: "center",
+    marginTop: 20,
   },
-  choices: { gap: 12 },
+  choices: {
+    gap: 12,
+    marginTop: 20,
+  },
   choice: {
     padding: 16,
     borderWidth: 1,
@@ -261,26 +274,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: "#f9f9f9",
   },
-  feedbackContainer: {
-    position: "absolute",
-    bottom: "20%",
-    left: 20,
-    right: 20,
-  },
-  nextButton: {
-    position: "absolute",
-    bottom: 70,
-    alignSelf: "center",
-    backgroundColor: "#7f8bff",
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    width: "100%",
-  },
-  nextButtonText: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 16,
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
