@@ -14,19 +14,19 @@ export default function HomeSections() {
 
     return (
         <View style={styles.container}>
-            {/* Exercices section */}
-            <SectionCardGame title="Exercices">
+            {/* Play Section */}
+            <SectionCardGame title="Jouer">
                 <SquareButton
-                    icon={<MaterialCommunityIcons name="brain" style={styles.icon} />}
-                    label="Compréhension"
+                    icon={<MaterialCommunityIcons name="gamepad-variant" style={styles.icon} />}
+                    label="Jouer"
                     bgColor="#f6c6c6"
-                    onClick={() => navigation.navigate("ChooseSettings", { type: "comprehension" })}
+                    onClick={() => navigation.navigate("QuizList")}
                 />
                 <SquareButton
-                    icon={<MaterialCommunityIcons name="translate" style={styles.icon} />}
-                    label="Traduction"
+                    icon={<MaterialCommunityIcons name="content-save-outline" style={styles.icon} />}
+                    label="Mes quiz"
                     bgColor="#f6c6c6"
-                    onClick={() => navigation.navigate("ChooseSettings", { type: "translation" })}
+                    onClick={() => navigation.navigate("SavedQuiz")}
                 />
             </SectionCardGame>
 

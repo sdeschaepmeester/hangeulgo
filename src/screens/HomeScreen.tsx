@@ -1,18 +1,23 @@
 import React from "react";
-import { View, StyleSheet, Dimensions, ScrollView, Image, TouchableOpacity, Text } from "react-native";
+import {
+    View,
+    StyleSheet,
+    Image,
+    TouchableOpacity,
+    Text,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
 import HomeSections from "@/components/sections/HomeSection";
-
-const screenHeight = Dimensions.get("window").height;
-const screenWidth = Dimensions.get("window").width;
+import MainLayout from "@/layouts/MainLayout";
 
 export default function HomeScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
     return (
-        <View style={styles.container}>
-            {/* ---------- Header image + scores ---------- */}
+        <MainLayout scrollable>
+            {/* ----------- Image top full width ----------- */}
             <View style={styles.topSection}>
                 <Image
                     source={require("../../assets/background_home.png")}
@@ -29,36 +34,18 @@ export default function HomeScreen() {
                 </View>
             </View>
 
-            {/* ---------- Scrollable main content ---------- */}
-            <ScrollView
-                style={styles.body}
-                contentContainerStyle={styles.bodyContent}
-                showsVerticalScrollIndicator={false}
-            >
-                <HomeSections />
-            </ScrollView>
-        </View>
+            {/* ----------- Contenu scrollable (avec padding via MainLayout) ----------- */}
+            <HomeSections />
+        </MainLayout>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        height: screenHeight,
-        width: screenWidth,
-    },
     topSection: {
-        height: screenHeight * 0.35,
-        width: "100%",
+        width: "110%",
+        height: 260,
         overflow: "hidden",
-    },
-    body: {
-        width: "100%",
-        height: screenHeight * 0.65,
-    },
-    bodyContent: {
-        padding: 20,
-        paddingBottom: 40,
-        justifyContent: "space-evenly",
+        marginHorizontal: -18,
     },
     image: {
         width: "100%",
@@ -87,5 +74,5 @@ const styles = StyleSheet.create({
         color: "white",
         textAlign: "center",
         fontSize: 18,
-    }
+    },
 });

@@ -1,11 +1,10 @@
 import { Difficulty } from "./Difficulty";
 
 export interface Question {
-    fr: string;
-    ko: string;
+    prompt: string;
+    correctAnswer: string;
     phonetic: string;
     difficulty: Difficulty;
-    correctAnswer: string;
-    choices?: string[];
+    choices?: string[]; // QCM choices, if applicable
     tags: string[];
 }

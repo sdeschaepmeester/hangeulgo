@@ -40,7 +40,7 @@ Vous pouvez personnalisez vos quiz en associant des mots clés à vos mots.
 ## Fonctionnalités
 
 - **Lexique personnalisable**
-  - Ajout de mots avec traduction, phonétique, niveau de difficulté et mots-clés
+  - Ajout de mots avec traduction, phonétique, niveau de difficulté et thèmes
   - Tri et filtres
   - Activation/désactivation des mots
   - Édition et suppression de mots
@@ -49,7 +49,7 @@ Vous pouvez personnalisez vos quiz en associant des mots clés à vos mots.
   - Traduction (FR → KO) : en QCM ou saisie libre
   - Compréhension (KO → FR)
   - Durées de jeu personnalisables : court, normal, long
-  - Filtres par difficulté et mots-clés
+  - Filtres par difficulté et thèmes
   - Génération aléatoire des questions
 
 - **Résultats et progression**

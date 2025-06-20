@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, } from "react-native";
+import { View, Text, FlatList, Image, StyleSheet } from "react-native";
 import { getScores, clearScores, type SavedScore } from "@/services/score";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { MaterialIcons } from "@expo/vector-icons";
 import AlertCustom from "@/components/AlertCustom";
 import IconButton from "@/components/IconButton";
+import MainLayout from "@/layouts/MainLayout";
 
 export default function ScoreScreen() {
     const [scores, setScores] = useState<SavedScore[]>([]);
@@ -16,19 +17,16 @@ export default function ScoreScreen() {
         setScores(data);
     };
 
-    // Delete scores history
     const handleClear = async () => {
         await clearScores();
         setScores([]);
         setShowConfirm(false);
     };
 
-    // Load scores
     useEffect(() => {
         load();
     }, []);
 
-    // Get medal image based on score percentage
     const getMedal = (percent: number) => {
         if (percent === 0) return require("../../assets/terrible.png");
         if (percent >= 80) return require("../../assets/gold_medal.png");
@@ -36,7 +34,6 @@ export default function ScoreScreen() {
         return require("../../assets/bronze_medal.png");
     };
 
-    // Render one score card
     const renderItem = ({ item }: { item: SavedScore }) => {
         const percent = Math.round((item.score / item.total) * 100);
         return (
@@ -44,18 +41,10 @@ export default function ScoreScreen() {
                 <Image source={getMedal(percent)} style={styles.medal} />
                 <View style={styles.details}>
                     <Text style={styles.percent}>{percent}%</Text>
-                    <Text style={styles.info}>
-                        {item.score} / {item.total}
-                    </Text>
-                    <Text style={styles.info}>
-                        {item.type === "translation" ? "Traduction" : "Compréhension"} —{" "}
-                        {item.inputMode === "input" ? "Saisie" : "QCM"}
-                    </Text>
+                    <Text style={styles.info}>{item.score} / {item.total}</Text>
+                    <Text style={styles.info}>{item.type}</Text>
                     <Text style={styles.date}>
-                        {formatDistanceToNow(new Date(item.date), {
-                            addSuffix: true,
-                            locale: fr,
-                        })}
+                        {formatDistanceToNow(new Date(item.date), { addSuffix: true, locale: fr })}
                     </Text>
                 </View>
             </View>
@@ -63,8 +52,8 @@ export default function ScoreScreen() {
     };
 
     return (
-        <View style={styles.container}>
-            {/* -------- Header with delete button -------- */}
+        <MainLayout scrollable={false}>
+            {/* -------- Header fixed -------- */}
             <View style={styles.headerRow}>
                 <Text style={styles.title}>Historique des scores</Text>
                 {scores.length > 0 && (
@@ -78,7 +67,7 @@ export default function ScoreScreen() {
                 )}
             </View>
 
-            {/* -------- List of scores -------- */}
+            {/* -------- List scrollable -------- */}
             {scores.length === 0 ? (
                 <Text style={styles.empty}>Aucun score enregistré.</Text>
             ) : (
@@ -86,11 +75,12 @@ export default function ScoreScreen() {
                     data={scores}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={renderItem}
-                    contentContainerStyle={{ paddingBottom: 100 }}
+                    contentContainerStyle={styles.listContainer}
+                    showsVerticalScrollIndicator={false}
                 />
             )}
 
-            {/* -------- Confirm delete modal -------- */}
+            {/* -------- Confirmation modale -------- */}
             <AlertCustom
                 visible={showConfirm}
                 title="Réinitialiser les scores"
@@ -99,30 +89,27 @@ export default function ScoreScreen() {
                 confirmText="Confirmer"
                 cancelText="Annuler"
                 onConfirm={handleClear}
-                icon={
-                    <MaterialIcons name="delete-forever" size={30} color="#e53935" />
-                }
+                icon={<MaterialIcons name="delete-forever" size={30} color="#e53935" />}
                 iconColor="#e53935"
             />
-        </View>
+        </MainLayout>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 16,
-        backgroundColor: "#f9f9f9",
-    },
     headerRow: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginBottom: 16,
+        marginBottom: 12,
     },
     title: {
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: "bold",
+        color: "#333",
+    },
+    listContainer: {
+        paddingBottom: 24,
     },
     card: {
         flexDirection: "row",
@@ -136,12 +123,15 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
+        borderWidth: 1,
+        borderColor: "#e0e0e0",
+        overflow: "hidden",
     },
     medal: {
         width: 48,
         height: 48,
         marginRight: 12,
-        resizeMode: "contain"
+        resizeMode: "contain",
     },
     details: {
         flex: 1,

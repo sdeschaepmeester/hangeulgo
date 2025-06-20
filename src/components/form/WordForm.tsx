@@ -4,7 +4,7 @@ import NetInfo from "@react-native-community/netinfo";
 import SelectPill from "@/components/SelectPill";
 import type { Difficulty } from "@/types/Difficulty";
 import TagSelector from "../tags/TagSelector";
-import { getAllUniqueTags } from "@/services/tags";
+import { getAllUniqueTags, isTagsLimitReached } from "@/services/tags";
 import { suggestKoreanTranslation } from "@/services/translator";
 import { saveWord, checkIfKoreanWordExists } from "@/services/lexicon";
 import { useNavigation } from "@react-navigation/native";
@@ -16,6 +16,8 @@ const difficulties = [
     { label: "Moyen", value: "medium", color: "orange" },
     { label: "Difficile", value: "hard", color: "red" },
 ];
+
+const MIN_DELAY = 10000; // 10s cooldown
 
 type Props = {
     edit: boolean;
@@ -38,46 +40,82 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
     const [difficulty, setDifficulty] = useState<Difficulty>(initialData?.difficulty || "easy");
     const [tags, setTags] = useState(initialData?.tags || "");
     const [allTags, setAllTags] = useState<string[]>([]);
-    const [suggestions, setSuggestions] = useState<string[]>([]);
     const [isConnected, setIsConnected] = useState(false);
     const [koreanExists, setKoreanExists] = useState(false);
     const [loadingSuggestion, setLoadingSuggestion] = useState(false);
     const [noSuggestionFound, setNoSuggestionFound] = useState(false);
-    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    const [tagLimitReached, setTagLimitReached] = useState(false);
+    const [lastSuggestionTime, setLastSuggestionTime] = useState<number | null>(null);
 
     const frRef = useRef<TextInput>(null);
     const koRef = useRef<TextInput>(null);
     const phoneticRef = useRef<TextInput>(null);
 
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const isValid = fr.trim() && ko.trim();
+
+    const cooldownActive =
+        lastSuggestionTime !== null && Date.now() - lastSuggestionTime < MIN_DELAY;
 
     useEffect(() => {
         getAllUniqueTags().then(setAllTags);
         NetInfo.fetch().then((state) => {
             setIsConnected(state.isConnected === true);
         });
+        isTagsLimitReached().then(setTagLimitReached);
     }, []);
 
-    const refreshTags = async () => {
-        const tags = await getAllUniqueTags();
-        setAllTags(tags);
+    useEffect(() => {
+        if (cooldownActive) {
+            const timeout = setTimeout(() => {
+                setLastSuggestionTime(null);
+            }, MIN_DELAY - (Date.now() - (lastSuggestionTime ?? 0)));
+            return () => clearTimeout(timeout);
+        }
+    }, [cooldownActive, lastSuggestionTime]);
+
+    useEffect(() => {
+        if (edit && initialData?.fr.includes("(") && phonetic.trim()) {
+            const baseFr = initialData.fr.split("(")[0].trim();
+            setFr(`${baseFr} (${phonetic.trim()})`);
+        }
+    }, [phonetic]);
+
+    const handleKoreanSuggestion = async () => {
+        if (!fr.trim() || !isConnected || cooldownActive) return;
+
+        setLastSuggestionTime(Date.now());
+        setLoadingSuggestion(true);
+        setNoSuggestionFound(false);
+
+        const suggestion = await suggestKoreanTranslation(fr.trim());
+        setLoadingSuggestion(false);
+
+        if (suggestion) {
+            setKoSuggested(suggestion);
+        } else {
+            setNoSuggestionFound(true);
+        }
     };
 
-    const applySuggestion = async (tag: string) => {
-        const parts = tags.split(",").map((t) => t.trim());
-        parts[parts.length - 1] = tag;
-        setTags(parts.join(", ") + ", ");
-        setSuggestions([]);
-    };
-
+    // Check if Korean word exists in the lexicon. A korean word cannot be duplicated.
     const handleKoBlur = async () => {
-        if (!ko.trim()) {
+        const trimmed = ko.trim();
+        if (!trimmed) {
             setKoreanExists(false);
             return;
         }
-        const exists = await checkIfKoreanWordExists(ko.trim());
+
+        // If editing and the initial data is the same, skip the check
+        if (edit && initialData?.ko.trim() === trimmed) {
+            setKoreanExists(false);
+            return;
+        }
+
+        const exists = await checkIfKoreanWordExists(trimmed);
         setKoreanExists(exists);
     };
+
 
     const handleSubmit = async () => {
         if (!isValid || koreanExists) return;
@@ -94,23 +132,8 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         });
 
         clearForm();
-        refreshTags();
+        getAllUniqueTags().then(setAllTags);
         onSuccess();
-    };
-
-    // Call Azure suggestion API when the user types in the French input
-    const handleKoreanSuggestion = async () => {
-        if (!fr.trim() || !isConnected) return;
-        setLoadingSuggestion(true);
-        setNoSuggestionFound(false);
-        const suggestion = await suggestKoreanTranslation(fr.trim());
-        setLoadingSuggestion(false);
-
-        if (suggestion) {
-            setKoSuggested(suggestion);
-        } else {
-            setNoSuggestionFound(true);
-        }
     };
 
     const clearForm = () => {
@@ -120,7 +143,6 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         setPhonetic("");
         setDifficulty("easy");
         setTags("");
-        setSuggestions([]);
         setKoreanExists(false);
     };
 
@@ -133,10 +155,12 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     ref={frRef}
                     value={fr}
                     onChangeText={(text) => {
-                        setFr(text);
-                        setKoSuggested(null);
+                        if (text.length <= 50) {
+                            setFr(text);
+                            setKoSuggested(null);
+                        }
                     }}
-                    style={styles.input}
+                    style={[styles.input, { backgroundColor: "#fff" }]}
                     placeholder="Ex : Bonjour"
                     placeholderTextColor={"#696969"}
                     returnKeyType="next"
@@ -144,17 +168,24 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 />
             </View>
 
-            {/* ----------------- Azure korean suggestion if online ----------------- */}
+            {/* ----------------- Azure korean translation suggestion ----------------- */}
             {isConnected && fr.trim().length > 0 && !edit && (
                 <>
                     {!koSuggested && !noSuggestionFound && (
                         <TouchableOpacity
-                            style={styles.suggestionButton}
+                            style={[
+                                styles.suggestionButton,
+                                (loadingSuggestion || cooldownActive) && { opacity: 0.5 },
+                            ]}
                             onPress={handleKoreanSuggestion}
-                            disabled={loadingSuggestion}
+                            disabled={loadingSuggestion || cooldownActive}
                         >
                             <Text style={styles.suggestionText}>
-                                {loadingSuggestion ? "⏳ Recherche en cours..." : "💡 Suggérer une traduction coréenne"}
+                                {loadingSuggestion
+                                    ? "⏳ Recherche en cours..."
+                                    : cooldownActive
+                                        ? "⏳ Attendez un peu avant de suggérer à nouveau"
+                                        : "💡 Suggérer une traduction coréenne"}
                             </Text>
                         </TouchableOpacity>
                     )}
@@ -185,15 +216,15 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     ref={koRef}
                     value={ko}
                     onChangeText={(text) => {
-                        setKo(text);
-                        setKoreanExists(false);
+                        if (text.length <= 50) {
+                            setKo(text);
+                            setKoreanExists(false);
+                        }
                     }}
                     onBlur={handleKoBlur}
-                    style={styles.input}
+                    style={[styles.input, { backgroundColor: "#fff" }]}
                     placeholder="Ex : 안녕하세요"
                     placeholderTextColor={"#696969"}
-                    keyboardType="default"
-                    textContentType="none"
                     returnKeyType="next"
                     onSubmitEditing={() => phoneticRef.current?.focus()}
                 />
@@ -210,35 +241,31 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 <TextInput
                     ref={phoneticRef}
                     value={phonetic}
-                    onChangeText={setPhonetic}
-                    style={styles.input}
+                    onChangeText={(text) => {
+                        if (text.length <= 50) setPhonetic(text);
+                    }}
+                    style={[styles.input, { backgroundColor: "#fff" }]}
                     placeholder="Ex : annyeonghaseyo"
                     placeholderTextColor={"#696969"}
                     returnKeyType="done"
-                    keyboardType="default"
                     onSubmitEditing={Keyboard.dismiss}
                 />
             </View>
 
-            {/* ----------------- Tags input ----------------- */}
+            {/* ----------------- Tags -----------------*/}
+            {tagLimitReached && (
+                <Text style={{ color: "#f57c00", fontSize: 13, marginBottom: 6 }}>
+                    Vous ne pouvez plus créer de nouveaux thèmes.
+                </Text>
+            )}
             <TagSelector
-                mode="edit"
+                mode={tagLimitReached ? "select" : "edit"}
                 allTags={allTags}
-                selectedTags={tags.split(",").map(t => t.trim())}
+                selectedTags={tags.split(",").map((t) => t.trim()).filter(Boolean)}
                 onChange={(newTags) => setTags(newTags.join(", "))}
             />
 
-            {suggestions.length > 0 && (
-                <View style={styles.suggestionsContainer}>
-                    {suggestions.map((tag) => (
-                        <TouchableOpacity key={tag} onPress={() => applySuggestion(tag)}>
-                            <Text style={styles.suggestion}>{tag}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-            )}
-
-            {/* ----------------- Select word difficulty input ----------------- */}
+            {/* ----------------- Difficulty of word ----------------- */}
             <Text style={[styles.label, { marginTop: 16 }]}>Difficulté</Text>
             <SelectPill
                 options={difficulties}
@@ -246,7 +273,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 onSelect={(val) => setDifficulty(val as Difficulty)}
             />
 
-            {/* ----------------- Buttons row ----------------- */}
+            {/* ----------------- Actions buttons ----------------- */}
             <View style={styles.buttonsRow}>
                 <TouchableOpacity
                     onPress={() => navigation.goBack()}
@@ -265,7 +292,6 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     </Text>
                 </TouchableOpacity>
             </View>
-
         </View>
     );
 }
@@ -281,39 +307,6 @@ const styles = StyleSheet.create({
         padding: 14,
         fontSize: 16,
     },
-    fullButton: {
-        marginTop: 28,
-        backgroundColor: "#9da7ff",
-        paddingVertical: 16,
-        borderRadius: 8,
-    },
-    fullButtonText: {
-        textAlign: "center",
-        color: "white",
-        fontWeight: "bold",
-        fontSize: 16,
-    },
-    disabled: {
-        opacity: 0.4,
-    },
-    suggestionsContainer: {
-        backgroundColor: "#f1f1ff",
-        borderRadius: 8,
-        padding: 8,
-        marginTop: -8,
-    },
-    suggestion: {
-        padding: 6,
-        fontSize: 14,
-        color: "#333",
-    },
-    suggestionBox: {
-        backgroundColor: "#e6f7ff",
-        padding: 8,
-        borderRadius: 6,
-        marginBottom: 8,
-        fontStyle: "italic",
-    },
     suggestionButton: {
         alignSelf: "flex-start",
         backgroundColor: "#f5f5f5",
@@ -327,6 +320,13 @@ const styles = StyleSheet.create({
         color: "#333",
         fontSize: 14,
     },
+    suggestionBox: {
+        backgroundColor: "#e6f7ff",
+        padding: 8,
+        borderRadius: 6,
+        marginBottom: 8,
+        fontStyle: "italic",
+    },
     warningText: {
         color: "#cc0000",
         marginTop: 4,
@@ -336,7 +336,6 @@ const styles = StyleSheet.create({
     buttonsRow: {
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "center",
         gap: 12,
         marginTop: 28,
     },
@@ -362,5 +361,8 @@ const styles = StyleSheet.create({
         color: "white",
         fontWeight: "bold",
         fontSize: 16,
+    },
+    disabled: {
+        opacity: 0.4,
     },
 });

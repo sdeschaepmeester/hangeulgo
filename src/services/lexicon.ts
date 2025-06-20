@@ -1,3 +1,4 @@
+import { MAX_SAVED_LEXICON_ENTRIES } from "@/data/constants";
 import { dbPromise } from "@/db/database";
 import type { Difficulty } from "@/types/Difficulty";
 import type { LexiconEntry } from "@/types/LexiconEntry";
@@ -50,6 +51,17 @@ export async function getFilteredLexicon(
     );
 
     return rows;
+}
+
+/**
+ * Check if the lexicon limit has been reached
+ */
+export async function isLexiconLimitReached(): Promise<boolean> {
+    const db = await dbPromise;
+    const result = await db.getFirstAsync<{ count: number }>(
+        "SELECT COUNT(*) as count FROM lexicon"
+    );
+    return (result?.count ?? 0) >= MAX_SAVED_LEXICON_ENTRIES;
 }
 
 /**
@@ -213,11 +225,24 @@ export async function saveWord({ fr, ko, phonetic, difficulty, tags, edit, id, }
 /**
  * Return available difficulties based on the tags provided: Check if there's at least one entry for each difficulty
  */
-export async function getAvailableDifficultiesFromTags(tags: string[]): Promise<Difficulty[]> {
-    const rows = await getFilteredLexicon([], tags); // on ignore les difficultés pour ce filtre
+export async function getAvailableDifficultiesFromTags(
+    tags: string[],
+    forPuzzle: boolean = false
+): Promise<Difficulty[]> {
+    const rows = await getFilteredLexicon([], tags);
 
     const difficulties = new Set<Difficulty>();
+
     for (const row of rows) {
+        const ko = row.ko.trim();
+
+        if (forPuzzle) {
+            // Ignore entries with only one syllable or one word
+            const hasMultipleSyllables = ko.replace(/ /g, "").length > 1;
+            const hasMultipleWords = ko.trim().split(" ").length > 1;
+            if (!hasMultipleSyllables && !hasMultipleWords) continue;
+        }
+
         difficulties.add(row.difficulty);
     }
 

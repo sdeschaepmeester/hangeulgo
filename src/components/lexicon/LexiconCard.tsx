@@ -50,7 +50,7 @@ export default React.memo(function LexiconCard({ id, fr, ko, phonetic, tags, dif
                     </Text>
                     {tags && (
                         <View style={styles.tagsContainer}>
-                            <Text style={styles.tagsLabel}>Mots-clés :</Text>
+                            <Text style={styles.tagsLabel}>Thèmes :</Text>
                             <View style={styles.tagsRow}>
                                 {tags.split(",").map((tag) => (
                                     <View key={tag.trim()} style={styles.tag}>

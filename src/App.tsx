@@ -11,24 +11,29 @@ import ChooseSettingsScreen from "./screens/ChooseSettingsScreen";
 import QuizScreen from "./screens/QuizScreen";
 import ResultScreen from "./screens/ResultScreen";
 import ScoreScreen from "./screens/ScoreScreen";
+import QuizListScreen from "./screens/QuizListScreen";
+import SavedQuizScreen from "./screens/SavedQuizScreen";
 
-import { GameSettings } from "./types/GameSettings";
+import { GameSettings, GameType } from "./types/GameSettings";
 import { injectPreviewLexicon } from "@/data/injectPreviewLexicon";
 import { isFirstLaunch } from "./services/firstLaunch";
 import { initDatabase } from "@/db/database";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export type RootStackParamList = {
   Home: undefined;
   AddWord: undefined;
   Lexicon: undefined;
-  ChooseSettings: { type: "translation" | "comprehension" };
+  ChooseSettings: { type: GameType };
   Quiz: { settings: GameSettings };
   Result: {
     score: number;
     total: number;
-    settings: Pick<GameSettings, "type" | "inputMode">;
+    settings: Pick<GameSettings, "type" | "inputMode" | "subType">;
   };
   Score: undefined;
+  QuizList: undefined;
+  SavedQuiz: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -36,7 +41,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function App() {
   useEffect(() => {
     initDatabase().catch(console.error);
-
     isFirstLaunch().then((firstTime) => {
       if (firstTime) {
         injectPreviewLexicon();
@@ -50,8 +54,8 @@ export default function App() {
       style={{ marginLeft: 10 }}
     >
       <MaterialCommunityIcons
-        name="chevron-left"
-        size={24}
+        name="home-circle"
+        size={32}
         color="#fff"
       />
     </TouchableOpacity>
@@ -66,64 +70,67 @@ export default function App() {
       { name: "Lexicon", component: LexiconScreen, title: "Réviser" },
       { name: "ChooseSettings", component: ChooseSettingsScreen, title: "Paramètres du jeu" },
       { name: "Score", component: ScoreScreen, title: "Mes scores" },
+      { name: "QuizList", component: QuizListScreen, title: "Types de quiz" },
+      { name: "SavedQuiz", component: SavedQuizScreen, title: "Quiz enregistrés" },
     ];
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Home"
-        screenOptions={{
-          headerStyle: { backgroundColor: "#9da7ff" },
-          headerTintColor: "#fff",
-          headerTitleStyle: { fontWeight: "bold" },
-        }}
-      >
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            title: "",
-            headerLeft: () => null,
-            headerRight: () => null,
-            headerTitle: () => null,
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Home"
+          screenOptions={{
+            headerStyle: { backgroundColor: "#9da7ff" },
+            headerTintColor: "#fff",
+            headerTitleStyle: { fontWeight: "bold" },
           }}
-        />
-        {screens.map(({ name, component, title }) => (
+        >
           <Stack.Screen
-            key={name}
-            name={name}
-            component={component}
-            options={({ navigation }) => ({
-              title,
-              headerLeft: () => goHomeButton(navigation),
-              headerTitle: () => (
-                <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-                  <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
-                    {title}
-                  </Text>
-                </TouchableOpacity>
-              ),
-            })}
+            name="Home"
+            component={HomeScreen}
+            options={{
+              title: "",
+              headerLeft: () => null,
+              headerRight: () => null,
+              headerTitle: () => null,
+            }}
           />
-        ))}
-        <Stack.Screen
-          name="Quiz"
-          component={QuizScreen}
-          options={{
-            headerTitle: "",
-            headerLeft: () => null,
-          }}
-        />
-
-        <Stack.Screen
-          name="Result"
-          component={ResultScreen}
-          options={{
-            headerTitle: "",
-            headerLeft: () => null,
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+          {screens.map(({ name, component, title }) => (
+            <Stack.Screen
+              key={name}
+              name={name}
+              component={component}
+              options={({ navigation }) => ({
+                title,
+                headerLeft: () => goHomeButton(navigation),
+                headerTitle: () => (
+                  <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{marginLeft: 10}}>
+                    <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
+                      {title}
+                    </Text>
+                  </TouchableOpacity>
+                ),
+              })}
+            />
+          ))}
+          <Stack.Screen
+            name="Quiz"
+            component={QuizScreen}
+            options={{
+              headerTitle: "",
+              headerLeft: () => null,
+            }}
+          />
+          <Stack.Screen
+            name="Result"
+            component={ResultScreen}
+            options={{
+              headerTitle: "",
+              headerLeft: () => null,
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }
