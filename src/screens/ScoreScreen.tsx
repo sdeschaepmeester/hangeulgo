@@ -5,9 +5,10 @@ import {
     FlatList,
     StyleSheet,
     Image,
-    KeyboardAvoidingView,
     Platform,
+    KeyboardAvoidingView,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { getScores, clearScores, type SavedScore } from "@/services/score";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -86,36 +87,36 @@ export default function ScoreScreen() {
             style={{ flex: 1 }}
             behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
-            <View style={styles.container}>
-                {/* ----------- Header ----------- */}
-                <View style={styles.headerRow}>
-                    <Text style={styles.title}>Historique des scores</Text>
-                    {scores.length > 0 && (
-                        <IconButton
-                            label="Tout effacer"
-                            icon="delete"
-                            onPress={() => setShowConfirm(true)}
-                            backgroundColor="#fcebea"
-                            color="#e53935"
+            <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
+                <View style={styles.body}>
+                    {/* Header */}
+                    <View style={styles.headerRow}>
+                        <Text style={styles.title}>Historique des scores</Text>
+                        {scores.length > 0 && (
+                            <IconButton
+                                label="Tout effacer"
+                                icon="delete"
+                                onPress={() => setShowConfirm(true)}
+                                backgroundColor="#fcebea"
+                                color="#e53935"
+                            />
+                        )}
+                    </View>
+
+                    {/* Liste ou message */}
+                    {scores.length === 0 ? (
+                        <Text style={styles.empty}>Aucun score enregistré.</Text>
+                    ) : (
+                        <FlatList
+                            data={scores}
+                            keyExtractor={(item) => item.id.toString()}
+                            renderItem={renderItem}
+                            contentContainerStyle={styles.list}
                         />
                     )}
                 </View>
 
-                {/*----------- Score list -----------*/}
-                {scores.length === 0 ? (
-                    <Text style={styles.empty}>Aucun score enregistré.</Text>
-                ) : (
-                    <FlatList
-                        data={scores}
-                        keyExtractor={(item) => item.id.toString()}
-                        renderItem={renderItem}
-                        contentContainerStyle={styles.list}
-                    />
-                )}
-
-                <NavBar />
-
-                {/* ----------- Modale confirmation -----------*/}
+                {/* Modale confirmation */}
                 <AlertCustom
                     visible={showConfirm}
                     title="Réinitialiser les scores"
@@ -127,15 +128,18 @@ export default function ScoreScreen() {
                     icon={<MaterialIcons name="delete-forever" size={30} color="#e53935" />}
                     iconColor="#e53935"
                 />
-            </View>
+            </SafeAreaView>
         </KeyboardAvoidingView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    safeArea: {
         flex: 1,
         backgroundColor: "#f9f9f9",
+    },
+    body: {
+        flex: 1,
         padding: 18,
     },
     headerRow: {
@@ -150,7 +154,7 @@ const styles = StyleSheet.create({
         color: "#333",
     },
     list: {
-        paddingBottom: 82,
+        paddingBottom: 24,
     },
     card: {
         flexDirection: "row",

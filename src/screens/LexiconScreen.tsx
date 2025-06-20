@@ -167,9 +167,6 @@ export default function LexiconScreen() {
         />
       </View>
 
-      {/* ----------------- Navbar ----------------- */}
-      <NavBar />
-
       {/* ----------------- Modales deletion single word ----------------- */}
       {confirmDeleteId !== null && (
         <AlertCustom

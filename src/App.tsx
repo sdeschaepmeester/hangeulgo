@@ -41,8 +41,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function App() {
   useEffect(() => {
     initDatabase().catch(console.error);
-    injectPreviewLexicon();
-
     isFirstLaunch().then((firstTime) => {
       if (firstTime) {
         injectPreviewLexicon();
@@ -56,8 +54,8 @@ export default function App() {
       style={{ marginLeft: 10 }}
     >
       <MaterialCommunityIcons
-        name="chevron-left"
-        size={24}
+        name="home-circle"
+        size={32}
         color="#fff"
       />
     </TouchableOpacity>
@@ -106,7 +104,7 @@ export default function App() {
                 title,
                 headerLeft: () => goHomeButton(navigation),
                 headerTitle: () => (
-                  <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+                  <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{marginLeft: 10}}>
                     <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
                       {title}
                     </Text>

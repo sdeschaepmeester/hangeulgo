@@ -53,8 +53,6 @@ export default function AddWordScreen() {
           }}
         />
 
-        <NavBar />
-
         {/* ----------------- Modale success add word ----------------- */}
         <AlertCustom
           visible={showSuccess}

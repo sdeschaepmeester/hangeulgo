@@ -66,7 +66,6 @@ export default function QuizListScreen() {
                     <Text style={styles.savedButtonText}>Voir mes quiz sauvegardés</Text>
                 </TouchableOpacity>
             </ScrollView>
-            <NavBar />
         </>
     );
 }

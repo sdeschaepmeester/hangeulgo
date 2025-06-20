@@ -29,8 +29,6 @@ export default function SavedQuizScreen() {
         const withValidity = await Promise.all(
             all.map(async (quiz) => {
                 const valid = await isQuizValid(quiz);
-                console.log(`Quiz ${quiz.id} validity: ${valid}`);
-                console.log(quiz);
                 return { ...quiz, disabled: !valid };
             })
         );
@@ -99,8 +97,6 @@ export default function SavedQuizScreen() {
                     />
                 )}
             </View>
-
-            <NavBar />
 
             {confirmDeleteId !== null && (
                 <AlertCustom
