@@ -94,7 +94,6 @@ export default function QuizScreen({ route, navigation }: Props) {
     );
   }
 
-  console.log(questions);
   return (
     <ImageBackground source={bgImage} style={styles.background} imageStyle={{ opacity: 0.8 }}>
       <View style={[styles.innerContainer, { height: screenHeight }]} {...panResponder.panHandlers}>

@@ -17,6 +17,8 @@ const difficulties = [
     { label: "Difficile", value: "hard", color: "red" },
 ];
 
+const MIN_DELAY = 10000; // 10s cooldown
+
 type Props = {
     edit: boolean;
     initialData?: {
@@ -38,20 +40,22 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
     const [difficulty, setDifficulty] = useState<Difficulty>(initialData?.difficulty || "easy");
     const [tags, setTags] = useState(initialData?.tags || "");
     const [allTags, setAllTags] = useState<string[]>([]);
-    const [suggestions, setSuggestions] = useState<string[]>([]);
     const [isConnected, setIsConnected] = useState(false);
     const [koreanExists, setKoreanExists] = useState(false);
     const [loadingSuggestion, setLoadingSuggestion] = useState(false);
     const [noSuggestionFound, setNoSuggestionFound] = useState(false);
-    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const [tagLimitReached, setTagLimitReached] = useState(false);
-
+    const [lastSuggestionTime, setLastSuggestionTime] = useState<number | null>(null);
 
     const frRef = useRef<TextInput>(null);
     const koRef = useRef<TextInput>(null);
     const phoneticRef = useRef<TextInput>(null);
 
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const isValid = fr.trim() && ko.trim();
+
+    const cooldownActive =
+        lastSuggestionTime !== null && Date.now() - lastSuggestionTime < MIN_DELAY;
 
     useEffect(() => {
         getAllUniqueTags().then(setAllTags);
@@ -61,17 +65,30 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         isTagsLimitReached().then(setTagLimitReached);
     }, []);
 
+    useEffect(() => {
+        if (cooldownActive) {
+            const timeout = setTimeout(() => {
+                setLastSuggestionTime(null);
+            }, MIN_DELAY - (Date.now() - (lastSuggestionTime ?? 0)));
+            return () => clearTimeout(timeout);
+        }
+    }, [cooldownActive, lastSuggestionTime]);
 
-    const refreshTags = async () => {
-        const tags = await getAllUniqueTags();
-        setAllTags(tags);
-    };
+    const handleKoreanSuggestion = async () => {
+        if (!fr.trim() || !isConnected || cooldownActive) return;
 
-    const applySuggestion = async (tag: string) => {
-        const parts = tags.split(",").map((t) => t.trim());
-        parts[parts.length - 1] = tag;
-        setTags(parts.join(", ") + ", ");
-        setSuggestions([]);
+        setLastSuggestionTime(Date.now());
+        setLoadingSuggestion(true);
+        setNoSuggestionFound(false);
+
+        const suggestion = await suggestKoreanTranslation(fr.trim());
+        setLoadingSuggestion(false);
+
+        if (suggestion) {
+            setKoSuggested(suggestion);
+        } else {
+            setNoSuggestionFound(true);
+        }
     };
 
     const handleKoBlur = async () => {
@@ -98,23 +115,8 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         });
 
         clearForm();
-        refreshTags();
+        getAllUniqueTags().then(setAllTags);
         onSuccess();
-    };
-
-    // Call Azure suggestion API when the user types in the French input
-    const handleKoreanSuggestion = async () => {
-        if (!fr.trim() || !isConnected) return;
-        setLoadingSuggestion(true);
-        setNoSuggestionFound(false);
-        const suggestion = await suggestKoreanTranslation(fr.trim());
-        setLoadingSuggestion(false);
-
-        if (suggestion) {
-            setKoSuggested(suggestion);
-        } else {
-            setNoSuggestionFound(true);
-        }
     };
 
     const clearForm = () => {
@@ -124,7 +126,6 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         setPhonetic("");
         setDifficulty("easy");
         setTags("");
-        setSuggestions([]);
         setKoreanExists(false);
     };
 
@@ -150,17 +151,24 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 />
             </View>
 
-            {/* ----------------- Azure korean suggestion if online ----------------- */}
+            {/* ----------------- Azure korean translation suggestion ----------------- */}
             {isConnected && fr.trim().length > 0 && !edit && (
                 <>
                     {!koSuggested && !noSuggestionFound && (
                         <TouchableOpacity
-                            style={styles.suggestionButton}
+                            style={[
+                                styles.suggestionButton,
+                                (loadingSuggestion || cooldownActive) && { opacity: 0.5 },
+                            ]}
                             onPress={handleKoreanSuggestion}
-                            disabled={loadingSuggestion}
+                            disabled={loadingSuggestion || cooldownActive}
                         >
                             <Text style={styles.suggestionText}>
-                                {loadingSuggestion ? "⏳ Recherche en cours..." : "💡 Suggérer une traduction coréenne"}
+                                {loadingSuggestion
+                                    ? "⏳ Recherche en cours..."
+                                    : cooldownActive
+                                        ? "⏳ Attendez un peu avant de suggérer à nouveau"
+                                        : "💡 Suggérer une traduction coréenne"}
                             </Text>
                         </TouchableOpacity>
                     )}
@@ -200,8 +208,6 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     style={[styles.input, { backgroundColor: "#fff" }]}
                     placeholder="Ex : 안녕하세요"
                     placeholderTextColor={"#696969"}
-                    keyboardType="default"
-                    textContentType="none"
                     returnKeyType="next"
                     onSubmitEditing={() => phoneticRef.current?.focus()}
                 />
@@ -225,18 +231,16 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     placeholder="Ex : annyeonghaseyo"
                     placeholderTextColor={"#696969"}
                     returnKeyType="done"
-                    keyboardType="default"
                     onSubmitEditing={Keyboard.dismiss}
                 />
             </View>
 
-            {/* ----------------- Tags input ----------------- */}
+            {/* ----------------- Tags -----------------*/}
             {tagLimitReached && (
                 <Text style={{ color: "#f57c00", fontSize: 13, marginBottom: 6 }}>
                     Vous ne pouvez plus créer de nouveaux thèmes.
                 </Text>
             )}
-
             <TagSelector
                 mode={tagLimitReached ? "select" : "edit"}
                 allTags={allTags}
@@ -244,17 +248,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 onChange={(newTags) => setTags(newTags.join(", "))}
             />
 
-            {suggestions.length > 0 && (
-                <View style={styles.suggestionsContainer}>
-                    {suggestions.map((tag) => (
-                        <TouchableOpacity key={tag} onPress={() => applySuggestion(tag)}>
-                            <Text style={styles.suggestion}>{tag}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-            )}
-
-            {/* ----------------- Select word difficulty input ----------------- */}
+            {/* ----------------- Difficulty of word ----------------- */}
             <Text style={[styles.label, { marginTop: 16 }]}>Difficulté</Text>
             <SelectPill
                 options={difficulties}
@@ -262,7 +256,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 onSelect={(val) => setDifficulty(val as Difficulty)}
             />
 
-            {/* ----------------- Buttons row ----------------- */}
+            {/* ----------------- Actions buttons ----------------- */}
             <View style={styles.buttonsRow}>
                 <TouchableOpacity
                     onPress={() => navigation.goBack()}
@@ -281,7 +275,6 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     </Text>
                 </TouchableOpacity>
             </View>
-
         </View>
     );
 }
@@ -297,39 +290,6 @@ const styles = StyleSheet.create({
         padding: 14,
         fontSize: 16,
     },
-    fullButton: {
-        marginTop: 28,
-        backgroundColor: "#9da7ff",
-        paddingVertical: 16,
-        borderRadius: 8,
-    },
-    fullButtonText: {
-        textAlign: "center",
-        color: "white",
-        fontWeight: "bold",
-        fontSize: 16,
-    },
-    disabled: {
-        opacity: 0.4,
-    },
-    suggestionsContainer: {
-        backgroundColor: "#f1f1ff",
-        borderRadius: 8,
-        padding: 8,
-        marginTop: -8,
-    },
-    suggestion: {
-        padding: 6,
-        fontSize: 14,
-        color: "#333",
-    },
-    suggestionBox: {
-        backgroundColor: "#e6f7ff",
-        padding: 8,
-        borderRadius: 6,
-        marginBottom: 8,
-        fontStyle: "italic",
-    },
     suggestionButton: {
         alignSelf: "flex-start",
         backgroundColor: "#f5f5f5",
@@ -343,6 +303,13 @@ const styles = StyleSheet.create({
         color: "#333",
         fontSize: 14,
     },
+    suggestionBox: {
+        backgroundColor: "#e6f7ff",
+        padding: 8,
+        borderRadius: 6,
+        marginBottom: 8,
+        fontStyle: "italic",
+    },
     warningText: {
         color: "#cc0000",
         marginTop: 4,
@@ -352,7 +319,6 @@ const styles = StyleSheet.create({
     buttonsRow: {
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "center",
         gap: 12,
         marginTop: 28,
     },
@@ -378,5 +344,8 @@ const styles = StyleSheet.create({
         color: "white",
         fontWeight: "bold",
         fontSize: 16,
+    },
+    disabled: {
+        opacity: 0.4,
     },
 });
