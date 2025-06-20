@@ -244,7 +244,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
             <TagSelector
                 mode={tagLimitReached ? "select" : "edit"}
                 allTags={allTags}
-                selectedTags={tags.split(",").map((t) => t.trim())}
+                selectedTags={tags.split(",").map((t) => t.trim()).filter(Boolean)}
                 onChange={(newTags) => setTags(newTags.join(", "))}
             />
 

@@ -100,12 +100,12 @@ export default function QuizScreen({ route, navigation }: Props) {
       <View style={[styles.innerContainer, { height: screenHeight }]} {...panResponder.panHandlers}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View style={styles.touchableWrapper}>
-            {/* Close button */}
+            {/* ----------- Close button ----------- */}
             <TouchableOpacity style={styles.closeButton} onPress={() => navigation.replace("Home")}>
               <MaterialIcons name="close" size={28} color="black" />
             </TouchableOpacity>
 
-            {/* Counter */}
+            {/* ----------- Counter -----------*/}
             <View style={styles.counterBar}>
               <Text style={styles.counterText}>
                 Question {currentIndex + 1} / {questions.length}
@@ -113,13 +113,14 @@ export default function QuizScreen({ route, navigation }: Props) {
             </View>
 
             <View style={{ marginTop: "15%" }}>
+              {/* ----------- Listening quiz ----------- */}
               {settings.type === "ecoute" ? (
                 <ListenPrompt prompt={currentQuestion.prompt} />
               ) : (
                 <PromptBox currentQuestion={currentQuestion} settings={settings} />
               )}
 
-              {/* INPUT MODE */}
+              {/* ----------- Input quiz ----------- */}
               {settings.inputMode === "input" && (
                 <TextInput
                   style={[styles.input, { backgroundColor: "#ccc" }]}
@@ -129,7 +130,7 @@ export default function QuizScreen({ route, navigation }: Props) {
                   editable={!showResult}
                 />
               )}
-
+              {/* ----------- QCM quiz ----------- */}
               {settings.inputMode === "multiple" && (
                 <View style={styles.choices}>
                   {currentQuestion.choices?.map((choice, index) => (
@@ -150,7 +151,7 @@ export default function QuizScreen({ route, navigation }: Props) {
                   ))}
                 </View>
               )}
-
+              {/* ----------- Puzzle quiz ----------- */}
               {settings.inputMode === "order" && (
                 <OrderInput
                   correctAnswer={currentQuestion.correctAnswer}
@@ -161,7 +162,7 @@ export default function QuizScreen({ route, navigation }: Props) {
 
             </View>
 
-            {/* Feedback */}
+            {/* ----------- Feedback ----------- */}
             {showResult && (
               <View style={styles.feedbackContainer}>
                 <Feedback
@@ -171,7 +172,7 @@ export default function QuizScreen({ route, navigation }: Props) {
               </View>
             )}
 
-            {/* Bottom CTA */}
+            {/* ----------- Bottom button ----------- */}
             {(settings.inputMode === "input" || settings.inputMode === "order") ? (
               <TouchableOpacity
                 style={[styles.nextButton, (!userInput && !showResult) && { opacity: 0.4 }]}

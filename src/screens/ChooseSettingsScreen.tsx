@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Dimensions }
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
 import type { Difficulty } from "@/types/Difficulty";
-import type { GameSettings, GameType, GameSubType, InputMode } from "@/types/GameSettings";
+import type { GameSettings, GameSubType, InputMode } from "@/types/GameSettings";
 import { getAllUniqueTags } from "@/services/tags";
 import { getAvailableDifficultiesFromTags } from "@/services/lexicon";
 import StepStructure from "@/components/chooseSettings/StepStructure";
@@ -14,6 +14,7 @@ import StepType from "@/components/chooseSettings/StepType";
 import StepSaveQuiz from "@/components/chooseSettings/StepSaveQuiz";
 import { saveCustomQuiz } from "@/services/quiz";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { SavedQuizEntry } from "@/types/SavedQuizEntry";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -118,13 +119,13 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
 
   const renderStep = () => <StepStructure step={step}>{steps[step]()}</StepStructure>;
 
-  const getQuizName = (type: GameType) => {
+  const getQuizTypeLabel = (type: SavedQuizEntry["type"]) => {
     switch (type) {
-      case "comprehension": return "de compréhension";
-      case "ecoute": return "d'écoute";
-      case "arrangement": return "d'arrangement";
-      case "ecriture": return "d'écriture";
-      default: return "";
+      case "comprehension": return "Quiz de compréhension";
+      case "ecoute": return "Quiz d'écoute";
+      case "arrangement": return "Quiz puzzle";
+      case "ecriture": return "Quiz d'écriture";
+      default: return "Quiz";
     }
   };
 
@@ -132,7 +133,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
     <View style={styles.container}>
       <ImageBackground source={arcadeBg} style={styles.background} resizeMode="cover">
         <View style={styles.top}>
-          <Text style={styles.quizType}>Quiz {getQuizName(type)}</Text>
+          <Text style={styles.quizType}>{getQuizTypeLabel(type)}</Text>
         </View>
 
         <View style={styles.middle}>{renderStep()}</View>

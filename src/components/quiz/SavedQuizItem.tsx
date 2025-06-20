@@ -13,7 +13,7 @@ const getQuizTypeLabel = (type: SavedQuizEntry["type"]) => {
     switch (type) {
         case "comprehension": return "Quiz de compréhension";
         case "ecoute": return "Quiz d'écoute";
-        case "arrangement": return "Quiz d'arrangement";
+        case "arrangement": return "Quiz puzzle";
         case "ecriture": return "Quiz d'écriture";
         default: return "Quiz";
     }
