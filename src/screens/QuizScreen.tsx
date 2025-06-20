@@ -4,9 +4,10 @@ import { MaterialIcons } from "@expo/vector-icons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
 import { generateQuestions } from "@/services/quizGenerator";
-import PromptBox from "@/components/quiz/PromptBox";
 import Feedback from "@/components/quiz/Feedback";
 import { Question } from "@/types/Question";
+import ListenPrompt from "@/components/quiz/ListenPrompt";
+import PromptBox from "@/components/quiz/PromptBox";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Quiz">;
 
@@ -31,7 +32,7 @@ export default function QuizScreen({ route, navigation }: Props) {
   ];
   const [bgImage, setBgImage] = useState(backgrounds[0]);
 
-  const current = questions[currentIndex];
+  const currentQuestion = questions[currentIndex];
 
   useEffect(() => {
     generateQuestions(settings).then(setQuestions);
@@ -74,7 +75,7 @@ export default function QuizScreen({ route, navigation }: Props) {
   });
 
   const checkAnswer = (answer: string) => {
-    const isCorrect = answer.trim() === current.correctAnswer;
+    const isCorrect = answer.trim() === currentQuestion.correctAnswer;
     if (isCorrect) {
       setScore((s) => s + 1);
       setFeedback("correct");
@@ -93,6 +94,7 @@ export default function QuizScreen({ route, navigation }: Props) {
     );
   }
 
+  console.log(questions);
   return (
     <ImageBackground source={bgImage} style={styles.background} imageStyle={{ opacity: 0.8 }}>
       <View style={[styles.innerContainer, { height: screenHeight }]} {...panResponder.panHandlers}>
@@ -111,8 +113,12 @@ export default function QuizScreen({ route, navigation }: Props) {
             </View>
 
             <View style={{ marginTop: "15%" }}>
-              <PromptBox settings={settings} currentQuestion={current} />
-       
+              {settings.type === "ecoute" ? (
+                <ListenPrompt prompt={currentQuestion.prompt} />
+              ) : (
+                <PromptBox currentQuestion={currentQuestion} settings={settings} />
+              )}
+
               {/* INPUT MODE */}
               {settings.inputMode === "input" && (
                 <TextInput
@@ -126,14 +132,14 @@ export default function QuizScreen({ route, navigation }: Props) {
 
               {settings.inputMode === "multiple" && (
                 <View style={styles.choices}>
-                  {current.choices?.map((choice, index) => (
+                  {currentQuestion.choices?.map((choice, index) => (
                     <TouchableOpacity
                       key={`${choice}-${index}`}
                       style={[
                         styles.choice,
                         selected === choice && {
                           backgroundColor:
-                            choice === current.correctAnswer ? "#c6f6d5" : "#feb2b2",
+                            choice === currentQuestion.correctAnswer ? "#c6f6d5" : "#feb2b2",
                         },
                       ]}
                       onPress={() => !showResult && checkAnswer(choice)}
@@ -152,14 +158,6 @@ export default function QuizScreen({ route, navigation }: Props) {
                   </Text>
                 </View>
               )}
-
-              {settings.type === "ecoute" && (
-                <View style={{ alignItems: "center", marginTop: 20 }}>
-                  <Text style={{ fontSize: 16, fontStyle: "italic" }}>
-                    (Quiz d’écoute en cours de construction)
-                  </Text>
-                </View>
-              )}
             </View>
 
             {/* Feedback */}
@@ -167,8 +165,8 @@ export default function QuizScreen({ route, navigation }: Props) {
               <View style={styles.feedbackContainer}>
                 <Feedback
                   feedback={feedback}
-                  correctAnswer={current.correctAnswer}
-                  phonetic={current.phonetic}
+                  correctAnswer={currentQuestion.correctAnswer}
+                  phonetic={currentQuestion.phonetic}
                 />
               </View>
             )}
@@ -272,4 +270,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
   },
+  promptText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#333",
+    textAlign: "center",
+    marginBottom: 20,
+  }
 });

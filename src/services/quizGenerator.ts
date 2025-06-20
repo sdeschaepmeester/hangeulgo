@@ -110,6 +110,10 @@ export async function generateQuestions(settings: GameSettings): Promise<Questio
                 } else {
                     q.prompt = entry.ko;
                     q.correctAnswer = entry.ko;
+                    q.choices = shuffle([
+                        entry.ko,
+                        ...shuffle(rows.map((e) => e.ko).filter((v) => v !== entry.ko)).slice(0, 3),
+                    ]);
                 }
                 break;
         }
@@ -117,6 +121,5 @@ export async function generateQuestions(settings: GameSettings): Promise<Questio
         return q;
     });
 
-    console.log(questions);
     return questions;
 }
