@@ -7,20 +7,13 @@ type Props = {
     allTags: string[];
     selectedTags: string[];
     onChange: (tags: string[]) => void;
-    placeholder?: string;
     label?: string;
+    withLimits?: boolean;
 };
 
 const MAX_TAGS_PER_WORD = 4;
 
-export default function TagSelector({
-    mode,
-    allTags,
-    selectedTags,
-    onChange,
-    placeholder = "Ajouter ou rechercher un mot-clé...",
-    label = "Mots-clés",
-}: Props) {
+export default function TagSelector({ mode, allTags, selectedTags, onChange, label = "Thèmes", withLimits = true, }: Props) {
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState("");
     const [isTouchingList, setIsTouchingList] = useState(false);
@@ -30,9 +23,8 @@ export default function TagSelector({
         return allTags.filter((tag) => tag.toLowerCase().includes(lower));
     }, [input, allTags]);
 
-    const canAddTag = selectedTags.length < MAX_TAGS_PER_WORD;
+    const canAddTag = !withLimits || selectedTags.length < MAX_TAGS_PER_WORD;
 
-    // Add a tag if it doesn't exist in the list and limit is not reached
     const handleToggle = (tag: string) => {
         const isSelected = selectedTags.includes(tag);
         if (!isSelected && !canAddTag) return;
@@ -98,7 +90,7 @@ export default function TagSelector({
                                     }
                                 }}
                                 onSubmitEditing={handleAdd}
-                                placeholder={placeholder}
+                                placeholder={"Ajouter ou rechercher un mot-clé..."}
                                 placeholderTextColor="#999"
                                 style={{ flex: 1, color: "#000", backgroundColor: "#fff" }}
                                 maxLength={25}
@@ -174,7 +166,7 @@ export default function TagSelector({
                     )}
 
                     {/* ------------ Selected tags ------------ */}
-                    {selectedTags.length >= MAX_TAGS_PER_WORD && (
+                    {withLimits && selectedTags.length >= MAX_TAGS_PER_WORD && (
                         <Text style={{ color: "#f57c00", fontSize: 13, marginTop: 6 }}>
                             La limite de {MAX_TAGS_PER_WORD} mots-clés est atteinte.
                         </Text>
