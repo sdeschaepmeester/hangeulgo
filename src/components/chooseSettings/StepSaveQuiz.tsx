@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Dimensions } from "react-native";
+import { MAX_SAVED_QUIZZES } from "@/data/constants";
+import { getSavedQuizCount } from "@/services/quiz";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Dimensions, } from "react-native";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -11,13 +13,47 @@ type Props = {
 };
 
 export default function StepSaveQuiz({ saveEnabled, saveName, onToggleSave, onChangeName }: Props) {
+    const [isLimitReached, setIsLimitReached] = useState(false);
+
+    useEffect(() => {
+        getSavedQuizCount().then((count) => {
+            if (count >= MAX_SAVED_QUIZZES) {
+                setIsLimitReached(true);
+            }
+        });
+    }, []);
+
     return (
         <View style={styles.container}>
             {/* Checkbox */}
-            <TouchableOpacity style={styles.checkboxContainer} onPress={onToggleSave}>
-                <View style={[styles.box, saveEnabled && styles.boxChecked]} />
-                <Text style={styles.label}>Sauvegarder ce quiz</Text>
+            <TouchableOpacity
+                style={styles.checkboxContainer}
+                onPress={onToggleSave}
+                disabled={isLimitReached}
+            >
+                <View
+                    style={[
+                        styles.box,
+                        saveEnabled && styles.boxChecked,
+                        isLimitReached && { opacity: 0.3 },
+                    ]}
+                />
+                <Text
+                    style={[
+                        styles.label,
+                        isLimitReached && styles.labelDisabled,
+                    ]}
+                >
+                    Sauvegarder ce quiz
+                </Text>
             </TouchableOpacity>
+
+            {/* Warning */}
+            {isLimitReached && (
+                <Text style={styles.warning}>
+                    La limite de quiz sauvegardés est atteinte, supprimez-en pour en ajouter d'autres.
+                </Text>
+            )}
 
             {/* Input name */}
             {saveEnabled && (
@@ -36,7 +72,7 @@ const styles = StyleSheet.create({
     container: {
         width: "100%",
         alignItems: "center",
-        gap: 16,
+        gap: 12,
     },
     checkboxContainer: {
         flexDirection: "row",
@@ -57,6 +93,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         color: "#333",
+    },
+    labelDisabled: {
+        color: "#999",
+        fontStyle: "italic",
+    },
+    warning: {
+        fontSize: 14,
+        color: "#ff9800",
+        textAlign: "center",
     },
     input: {
         width: windowWidth * 0.8,

@@ -2,14 +2,19 @@ import { dbPromise } from "@/db/database";
 import type { GameSettings } from "@/types/GameSettings";
 import type { SavedQuizEntry } from "@/types/SavedQuizEntry";
 
+/**
+ * Save a custom quiz to the database.
+ */
 export async function saveCustomQuiz(name: string, settings: GameSettings) {
     const db = await dbPromise;
     const { type, subType, inputMode, difficulties, length, tags } = settings;
 
+    const finalName = name.trim() === "" ? "Quiz sans nom" : name.trim();
+
     await db.runAsync(
         `INSERT INTO saved_quiz (name, type, subType, inputMode, difficulties, length, tags)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        name,
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        finalName,
         type,
         subType,
         inputMode,
@@ -30,6 +35,9 @@ type RawSavedQuiz = {
     tags: string | null;
 };
 
+/**
+ * Fetch all saved quizzes from the database.
+ */
 export async function getAllSavedQuizzes(): Promise<SavedQuizEntry[]> {
     const db = await dbPromise;
     const rows = await db.getAllAsync<RawSavedQuiz>(`SELECT * FROM saved_quiz ORDER BY id DESC`);
@@ -46,7 +54,22 @@ export async function getAllSavedQuizzes(): Promise<SavedQuizEntry[]> {
     }));
 }
 
+/**
+ * Delete single saved quiz by ID.
+ */
 export async function deleteSavedQuiz(id: number): Promise<void> {
     const db = await dbPromise;
     await db.runAsync(`DELETE FROM saved_quiz WHERE id = ?`, id);
+}
+
+
+/**
+ * Get number of saved quizzes in the database.
+ */
+export async function getSavedQuizCount(): Promise<number> {
+    const db = await dbPromise;
+    const result = await db.getFirstAsync<{ count: number }>(`
+    SELECT COUNT(*) as count FROM saved_quiz
+  `);
+    return result?.count ?? 0;
 }

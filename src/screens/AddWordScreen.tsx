@@ -6,6 +6,7 @@ import { RootStackParamList } from "@/App";
 import AlertCustom from "@/components/AlertCustom";
 import WordForm from "@/components/form/WordForm";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import NavBar from "@/components/NavBar";
 
 export default function AddWordScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -30,10 +31,7 @@ export default function AddWordScreen() {
           onSuccess={() => setShowSuccess(true)}
         />
 
-        <Image
-          source={require("../../assets/dictionary.png")}
-          style={styles.dictionary}
-        />
+        <NavBar />
 
         {/* ----------------- Modale success add word ----------------- */}
         <AlertCustom
@@ -63,11 +61,4 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   title: { fontSize: 22, fontWeight: "bold" },
-  dictionary: {
-    width: 120,
-    height: 120,
-    alignSelf: "center",
-    marginTop: 24,
-    opacity: 0.9,
-  },
 });

@@ -6,6 +6,7 @@ import { fr } from "date-fns/locale";
 import { MaterialIcons } from "@expo/vector-icons";
 import AlertCustom from "@/components/AlertCustom";
 import IconButton from "@/components/IconButton";
+import NavBar from "@/components/NavBar";
 
 export default function ScoreScreen() {
     const [scores, setScores] = useState<SavedScore[]>([]);
@@ -86,7 +87,6 @@ export default function ScoreScreen() {
                     data={scores}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={renderItem}
-                    contentContainerStyle={{ paddingBottom: 100 }}
                 />
             )}
 

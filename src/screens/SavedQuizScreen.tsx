@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Platform, UIManager } from "react-native";
+import { View, StyleSheet, Platform, UIManager, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import NavBar from "@/components/NavBar";
@@ -10,6 +10,7 @@ import type { SavedQuizEntry } from "@/types/SavedQuizEntry";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
+import IconButton from "@/components/IconButton";
 
 if (Platform.OS === "android") {
     UIManager.setLayoutAnimationEnabledExperimental?.(true);
@@ -18,6 +19,7 @@ if (Platform.OS === "android") {
 export default function SavedQuizScreen() {
     const [quizzes, setQuizzes] = useState<SavedQuizEntry[]>([]);
     const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
+    const [confirmDeleteAll, setConfirmDeleteAll] = useState(false);
 
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -38,6 +40,14 @@ export default function SavedQuizScreen() {
         }
     };
 
+    const handleConfirmDeleteAll = async () => {
+        for (const quiz of quizzes) {
+            await deleteSavedQuiz(quiz.id);
+        }
+        setConfirmDeleteAll(false);
+        fetchQuizzes();
+    };
+
     const handleSelect = (quiz: SavedQuizEntry) => {
         navigation.navigate("Quiz", {
             settings: {
@@ -53,14 +63,33 @@ export default function SavedQuizScreen() {
 
     return (
         <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
-            <View style={styles.listSection}>
-                <SavedQuizList
-                    data={quizzes}
-                    onDelete={(id) => setConfirmDeleteId(id)}
-                    onSelect={handleSelect}
-                />
+            <View style={styles.header}>
+                <Text style={styles.title}>Mes quiz</Text>
+                {quizzes.length > 0 && (
+                    <IconButton
+                        label="Supprimer tout"
+                        icon="delete-empty"
+                        onPress={() => setConfirmDeleteAll(true)}
+                        backgroundColor="#fcebea"
+                        color="#e53935"
+                    />
+                )}
             </View>
+
+            <View style={styles.listSection}>
+                {quizzes.length === 0 ? (
+                    <Text style={styles.empty}>Aucun quiz sauvegardé.</Text>
+                ) : (
+                    <SavedQuizList
+                        data={quizzes}
+                        onDelete={(id) => setConfirmDeleteId(id)}
+                        onSelect={handleSelect}
+                    />
+                )}
+            </View>
+
             <NavBar />
+
             {confirmDeleteId !== null && (
                 <AlertCustom
                     visible={true}
@@ -74,19 +103,51 @@ export default function SavedQuizScreen() {
                     cancelText="Annuler"
                 />
             )}
+
+            {confirmDeleteAll && (
+                <AlertCustom
+                    visible={true}
+                    icon={<MaterialCommunityIcons name="delete-alert" size={30} color="#e53935" />}
+                    iconColor="#e53935"
+                    title="Tout supprimer"
+                    description={`Cela va supprimer ${quizzes.length} quiz sauvegardé${quizzes.length > 1 ? "s" : ""}. Continuer ?`}
+                    onClose={() => setConfirmDeleteAll(false)}
+                    onConfirm={handleConfirmDeleteAll}
+                    confirmText="Supprimer tout"
+                    cancelText="Annuler"
+                />
+            )}
         </SafeAreaView>
     );
 }
-
 
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
         backgroundColor: "#fff",
     },
+    header: {
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 10,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    title: {
+        fontSize: 22,
+        fontWeight: "bold",
+        color: "#333",
+    },
     listSection: {
         flex: 1,
-        padding: 12,
+        paddingHorizontal: 12,
         marginBottom: 24,
     },
+    empty: {
+        textAlign: "center",
+        marginTop: 40,
+        fontSize: 16,
+        color: "#666",
+    }
 });

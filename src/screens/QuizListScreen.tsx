@@ -1,11 +1,5 @@
 import React from "react";
-import {
-    View,
-    Text,
-    StyleSheet,
-    Dimensions,
-    TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import MainLayout from "@/layouts/MainLayout";
 import SquareButton from "@/components/SquareButton";
@@ -14,7 +8,6 @@ import { RootStackParamList } from "@/App";
 import { useNavigation } from "@react-navigation/native";
 import type { GameType } from "@/types/GameSettings";
 import type { ComponentProps } from "react";
-import NavBar from "@/components/NavBar";
 
 const screenWidth = Dimensions.get("window").width;
 const BUTTON_WIDTH = (screenWidth - 60) / 2;
@@ -71,23 +64,24 @@ export default function QuizListScreen() {
 
 const styles = StyleSheet.create({
     title: {
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: "bold",
-        textAlign: "center",
-        marginVertical: 20,
         color: "#333",
+        paddingHorizontal: 20,
+        paddingBottom: 10,
     },
     grid: {
         flexDirection: "row",
         flexWrap: "wrap",
         justifyContent: "space-between",
+        marginTop: 20,
     },
     buttonContainer: {
         width: BUTTON_WIDTH,
         marginBottom: 20,
     },
     icon: {
-        fontSize: 22,
+        fontSize: 64,
         color: "#595959",
     },
     savedButton: {
