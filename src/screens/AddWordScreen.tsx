@@ -72,15 +72,12 @@ export default function AddWordScreen() {
 const styles = StyleSheet.create({
   scrollContainer: {
     padding: 18,
-    paddingTop: 50,
-    gap: 12,
     flexGrow: 1,
   },
   headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 12,
   },
   title: {
     fontSize: 20,

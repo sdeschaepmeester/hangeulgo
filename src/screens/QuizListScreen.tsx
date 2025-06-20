@@ -8,6 +8,7 @@ import { RootStackParamList } from "@/App";
 import { useNavigation } from "@react-navigation/native";
 import type { GameType } from "@/types/GameSettings";
 import type { ComponentProps } from "react";
+import NavBar from "@/components/NavBar";
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
@@ -31,39 +32,42 @@ export default function QuizListScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     return (
-        <ScrollView
-            style={styles.body}
-            contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
-        >
-            <Text style={styles.title}>Choisis ton jeu</Text>
-
-            <View style={styles.grid}>
-                {quizList.map((item, index) => (
-                    <View
-                        key={item.label}
-                        style={[
-                            styles.buttonContainer,
-                            index % 2 === 0 ? { marginRight: 20 } : {},
-                        ]}
-                    >
-                        <SquareButton
-                            icon={<MaterialCommunityIcons name={item.icon} style={styles.icon} />}
-                            label={item.label}
-                            bgColor={item.color}
-                            onClick={() => navigation.navigate("ChooseSettings", { type: item.type })}
-                        />
-                    </View>
-                ))}
-            </View>
-
-            <TouchableOpacity
-                onPress={() => navigation.navigate("SavedQuiz")}
-                style={styles.savedButton}
+        <>
+            <ScrollView
+                style={styles.body}
+                contentContainerStyle={styles.scrollContent}
+                showsVerticalScrollIndicator={false}
             >
-                <Text style={styles.savedButtonText}>Voir mes quiz sauvegardés</Text>
-            </TouchableOpacity>
-        </ScrollView>
+                <Text style={styles.title}>Choisis ton jeu</Text>
+
+                <View style={styles.grid}>
+                    {quizList.map((item, index) => (
+                        <View
+                            key={item.label}
+                            style={[
+                                styles.buttonContainer,
+                                index % 2 === 0 ? { marginRight: 20 } : {},
+                            ]}
+                        >
+                            <SquareButton
+                                icon={<MaterialCommunityIcons name={item.icon} style={styles.icon} />}
+                                label={item.label}
+                                bgColor={item.color}
+                                onClick={() => navigation.navigate("ChooseSettings", { type: item.type })}
+                            />
+                        </View>
+                    ))}
+                </View>
+
+                <TouchableOpacity
+                    onPress={() => navigation.navigate("SavedQuiz")}
+                    style={styles.savedButton}
+                >
+                    <Text style={styles.savedButtonText}>Voir mes quiz sauvegardés</Text>
+                </TouchableOpacity>
+            </ScrollView>
+            <NavBar />
+        </>
     );
 }
 

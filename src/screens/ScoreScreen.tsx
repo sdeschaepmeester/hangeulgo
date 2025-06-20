@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, Image } from "react-native";
+import {
+    View,
+    Text,
+    FlatList,
+    StyleSheet,
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+} from "react-native";
 import { getScores, clearScores, type SavedScore } from "@/services/score";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { MaterialIcons } from "@expo/vector-icons";
 import AlertCustom from "@/components/AlertCustom";
 import IconButton from "@/components/IconButton";
+import NavBar from "@/components/NavBar";
 
 export default function ScoreScreen() {
     const [scores, setScores] = useState<SavedScore[]>([]);
@@ -73,63 +82,75 @@ export default function ScoreScreen() {
     };
 
     return (
-        <View style={styles.container}>
-            <View style={styles.headerRow}>
-                <Text style={styles.title}>Historique des scores</Text>
-                {scores.length > 0 && (
-                    <IconButton
-                        label="Tout effacer"
-                        icon="delete"
-                        onPress={() => setShowConfirm(true)}
-                        backgroundColor="#fcebea"
-                        color="#e53935"
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === "ios" ? "padding" : undefined}
+        >
+            <View style={styles.container}>
+                {/* ----------- Header ----------- */}
+                <View style={styles.headerRow}>
+                    <Text style={styles.title}>Historique des scores</Text>
+                    {scores.length > 0 && (
+                        <IconButton
+                            label="Tout effacer"
+                            icon="delete"
+                            onPress={() => setShowConfirm(true)}
+                            backgroundColor="#fcebea"
+                            color="#e53935"
+                        />
+                    )}
+                </View>
+
+                {/*----------- Score list -----------*/}
+                {scores.length === 0 ? (
+                    <Text style={styles.empty}>Aucun score enregistré.</Text>
+                ) : (
+                    <FlatList
+                        data={scores}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={renderItem}
+                        contentContainerStyle={styles.list}
                     />
                 )}
-            </View>
 
-            {scores.length === 0 ? (
-                <Text style={styles.empty}>Aucun score enregistré.</Text>
-            ) : (
-                <FlatList
-                    data={scores}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={renderItem}
-                    style={{ marginBottom: "10%" }}
+                <NavBar />
+
+                {/* ----------- Modale confirmation -----------*/}
+                <AlertCustom
+                    visible={showConfirm}
+                    title="Réinitialiser les scores"
+                    description="Tous les scores vont être supprimés. Cette action est irréversible."
+                    onClose={() => setShowConfirm(false)}
+                    confirmText="Confirmer"
+                    cancelText="Annuler"
+                    onConfirm={handleClear}
+                    icon={<MaterialIcons name="delete-forever" size={30} color="#e53935" />}
+                    iconColor="#e53935"
                 />
-            )}
-
-            <AlertCustom
-                visible={showConfirm}
-                title="Réinitialiser les scores"
-                description="Tous les scores vont être supprimés. Cette action est irréversible."
-                onClose={() => setShowConfirm(false)}
-                confirmText="Confirmer"
-                cancelText="Annuler"
-                onConfirm={handleClear}
-                icon={
-                    <MaterialIcons name="delete-forever" size={30} color="#e53935" />
-                }
-                iconColor="#e53935"
-            />
-        </View>
+            </View>
+        </KeyboardAvoidingView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
         backgroundColor: "#f9f9f9",
+        padding: 18,
     },
     headerRow: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginBottom: 16,
+        marginBottom: 12,
     },
     title: {
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: "bold",
+        color: "#333",
+    },
+    list: {
+        paddingBottom: 82,
     },
     card: {
         flexDirection: "row",
