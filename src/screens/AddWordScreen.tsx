@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, KeyboardAvoidingView, Platform, } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
@@ -7,10 +7,21 @@ import AlertCustom from "@/components/AlertCustom";
 import WordForm from "@/components/form/WordForm";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import NavBar from "@/components/NavBar";
+import { isLexiconLimitReached } from "@/services/lexicon";
+import WarningLimit from "@/components/WarningLimit";
 
 export default function AddWordScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isLimitReached, setIsLimitReached] = useState(false);
+
+  const checkLimit = () => {
+    isLexiconLimitReached().then(setIsLimitReached);
+  };
+
+  useEffect(() => {
+    checkLimit();
+  }, []);
 
   return (
     <KeyboardAvoidingView
@@ -21,14 +32,25 @@ export default function AddWordScreen() {
         <View style={styles.headerRow}>
           <Text style={styles.title}>Ajouter du vocabulaire</Text>
           <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-            <MaterialIcons name="close" size={28} color="#999" />
+            <MaterialIcons name="close" size={24} color="#999" />
           </TouchableOpacity>
         </View>
+
+        {/* ----------------- Warning if number max of words reached ----------------- */}
+        {isLimitReached && (
+          <WarningLimit
+            label="La limite de mots du lexique est atteinte, supprimez-en pour en ajouter d'autres."
+            onClick={() => navigation.navigate("Lexicon")}
+          />
+        )}
 
         {/* ----------------- Add word form ----------------- */}
         <WordForm
           edit={false}
-          onSuccess={() => setShowSuccess(true)}
+          onSuccess={() => {
+            setShowSuccess(true);
+            checkLimit();
+          }}
         />
 
         <NavBar />
@@ -60,5 +82,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 12,
   },
-  title: { fontSize: 22, fontWeight: "bold" },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#333",
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+  },
 });

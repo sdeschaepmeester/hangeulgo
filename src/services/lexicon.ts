@@ -1,3 +1,4 @@
+import { MAX_SAVED_LEXICON_ENTRIES } from "@/data/constants";
 import { dbPromise } from "@/db/database";
 import type { Difficulty } from "@/types/Difficulty";
 import type { LexiconEntry } from "@/types/LexiconEntry";
@@ -50,6 +51,17 @@ export async function getFilteredLexicon(
     );
 
     return rows;
+}
+
+/**
+ * Check if the lexicon limit has been reached
+ */
+export async function isLexiconLimitReached(): Promise<boolean> {
+    const db = await dbPromise;
+    const result = await db.getFirstAsync<{ count: number }>(
+        "SELECT COUNT(*) as count FROM lexicon"
+    );
+    return (result?.count ?? 0) >= MAX_SAVED_LEXICON_ENTRIES;
 }
 
 /**

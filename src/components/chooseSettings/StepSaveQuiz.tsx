@@ -2,6 +2,10 @@ import { MAX_SAVED_QUIZZES } from "@/data/constants";
 import { getSavedQuizCount } from "@/services/quiz";
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Dimensions, } from "react-native";
+import WarningLimit from "../WarningLimit";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "@/App";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -14,6 +18,7 @@ type Props = {
 
 export default function StepSaveQuiz({ saveEnabled, saveName, onToggleSave, onChangeName }: Props) {
     const [isLimitReached, setIsLimitReached] = useState(false);
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     useEffect(() => {
         getSavedQuizCount().then((count) => {
@@ -25,7 +30,7 @@ export default function StepSaveQuiz({ saveEnabled, saveName, onToggleSave, onCh
 
     return (
         <View style={styles.container}>
-            {/* Checkbox */}
+            {/* ----------------- Checkbox ----------------- */}
             <TouchableOpacity
                 style={styles.checkboxContainer}
                 onPress={onToggleSave}
@@ -48,14 +53,16 @@ export default function StepSaveQuiz({ saveEnabled, saveName, onToggleSave, onCh
                 </Text>
             </TouchableOpacity>
 
-            {/* Warning */}
+            {/* ----------------- Warning ----------------- */}
             {isLimitReached && (
-                <Text style={styles.warning}>
-                    La limite de quiz sauvegardés est atteinte, supprimez-en pour en ajouter d'autres.
-                </Text>
+                <WarningLimit
+                    label="La limite de quiz sauvegardés est atteinte, supprimez-en pour en ajouter d'autres."
+                    onClick={() => navigation.navigate("SavedQuiz")}
+                />
             )}
 
-            {/* Input name */}
+
+            {/* ----------------- Input name -----------------*/}
             {saveEnabled && (
                 <TextInput
                     style={styles.input}
