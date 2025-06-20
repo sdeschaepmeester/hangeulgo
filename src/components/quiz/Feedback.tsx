@@ -5,11 +5,10 @@ import { MaterialIcons } from "@expo/vector-icons";
 interface FeedbackProps {
     feedback: "correct" | "wrong" | null;
     correctAnswer?: string;
-    phonetic?: string;
 }
 
-export default function Feedback({ feedback, correctAnswer, phonetic }: FeedbackProps) {
-    const iconName = feedback === "correct" ? "emoji-events" : "cancel";
+export default function Feedback({ feedback, correctAnswer }: FeedbackProps) {
+    const iconName = feedback === "correct" ? "emoji-events" : "block";
     const iconColor = feedback === "correct" ? "gold" : "#ff5e5e";
 
     return (

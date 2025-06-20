@@ -8,6 +8,7 @@ import Feedback from "@/components/quiz/Feedback";
 import { Question } from "@/types/Question";
 import ListenPrompt from "@/components/quiz/ListenPrompt";
 import PromptBox from "@/components/quiz/PromptBox";
+import OrderInput from "@/components/quiz/OrderInput";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Quiz">;
 
@@ -151,12 +152,13 @@ export default function QuizScreen({ route, navigation }: Props) {
               )}
 
               {settings.inputMode === "order" && (
-                <View style={{ alignItems: "center", marginTop: 20 }}>
-                  <Text style={{ fontSize: 16, fontStyle: "italic" }}>
-                    (Composant de remise en ordre à venir)
-                  </Text>
-                </View>
+                <OrderInput
+                  correctAnswer={currentQuestion.correctAnswer}
+                  onSubmit={checkAnswer}
+                  disabled={showResult}
+                />
               )}
+
             </View>
 
             {/* Feedback */}
@@ -165,7 +167,6 @@ export default function QuizScreen({ route, navigation }: Props) {
                 <Feedback
                   feedback={feedback}
                   correctAnswer={currentQuestion.correctAnswer}
-                  phonetic={currentQuestion.phonetic}
                 />
               </View>
             )}
