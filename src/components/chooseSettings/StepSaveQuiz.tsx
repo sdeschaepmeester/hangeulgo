@@ -68,7 +68,12 @@ export default function StepSaveQuiz({ saveEnabled, saveName, onToggleSave, onCh
                     style={styles.input}
                     placeholder="Nom de la sauvegarde"
                     value={saveName}
-                    onChangeText={onChangeName}
+                    onChangeText={(text) => {
+                        if (text.length <= 30) {
+                            onChangeName(text);
+                        }
+                    }}
+                    maxLength={30}
                 />
             )}
         </View>
@@ -111,13 +116,13 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     input: {
+        backgroundColor: "#fff",
         width: windowWidth * 0.8,
         padding: 12,
         borderRadius: 8,
         borderColor: "#ccc",
         borderWidth: 1,
         fontSize: 16,
-        backgroundColor: "#fff",
         textAlign: "center",
     },
 });

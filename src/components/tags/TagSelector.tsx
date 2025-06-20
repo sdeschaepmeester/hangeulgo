@@ -74,8 +74,10 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, pla
                             <TextInput
                                 value={input}
                                 onChangeText={(text) => {
-                                    setInput(text);
-                                    setOpen(text.length > 0);
+                                    if (text.length <= 50) {
+                                        setInput(text);
+                                        setOpen(text.length > 0);
+                                    }
                                 }}
                                 onFocus={() => setOpen(true)}
                                 onBlur={() => {
@@ -86,7 +88,8 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, pla
                                 onSubmitEditing={handleAdd}
                                 placeholder={placeholder}
                                 placeholderTextColor="#999"
-                                style={{ flex: 1, color: "#000" }}
+                                style={{ flex: 1, color: "#000", backgroundColor: "#fff" }}
+                                maxLength={25}
                             />
                         ) : (
                             <Text style={{ color: "#333" }}>

@@ -137,10 +137,12 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     ref={frRef}
                     value={fr}
                     onChangeText={(text) => {
-                        setFr(text);
-                        setKoSuggested(null);
+                        if (text.length <= 50) {
+                            setFr(text);
+                            setKoSuggested(null);
+                        }
                     }}
-                    style={styles.input}
+                    style={[styles.input, { backgroundColor: "#fff" }]}
                     placeholder="Ex : Bonjour"
                     placeholderTextColor={"#696969"}
                     returnKeyType="next"
@@ -189,11 +191,13 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     ref={koRef}
                     value={ko}
                     onChangeText={(text) => {
-                        setKo(text);
-                        setKoreanExists(false);
+                        if (text.length <= 50) {
+                            setKo(text);
+                            setKoreanExists(false);
+                        }
                     }}
                     onBlur={handleKoBlur}
-                    style={styles.input}
+                    style={[styles.input, { backgroundColor: "#fff" }]}
                     placeholder="Ex : 안녕하세요"
                     placeholderTextColor={"#696969"}
                     keyboardType="default"
@@ -214,8 +218,10 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 <TextInput
                     ref={phoneticRef}
                     value={phonetic}
-                    onChangeText={setPhonetic}
-                    style={styles.input}
+                    onChangeText={(text) => {
+                        if (text.length <= 50) setPhonetic(text);
+                    }}
+                    style={[styles.input, { backgroundColor: "#fff" }]}
                     placeholder="Ex : annyeonghaseyo"
                     placeholderTextColor={"#696969"}
                     returnKeyType="done"
