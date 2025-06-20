@@ -1,36 +1,56 @@
-import React from "react";
-import { ScrollView, StyleSheet, Dimensions, ViewStyle } from "react-native";
-
-const { height } = Dimensions.get("window");
+import React, { ReactNode } from "react";
+import { View, KeyboardAvoidingView, Platform, StyleSheet, ScrollView, ViewStyle, } from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import NavBar from "@/components/NavBar";
 
 type Props = {
-    children: React.ReactNode;
+    children: ReactNode;
+    scrollable?: boolean;
     style?: ViewStyle;
-    noPadding?: boolean;
 };
 
-export default function MainLayout({ children, style, noPadding = false }: Props) {
-    return (
+export default function MainLayout({ children, scrollable = false, style }: Props) {
+    const insets = useSafeAreaInsets();
+    const navBarHeight = 60 + insets.bottom;
+
+    const content = scrollable ? (
         <ScrollView
             contentContainerStyle={[
-                styles.container,
-                !noPadding && styles.padded,
+                styles.body,
+                { paddingBottom: navBarHeight },
                 style,
             ]}
-            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
         >
             {children}
         </ScrollView>
+    ) : (
+        <View style={[styles.body, { paddingBottom: navBarHeight }, style]}>
+            {children}
+        </View>
+    );
+
+    return (
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : undefined}
+            style={{ flex: 1 }}
+        >
+            <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
+                {content}
+                <NavBar />
+            </SafeAreaView>
+        </KeyboardAvoidingView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        minHeight: height,
+    safeArea: {
+        flex: 1,
+        backgroundColor: "#f9f9f9",
     },
-    padded: {
-        paddingHorizontal: 20,
-        paddingTop: 20,
-        paddingBottom: 40,
+    body: {
+        flexGrow: 1,
+        paddingHorizontal: 10,
+        paddingTop: 18,
     },
 });

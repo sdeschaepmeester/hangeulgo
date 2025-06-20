@@ -73,12 +73,21 @@ export default function SavedQuizItem({ quiz, onDelete, onSelect }: Props) {
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: "#f9f9f9",
-        padding: 14,
-        borderRadius: 10,
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
+        backgroundColor: "#fff",
+        padding: 16,
+        marginBottom: 12,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 6,
+        elevation: 1,
+        borderWidth: 1,
+        borderColor: "#e0e0e0",
+        borderRadius: 12,
+        overflow: "hidden",
     },
     info: {
         flex: 1,

@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Platform, UIManager, Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, StyleSheet, Text, ScrollView, Platform, UIManager } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import NavBar from "@/components/NavBar";
-import AlertCustom from "@/components/AlertCustom";
-import { getAllSavedQuizzes, deleteSavedQuiz, isQuizValid } from "@/services/quiz";
-import SavedQuizList from "@/components/quiz/SavedQuizList";
-import type { SavedQuizEntry } from "@/types/SavedQuizEntry";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "@/App";
+import AlertCustom from "@/components/AlertCustom";
 import IconButton from "@/components/IconButton";
+import SavedQuizList from "@/components/quiz/SavedQuizList";
+import MainLayout from "@/layouts/MainLayout";
+
+import { getAllSavedQuizzes, deleteSavedQuiz, isQuizValid } from "@/services/quiz";
+import type { SavedQuizEntry } from "@/types/SavedQuizEntry";
+import { RootStackParamList } from "@/App";
 
 if (Platform.OS === "android") {
     UIManager.setLayoutAnimationEnabledExperimental?.(true);
@@ -25,14 +25,12 @@ export default function SavedQuizScreen() {
 
     const fetchQuizzes = async () => {
         const all = await getAllSavedQuizzes();
-
         const withValidity = await Promise.all(
             all.map(async (quiz) => {
                 const valid = await isQuizValid(quiz);
                 return { ...quiz, disabled: !valid };
             })
         );
-
         setQuizzes(withValidity);
     };
 
@@ -58,7 +56,6 @@ export default function SavedQuizScreen() {
 
     const handleSelect = (quiz: SavedQuizEntry & { disabled?: boolean }) => {
         if (quiz.disabled) return;
-
         navigation.navigate("Quiz", {
             settings: {
                 type: quiz.type,
@@ -72,7 +69,8 @@ export default function SavedQuizScreen() {
     };
 
     return (
-        <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
+        <MainLayout scrollable={false}>
+            {/* --------- Header --------- */}
             <View style={styles.header}>
                 <Text style={styles.title}>Mes quiz</Text>
                 {quizzes.length > 0 && (
@@ -86,7 +84,12 @@ export default function SavedQuizScreen() {
                 )}
             </View>
 
-            <View style={styles.listSection}>
+            {/* --------- Scrollable saved quiz --------- */}
+            <ScrollView
+                style={styles.scroll}
+                contentContainerStyle={styles.listSection}
+                showsVerticalScrollIndicator={false}
+            >
                 {quizzes.length === 0 ? (
                     <Text style={styles.empty}>Aucun quiz sauvegardé.</Text>
                 ) : (
@@ -96,8 +99,9 @@ export default function SavedQuizScreen() {
                         onSelect={handleSelect}
                     />
                 )}
-            </View>
+            </ScrollView>
 
+            {/* --------- Alerts --------- */}
             {confirmDeleteId !== null && (
                 <AlertCustom
                     visible={true}
@@ -125,17 +129,13 @@ export default function SavedQuizScreen() {
                     cancelText="Annuler"
                 />
             )}
-        </SafeAreaView>
+        </MainLayout>
     );
 }
 
 const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-        backgroundColor: "#fff",
-    },
     header: {
-        paddingHorizontal: 20,
+        paddingHorizontal: 18,
         paddingTop: 20,
         paddingBottom: 10,
         flexDirection: "row",
@@ -147,10 +147,12 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#333",
     },
-    listSection: {
+    scroll: {
         flex: 1,
-        paddingHorizontal: 12,
-        marginBottom: 24,
+        width: "100%",
+    },
+    listSection: {
+        paddingBottom: 24,
     },
     empty: {
         textAlign: "center",

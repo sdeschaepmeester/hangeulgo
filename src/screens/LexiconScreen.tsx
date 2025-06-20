@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Platform, UIManager, TextInput } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { Difficulty } from "@/types/Difficulty";
 import type { LexiconEntry } from "@/types/LexiconEntry";
-import NavBar from "@/components/NavBar";
 import FilterBarToggle from "@/components/lexicon/FilterBarToggle";
 import SortOptions from "@/components/lexicon/SortOptions";
 import LexiconFilters from "@/components/lexicon/LexiconFilters";
@@ -12,8 +10,8 @@ import AlertCustom from "@/components/AlertCustom";
 import { getFilteredLexicon, toggleLexiconActive, deleteLexiconEntry, updateFrenchDuplicateFormatting } from "@/services/lexicon";
 import { getAllUniqueTags } from "@/services/tags";
 import LexiconList from "@/components/lexicon/LexiconList";
+import MainLayout from "@/layouts/MainLayout";
 
-// Activate animation layout auto on Android without having to use Reanimated
 if (Platform.OS === "android") {
   UIManager.setLayoutAnimationEnabledExperimental?.(true);
 }
@@ -32,7 +30,6 @@ export default function LexiconScreen() {
 
   const fetchLexicon = async () => {
     const rows = await getFilteredLexicon(selectedDifficulties, selectedTags, sortOrder);
-    // Search by french word
     if (searchTerm.trim()) {
       setLexicon(rows.filter((entry) =>
         entry.fr.toLowerCase().includes(searchTerm.toLowerCase())
@@ -42,8 +39,6 @@ export default function LexiconScreen() {
     }
   };
 
-
-  // Fetch all unique tags for filters
   useEffect(() => {
     getAllUniqueTags().then(setAllTags);
   }, []);
@@ -52,19 +47,16 @@ export default function LexiconScreen() {
     fetchLexicon().catch(console.error);
   }, [selectedDifficulties, sortOrder, selectedTags, searchTerm]);
 
-  // Fetch all tags
   const refreshTags = async () => {
     const tags = await getAllUniqueTags();
     setAllTags(tags);
   };
 
-  // Activate or deactivate a word
   const handleToggleActive = async (id: number, current: number) => {
     await toggleLexiconActive(id, current);
     fetchLexicon();
   };
 
-  // After deletion of several words, reset filters and fetch lexicon
   const resetFiltersAndFetchLexicon = () => {
     setSelectedDifficulties([]);
     setSelectedTags([]);
@@ -74,12 +66,10 @@ export default function LexiconScreen() {
     fetchLexicon();
   };
 
-  // Delete a single word 
   const handleDeleteWord = (id: number) => {
     setConfirmDeleteId(id);
   };
 
-  // Confirm single deletion
   const handleConfirmDelete = async () => {
     if (confirmDeleteId !== null) {
       await deleteLexiconEntry(confirmDeleteId);
@@ -89,7 +79,6 @@ export default function LexiconScreen() {
     }
   };
 
-  // Delete several words
   const handleConfirmDeleteSeveral = async () => {
     for (const entry of lexicon) {
       await deleteLexiconEntry(entry.id);
@@ -102,24 +91,23 @@ export default function LexiconScreen() {
   const updateLexicon = async (id: number) => {
     await updateFrenchDuplicateFormatting(id);
     await fetchLexicon();
-  }
+  };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['bottom']}>
-      {/* ----------------- Searchbar french word ----------------- */}
+    <MainLayout scrollable={false}>
+      {/* ---------- Searchbar ---------- */}
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
           placeholder="Recherche par mot"
           value={searchTerm}
-          onChangeText={(text) => {
-            setSearchTerm(text);
-          }}
+          onChangeText={setSearchTerm}
           placeholderTextColor="#888"
         />
       </View>
-      {/* ----------------- Filters section ----------------- */}
-      <View style={styles.filtersSection}>
+
+      {/* ---------- Filters ---------- */}
+      <View style={styles.fullWidth}>
         <FilterBarToggle
           onToggleSort={() => {
             setShowSortOptions((prev) => !prev);
@@ -154,20 +142,18 @@ export default function LexiconScreen() {
         )}
       </View>
 
-      {/* ----------------- Content section: List of lexicon words ----------------- */}
+      {/* ---------- Lexicon list ---------- */}
       <View style={styles.listSection}>
         <LexiconList
           data={lexicon}
           onToggle={handleToggleActive}
           onDelete={handleDeleteWord}
           onDeleteAll={() => setConfirmDeleteSeverals(true)}
-          onUpdate={async (id) => {
-            updateLexicon(id)
-          }}
+          onUpdate={updateLexicon}
         />
       </View>
 
-      {/* ----------------- Modales deletion single word ----------------- */}
+      {/* ---------- Alerts ---------- */}
       {confirmDeleteId !== null && (
         <AlertCustom
           visible={true}
@@ -181,8 +167,6 @@ export default function LexiconScreen() {
           cancelText="Annuler"
         />
       )}
-
-      {/* ----------------- Modales deletion whole lexicon ----------------- */}
       {confirmDeleteSeverals && (
         <AlertCustom
           visible={true}
@@ -196,40 +180,20 @@ export default function LexiconScreen() {
           cancelText="Annuler"
         />
       )}
-    </SafeAreaView>
+    </MainLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  filtersSection: {
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+  fullWidth: {
+    marginHorizontal: -18,
   },
   listSection: {
     flex: 1,
-    padding: 12,
-    marginBottom: 24
-  },
-  listHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 12,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
+    marginTop: 8,
   },
   searchContainer: {
-    padding: 12,
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    marginBottom: 10,
   },
   searchInput: {
     backgroundColor: "#f1f1f1",
@@ -237,5 +201,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 8,
     fontSize: 16,
-  }
+  },
 });

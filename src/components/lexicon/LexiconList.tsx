@@ -52,7 +52,6 @@ export default function LexiconList({ data, onToggle, onDelete, onDeleteAll, onU
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 12,
     },
     header: {
         flexDirection: "row",

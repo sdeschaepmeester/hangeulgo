@@ -1,21 +1,12 @@
 import React, { useEffect, useState } from "react";
-import {
-    View,
-    Text,
-    FlatList,
-    StyleSheet,
-    Image,
-    Platform,
-    KeyboardAvoidingView,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Text, FlatList, Image, StyleSheet } from "react-native";
 import { getScores, clearScores, type SavedScore } from "@/services/score";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { MaterialIcons } from "@expo/vector-icons";
 import AlertCustom from "@/components/AlertCustom";
 import IconButton from "@/components/IconButton";
-import NavBar from "@/components/NavBar";
+import MainLayout from "@/layouts/MainLayout";
 
 export default function ScoreScreen() {
     const [scores, setScores] = useState<SavedScore[]>([]);
@@ -43,23 +34,6 @@ export default function ScoreScreen() {
         return require("../../assets/bronze_medal.png");
     };
 
-    const getLabel = (item: SavedScore) => {
-        switch (item.type) {
-            case "comprehension":
-                return `Compréhension – ${item.subType === "frToKo" ? "🇫🇷 → 🇰🇷" : "🇰🇷 → 🇫🇷"}`;
-            case "ecoute":
-                return `Écoute – ${item.subType === "koToKo" ? "🇰🇷 → 🇰🇷" : "🇰🇷 → 🇫🇷"}`;
-            case "arrangement":
-                return "Puzzle";
-            case "ecriture":
-                return "Écriture – 🇫🇷 → 🇰🇷";
-            case "translation":
-                return "Traduction – 🇫🇷 → 🇰🇷";
-            default:
-                return "Quiz";
-        }
-    };
-
     const renderItem = ({ item }: { item: SavedScore }) => {
         const percent = Math.round((item.score / item.total) * 100);
         return (
@@ -67,15 +41,10 @@ export default function ScoreScreen() {
                 <Image source={getMedal(percent)} style={styles.medal} />
                 <View style={styles.details}>
                     <Text style={styles.percent}>{percent}%</Text>
-                    <Text style={styles.info}>
-                        {item.score} / {item.total}
-                    </Text>
-                    <Text style={styles.info}>{getLabel(item)}</Text>
+                    <Text style={styles.info}>{item.score} / {item.total}</Text>
+                    <Text style={styles.info}>{item.type}</Text>
                     <Text style={styles.date}>
-                        {formatDistanceToNow(new Date(item.date), {
-                            addSuffix: true,
-                            locale: fr,
-                        })}
+                        {formatDistanceToNow(new Date(item.date), { addSuffix: true, locale: fr })}
                     </Text>
                 </View>
             </View>
@@ -83,65 +52,51 @@ export default function ScoreScreen() {
     };
 
     return (
-        <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior={Platform.OS === "ios" ? "padding" : undefined}
-        >
-            <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
-                <View style={styles.body}>
-                    {/* Header */}
-                    <View style={styles.headerRow}>
-                        <Text style={styles.title}>Historique des scores</Text>
-                        {scores.length > 0 && (
-                            <IconButton
-                                label="Tout effacer"
-                                icon="delete"
-                                onPress={() => setShowConfirm(true)}
-                                backgroundColor="#fcebea"
-                                color="#e53935"
-                            />
-                        )}
-                    </View>
+        <MainLayout scrollable={false}>
+            {/* -------- Header fixed -------- */}
+            <View style={styles.headerRow}>
+                <Text style={styles.title}>Historique des scores</Text>
+                {scores.length > 0 && (
+                    <IconButton
+                        label="Tout effacer"
+                        icon="delete"
+                        onPress={() => setShowConfirm(true)}
+                        backgroundColor="#fcebea"
+                        color="#e53935"
+                    />
+                )}
+            </View>
 
-                    {/* Liste ou message */}
-                    {scores.length === 0 ? (
-                        <Text style={styles.empty}>Aucun score enregistré.</Text>
-                    ) : (
-                        <FlatList
-                            data={scores}
-                            keyExtractor={(item) => item.id.toString()}
-                            renderItem={renderItem}
-                            contentContainerStyle={styles.list}
-                        />
-                    )}
-                </View>
-
-                {/* Modale confirmation */}
-                <AlertCustom
-                    visible={showConfirm}
-                    title="Réinitialiser les scores"
-                    description="Tous les scores vont être supprimés. Cette action est irréversible."
-                    onClose={() => setShowConfirm(false)}
-                    confirmText="Confirmer"
-                    cancelText="Annuler"
-                    onConfirm={handleClear}
-                    icon={<MaterialIcons name="delete-forever" size={30} color="#e53935" />}
-                    iconColor="#e53935"
+            {/* -------- List scrollable -------- */}
+            {scores.length === 0 ? (
+                <Text style={styles.empty}>Aucun score enregistré.</Text>
+            ) : (
+                <FlatList
+                    data={scores}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={renderItem}
+                    contentContainerStyle={styles.listContainer}
+                    showsVerticalScrollIndicator={false}
                 />
-            </SafeAreaView>
-        </KeyboardAvoidingView>
+            )}
+
+            {/* -------- Confirmation modale -------- */}
+            <AlertCustom
+                visible={showConfirm}
+                title="Réinitialiser les scores"
+                description="Tous les scores vont être supprimés. Cette action est irréversible."
+                onClose={() => setShowConfirm(false)}
+                confirmText="Confirmer"
+                cancelText="Annuler"
+                onConfirm={handleClear}
+                icon={<MaterialIcons name="delete-forever" size={30} color="#e53935" />}
+                iconColor="#e53935"
+            />
+        </MainLayout>
     );
 }
 
 const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-        backgroundColor: "#f9f9f9",
-    },
-    body: {
-        flex: 1,
-        padding: 18,
-    },
     headerRow: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -153,7 +108,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#333",
     },
-    list: {
+    listContainer: {
         paddingBottom: 24,
     },
     card: {
@@ -168,6 +123,9 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
+        borderWidth: 1,
+        borderColor: "#e0e0e0",
+        overflow: "hidden",
     },
     medal: {
         width: 48,
