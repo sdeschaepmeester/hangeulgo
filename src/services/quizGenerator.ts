@@ -7,6 +7,15 @@ function shuffle<T>(array: T[]): T[] {
     return [...array].sort(() => Math.random() - 0.5);
 }
 
+function isTooShortForOrderQuiz(word: string): boolean {
+    const clean = word.trim();
+    if (clean.includes(" ")) {
+        return clean.split(" ").length <= 1;
+    } else {
+        return clean.length <= 1;
+    }
+}
+
 export async function generateQuestions(settings: GameSettings): Promise<Question[]> {
     const db = await dbPromise;
     let rows: (LexiconEntry & { tags: string | null })[] = [];
@@ -46,6 +55,11 @@ export async function generateQuestions(settings: GameSettings): Promise<Questio
       `,
             ...settings.difficulties
         );
+    }
+
+    // exclude words that are too short for the puzzle quiz
+    if (settings.type === "arrangement") {
+        rows = rows.filter((entry) => !isTooShortForOrderQuiz(entry.ko));
     }
 
     const baseSet = shuffle(rows);

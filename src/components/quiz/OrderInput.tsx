@@ -1,14 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 type Props = {
     correctAnswer: string;
+    onChange: (userAnswer: string) => void;
     onSubmit: (userAnswer: string) => void;
     disabled: boolean;
 };
 
-export default function OrderInput({ correctAnswer, onSubmit, disabled }: Props) {
+export default function OrderInput({ correctAnswer, onChange, onSubmit, disabled }: Props) {
     const pieces = useMemo(() => {
         const clean = correctAnswer.trim();
         return clean.length <= 4 ? clean.split("") : clean.split(" ");
@@ -18,24 +19,34 @@ export default function OrderInput({ correctAnswer, onSubmit, disabled }: Props)
     const [userPieces, setUserPieces] = useState<string[]>([]);
 
     useEffect(() => {
-        setShuffled(shuffle(pieces));
+        const shuffledArray = shuffle(pieces);
+        setShuffled(shuffledArray);
         setUserPieces([]);
-    }, [pieces]);
+        onChange("");
+    }, [correctAnswer]);
 
-    const remaining = shuffled.filter((p) => !userPieces.includes(p) || userPieces.filter(x => x === p).length < shuffled.filter(x => x === p).length);
+    const remaining = shuffled.filter((p, idx, arr) =>
+        userPieces.filter((x) => x === p).length < arr.filter((x, i) => x === p && i <= idx).length
+    );
+
+    const assembledAnswer = userPieces.join(correctAnswer.length <= 4 ? "" : " ");
+
+    useEffect(() => {
+        onChange(assembledAnswer);
+    }, [assembledAnswer]);
 
     return (
         <View style={styles.wrapper}>
-            {/* User answer */}
-            <View style={styles.answerContainer}>
-                {userPieces.map((piece, i) => (
-                    <View key={`${piece}-${i}`} style={styles.answerPiece}>
-                        <Text style={styles.answerText}>{piece}</Text>
-                    </View>
-                ))}
+            <View style={styles.inputContainer}>
+                <TextInput
+                    style={styles.input}
+                    value={assembledAnswer}
+                    placeholder="Remettez la réponse dans l'ordre"
+                    editable={false}
+                />
                 {userPieces.length > 0 && (
-                    <TouchableOpacity onPress={() => setUserPieces([])} style={styles.clearButton}>
-                        <MaterialCommunityIcons name="close-circle" size={20} color="#666" />
+                    <TouchableOpacity style={styles.clearIcon} onPress={() => setUserPieces([])}>
+                        <MaterialCommunityIcons name="close-circle" size={22} color="#666" />
                     </TouchableOpacity>
                 )}
             </View>
@@ -46,22 +57,15 @@ export default function OrderInput({ correctAnswer, onSubmit, disabled }: Props)
                     <TouchableOpacity
                         key={`${piece}-${i}`}
                         style={styles.choice}
-                        onPress={() => !disabled && setUserPieces((prev) => [...prev, piece])}
+                        onPress={() => {
+                            if (!disabled) setUserPieces((prev) => [...prev, piece]);
+                        }}
                         disabled={disabled}
                     >
                         <Text style={styles.choiceText}>{piece}</Text>
                     </TouchableOpacity>
                 ))}
             </View>
-
-            {/* Validate */}
-            <TouchableOpacity
-                style={[styles.validateButton, disabled && { opacity: 0.5 }]}
-                onPress={() => onSubmit(userPieces.join(correctAnswer.length <= 4 ? "" : " "))}
-                disabled={disabled}
-            >
-                <Text style={styles.validateText}>Valider ma réponse</Text>
-            </TouchableOpacity>
         </View>
     );
 }
@@ -72,26 +76,25 @@ function shuffle<T>(arr: T[]): T[] {
 
 const styles = StyleSheet.create({
     wrapper: { alignItems: "center", gap: 20 },
-    answerContainer: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        alignItems: "center",
-        gap: 6,
-        justifyContent: "center",
+    inputContainer: {
+        position: "relative",
+        width: "100%",
     },
-    answerPiece: {
-        backgroundColor: "#e0e0ff",
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        borderRadius: 6,
+    input: {
+        width: "100%",
+        borderWidth: 1,
+        borderColor: "#7f8bff",
+        borderRadius: 8,
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        fontSize: 16,
+        backgroundColor: "#fff",
     },
-    answerText: {
-        fontSize: 18,
-        color: "#333",
-    },
-    clearButton: {
-        marginLeft: 8,
-        marginTop: 4,
+    clearIcon: {
+        position: "absolute",
+        right: 12,
+        top: "50%",
+        transform: [{ translateY: -11 }],
     },
     choicesContainer: {
         flexDirection: "row",
@@ -100,6 +103,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     choice: {
+        borderWidth: 1,
+        borderColor: "#7f8bff",
         backgroundColor: "#f5f5f5",
         paddingVertical: 10,
         paddingHorizontal: 14,
@@ -108,17 +113,5 @@ const styles = StyleSheet.create({
     choiceText: {
         fontSize: 18,
         color: "#333",
-    },
-    validateButton: {
-        backgroundColor: "#7f8bff",
-        paddingVertical: 14,
-        paddingHorizontal: 24,
-        borderRadius: 8,
-        marginTop: 10,
-    },
-    validateText: {
-        color: "#fff",
-        fontWeight: "bold",
-        fontSize: 16,
     },
 });

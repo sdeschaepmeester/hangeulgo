@@ -4,7 +4,7 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
 import type { Difficulty } from "@/types/Difficulty";
 import type { GameSettings, GameSubType, InputMode } from "@/types/GameSettings";
-import { getAllUniqueTags } from "@/services/tags";
+import { getAllUniqueTags, getFilteredTagsForPuzzle } from "@/services/tags";
 import { getAvailableDifficultiesFromTags } from "@/services/lexicon";
 import StepStructure from "@/components/chooseSettings/StepStructure";
 import StepDifficulty from "@/components/chooseSettings/StepDifficulty";
@@ -60,12 +60,22 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
   }, [type]);
 
   useEffect(() => {
-    getAllUniqueTags().then(setAllTags);
+    const loadTags = async () => {
+      if (type === "arrangement") {
+        const validTags = await getFilteredTagsForPuzzle();
+        setAllTags(validTags);
+      } else {
+        const all = await getAllUniqueTags();
+        setAllTags(all);
+      }
+    };
+    loadTags();
   }, []);
+
 
   useEffect(() => {
     const updateAvailableDifficulties = async () => {
-      const available = await getAvailableDifficultiesFromTags(selectedTags);
+      const available = await getAvailableDifficultiesFromTags(selectedTags, type === "arrangement");
       const allDifficulties: Difficulty[] = ["easy", "medium", "hard"];
       const disabled = allDifficulties.filter((d) => !available.includes(d));
       setDisabledDifficulties(disabled);

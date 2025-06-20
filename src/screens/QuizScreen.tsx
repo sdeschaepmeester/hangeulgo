@@ -96,6 +96,9 @@ export default function QuizScreen({ route, navigation }: Props) {
     );
   }
 
+  const isPuzzle = settings.inputMode === "order";
+  const correctLength = currentQuestion.correctAnswer.trim().length;
+
   return (
     <ImageBackground source={bgImage} style={styles.background} imageStyle={{ opacity: 0.8 }}>
       <View style={[styles.innerContainer, { height: screenHeight }]} {...panResponder.panHandlers}>
@@ -114,14 +117,14 @@ export default function QuizScreen({ route, navigation }: Props) {
             </View>
 
             <View style={{ marginTop: "15%" }}>
-              {/* ----------- Listening quiz ----------- */}
+              {/* ----------- Prompt ----------- */}
               {settings.type === "ecoute" ? (
                 <ListenPrompt prompt={currentQuestion.prompt} tags={currentQuestion.tags} />
               ) : (
                 <PromptBox currentQuestion={currentQuestion} settings={settings} />
               )}
 
-              {/* ----------- Input quiz ----------- */}
+              {/* ----------- Input free form ----------- */}
               {settings.inputMode === "input" && (
                 <TextInput
                   style={[styles.input, { backgroundColor: "#ccc" }]}
@@ -131,7 +134,8 @@ export default function QuizScreen({ route, navigation }: Props) {
                   editable={!showResult}
                 />
               )}
-              {/* ----------- QCM quiz ----------- */}
+
+              {/* ----------- Multiple choice ----------- */}
               {settings.inputMode === "multiple" && (
                 <View style={styles.choices}>
                   {currentQuestion.choices?.map((choice, index) => (
@@ -152,15 +156,19 @@ export default function QuizScreen({ route, navigation }: Props) {
                   ))}
                 </View>
               )}
-              {/* ----------- Puzzle quiz ----------- */}
-              {settings.inputMode === "order" && (
+
+              {/* ----------- Puzzle input ----------- */}
+              {isPuzzle && (
                 <OrderInput
                   correctAnswer={currentQuestion.correctAnswer}
-                  onSubmit={checkAnswer}
+                  onChange={(val) => setUserInput(val)}
+                  onSubmit={(val) => {
+                    setUserInput(val);
+                    checkAnswer(val);
+                  }}
                   disabled={showResult}
                 />
               )}
-
             </View>
 
             {/* ----------- Feedback ----------- */}
@@ -173,7 +181,7 @@ export default function QuizScreen({ route, navigation }: Props) {
               </View>
             )}
 
-            {/* ----------- Bottom button ----------- */}
+            {/* ----------- Validate / Next button ----------- */}
             {(settings.inputMode === "input" || settings.inputMode === "order") ? (
               <TouchableOpacity
                 style={[styles.nextButton, (!userInput && !showResult) && { opacity: 0.4 }]}
@@ -184,7 +192,13 @@ export default function QuizScreen({ route, navigation }: Props) {
                     checkAnswer(userInput);
                   }
                 }}
-                disabled={!userInput && !showResult}
+                disabled={
+                  !showResult &&
+                  (
+                    !userInput ||
+                    (isPuzzle && userInput.trim().length !== correctLength)
+                  )
+                }
               >
                 <Text style={styles.nextButtonText}>
                   {showResult
@@ -272,11 +286,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
   },
-  promptText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#333",
-    textAlign: "center",
-    marginBottom: 20,
-  }
 });
