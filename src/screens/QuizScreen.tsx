@@ -58,6 +58,7 @@ export default function QuizScreen({ route, navigation }: Props) {
         settings: {
           type: settings.type,
           inputMode: settings.inputMode ?? "multiple",
+          subType: settings.subType ?? undefined,
         },
       });
     } else {
@@ -115,7 +116,7 @@ export default function QuizScreen({ route, navigation }: Props) {
             <View style={{ marginTop: "15%" }}>
               {/* ----------- Listening quiz ----------- */}
               {settings.type === "ecoute" ? (
-                <ListenPrompt prompt={currentQuestion.prompt} />
+                <ListenPrompt prompt={currentQuestion.prompt} tags={currentQuestion.tags} />
               ) : (
                 <PromptBox currentQuestion={currentQuestion} settings={settings} />
               )}

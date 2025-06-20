@@ -1,8 +1,9 @@
 import { MAX_SAVED_SCORES } from "@/data/constants";
 import { dbPromise } from "@/db/database";
+import { GameSubType } from "@/types/GameSettings";
 
-export type GameType = "translation" | "comprehension";
-export type InputMode = "input" | "multiple";
+export type GameType = "translation" | "comprehension" | "ecoute" | "arrangement" | "ecriture";
+export type InputMode = "input" | "multiple" | "order";
 
 export type SavedScore = {
   id: number;
@@ -10,6 +11,7 @@ export type SavedScore = {
   total: number;
   type: GameType;
   inputMode: InputMode;
+  subType?: GameSubType;
   date: string;
 };
 
@@ -28,9 +30,11 @@ export async function saveScore(data: {
   score: number;
   total: number;
   type: GameType;
+  subType?: GameSubType;
   inputMode: InputMode;
 }): Promise<void> {
   const db = await dbPromise;
+
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS scores (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,17 +42,16 @@ export async function saveScore(data: {
       total INTEGER NOT NULL,
       type TEXT NOT NULL,
       inputMode TEXT NOT NULL,
+      subType TEXT,
       date TEXT NOT NULL
     );
   `);
 
-  // Count current scores
   const countResult = await db.getFirstAsync<{ count: number }>(`
     SELECT COUNT(*) as count FROM scores
   `);
   const count = countResult?.count ?? 0;
 
-  // If limit is reached, delete the oldest score
   if (count >= MAX_SAVED_SCORES) {
     await db.runAsync(`
       DELETE FROM scores
@@ -60,13 +63,13 @@ export async function saveScore(data: {
     `);
   }
 
-  // Insert new score
   await db.runAsync(
-    `INSERT INTO scores (score, total, type, inputMode, date) VALUES (?, ?, ?, ?, ?)`,
+    `INSERT INTO scores (score, total, type, inputMode, subType, date) VALUES (?, ?, ?, ?, ?, ?)`,
     data.score,
     data.total,
     data.type,
     data.inputMode,
+    data.subType ?? null,
     new Date().toISOString()
   );
 }
@@ -76,6 +79,7 @@ export async function saveScore(data: {
  */
 export async function getScores(): Promise<SavedScore[]> {
   const db = await dbPromise;
+
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS scores (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -83,10 +87,10 @@ export async function getScores(): Promise<SavedScore[]> {
       total INTEGER NOT NULL,
       type TEXT NOT NULL,
       inputMode TEXT NOT NULL,
+      subType TEXT,
       date TEXT NOT NULL
     );
   `);
-
   const result = await db.getAllAsync<SavedScore>(`SELECT * FROM scores ORDER BY date DESC`);
   return result;
 }
@@ -96,8 +100,10 @@ export async function getScores(): Promise<SavedScore[]> {
  */
 export async function isScoreLimitReached(): Promise<boolean> {
   const db = await dbPromise;
+
   const result = await db.getFirstAsync<{ count: number }>(`
     SELECT COUNT(*) as count FROM scores
   `);
+
   return (result?.count ?? 0) >= MAX_SAVED_SCORES;
 }

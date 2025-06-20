@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity, } from "react-native";
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, ScrollView, } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import MainLayout from "@/layouts/MainLayout";
 import SquareButton from "@/components/SquareButton";
@@ -9,6 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import type { GameType } from "@/types/GameSettings";
 import type { ComponentProps } from "react";
 
+const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 const BUTTON_WIDTH = (screenWidth - 60) / 2;
 
@@ -22,7 +23,7 @@ type QuizItem = {
 const quizList: QuizItem[] = [
     { label: "Compréhension", icon: "eye", color: "#f6c6c6", type: "comprehension" },
     { label: "Écoute", icon: "ear-hearing", color: "#f6c6c6", type: "ecoute" },
-    { label: "Arrangement", icon: "format-align-center", color: "#c6cbf6", type: "arrangement" },
+    { label: "Quiz puzzle", icon: "puzzle", color: "#c6cbf6", type: "arrangement" },
     { label: "Écriture", icon: "pencil", color: "#c6cbf6", type: "ecriture" },
 ];
 
@@ -30,7 +31,11 @@ export default function QuizListScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     return (
-        <MainLayout>
+        <ScrollView
+            style={styles.body}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+        >
             <Text style={styles.title}>Choisis ton jeu</Text>
 
             <View style={styles.grid}>
@@ -58,7 +63,7 @@ export default function QuizListScreen() {
             >
                 <Text style={styles.savedButtonText}>Voir mes quiz sauvegardés</Text>
             </TouchableOpacity>
-        </MainLayout>
+        </ScrollView>
     );
 }
 
@@ -96,5 +101,14 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center",
         fontSize: 16,
+    },
+    body: {
+        width: "100%",
+        height: screenHeight * 0.65,
+    },
+    scrollContent: {
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 40,
     },
 });

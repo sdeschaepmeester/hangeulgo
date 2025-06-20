@@ -18,6 +18,7 @@ import { GameSettings, GameType } from "./types/GameSettings";
 import { injectPreviewLexicon } from "@/data/injectPreviewLexicon";
 import { isFirstLaunch } from "./services/firstLaunch";
 import { initDatabase } from "@/db/database";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export type RootStackParamList = {
   Home: undefined;
@@ -28,7 +29,7 @@ export type RootStackParamList = {
   Result: {
     score: number;
     total: number;
-    settings: Pick<GameSettings, "type" | "inputMode">;
+    settings: Pick<GameSettings, "type" | "inputMode" | "subType">;
   };
   Score: undefined;
   QuizList: undefined;
@@ -74,60 +75,62 @@ export default function App() {
     ];
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Home"
-        screenOptions={{
-          headerStyle: { backgroundColor: "#9da7ff" },
-          headerTintColor: "#fff",
-          headerTitleStyle: { fontWeight: "bold" },
-        }}
-      >
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            title: "",
-            headerLeft: () => null,
-            headerRight: () => null,
-            headerTitle: () => null,
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Home"
+          screenOptions={{
+            headerStyle: { backgroundColor: "#9da7ff" },
+            headerTintColor: "#fff",
+            headerTitleStyle: { fontWeight: "bold" },
           }}
-        />
-        {screens.map(({ name, component, title }) => (
+        >
           <Stack.Screen
-            key={name}
-            name={name}
-            component={component}
-            options={({ navigation }) => ({
-              title,
-              headerLeft: () => goHomeButton(navigation),
-              headerTitle: () => (
-                <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-                  <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
-                    {title}
-                  </Text>
-                </TouchableOpacity>
-              ),
-            })}
+            name="Home"
+            component={HomeScreen}
+            options={{
+              title: "",
+              headerLeft: () => null,
+              headerRight: () => null,
+              headerTitle: () => null,
+            }}
           />
-        ))}
-        <Stack.Screen
-          name="Quiz"
-          component={QuizScreen}
-          options={{
-            headerTitle: "",
-            headerLeft: () => null,
-          }}
-        />
-        <Stack.Screen
-          name="Result"
-          component={ResultScreen}
-          options={{
-            headerTitle: "",
-            headerLeft: () => null,
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+          {screens.map(({ name, component, title }) => (
+            <Stack.Screen
+              key={name}
+              name={name}
+              component={component}
+              options={({ navigation }) => ({
+                title,
+                headerLeft: () => goHomeButton(navigation),
+                headerTitle: () => (
+                  <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+                    <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
+                      {title}
+                    </Text>
+                  </TouchableOpacity>
+                ),
+              })}
+            />
+          ))}
+          <Stack.Screen
+            name="Quiz"
+            component={QuizScreen}
+            options={{
+              headerTitle: "",
+              headerLeft: () => null,
+            }}
+          />
+          <Stack.Screen
+            name="Result"
+            component={ResultScreen}
+            options={{
+              headerTitle: "",
+              headerLeft: () => null,
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }

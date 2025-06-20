@@ -13,13 +13,24 @@ export default function ResultScreen({ route, navigation }: Props) {
   const percent = Math.round((score / total) * 100);
 
   useEffect(() => {
-    saveScore({
-      score,
-      total,
-      type: settings.type,
-      inputMode: settings.inputMode ?? "multiple",
-    });
+    const save = async () => {
+      try {
+        await saveScore({
+          score,
+          total,
+          type: settings.type,
+          inputMode: settings.inputMode,
+          subType: settings.subType,
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    save();
   }, [score, total, settings]);
+
+
 
   const { medal, message, glowColor } = getMedalInfo(percent);
 

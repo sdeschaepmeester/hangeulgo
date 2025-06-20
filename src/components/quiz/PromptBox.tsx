@@ -14,10 +14,7 @@ export default function PromptBox({ settings, currentQuestion }: PromptBoxProps)
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [showTags, setShowTags] = useState(false);
 
-    const shouldShowSpeaker =
-        settings.type === "comprehension" ||
-        settings.type === "ecoute" ||
-        settings.subType === "frToKo";
+    const shouldShowSpeaker = settings.subType === "koToFr";
 
     const handleSpeak = () => {
         setIsSpeaking(true);

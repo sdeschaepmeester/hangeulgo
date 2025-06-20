@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, } from "react-native";
+import { View, Text, FlatList, StyleSheet, Image } from "react-native";
 import { getScores, clearScores, type SavedScore } from "@/services/score";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { MaterialIcons } from "@expo/vector-icons";
 import AlertCustom from "@/components/AlertCustom";
 import IconButton from "@/components/IconButton";
-import NavBar from "@/components/NavBar";
 
 export default function ScoreScreen() {
     const [scores, setScores] = useState<SavedScore[]>([]);
@@ -17,19 +16,16 @@ export default function ScoreScreen() {
         setScores(data);
     };
 
-    // Delete scores history
     const handleClear = async () => {
         await clearScores();
         setScores([]);
         setShowConfirm(false);
     };
 
-    // Load scores
     useEffect(() => {
         load();
     }, []);
 
-    // Get medal image based on score percentage
     const getMedal = (percent: number) => {
         if (percent === 0) return require("../../assets/terrible.png");
         if (percent >= 80) return require("../../assets/gold_medal.png");
@@ -37,7 +33,23 @@ export default function ScoreScreen() {
         return require("../../assets/bronze_medal.png");
     };
 
-    // Render one score card
+    const getLabel = (item: SavedScore) => {
+        switch (item.type) {
+            case "comprehension":
+                return `Compréhension – ${item.subType === "frToKo" ? "🇫🇷 → 🇰🇷" : "🇰🇷 → 🇫🇷"}`;
+            case "ecoute":
+                return `Écoute – ${item.subType === "koToKo" ? "🇰🇷 → 🇰🇷" : "🇰🇷 → 🇫🇷"}`;
+            case "arrangement":
+                return "Puzzle";
+            case "ecriture":
+                return "Écriture – 🇫🇷 → 🇰🇷";
+            case "translation":
+                return "Traduction – 🇫🇷 → 🇰🇷";
+            default:
+                return "Quiz";
+        }
+    };
+
     const renderItem = ({ item }: { item: SavedScore }) => {
         const percent = Math.round((item.score / item.total) * 100);
         return (
@@ -48,10 +60,7 @@ export default function ScoreScreen() {
                     <Text style={styles.info}>
                         {item.score} / {item.total}
                     </Text>
-                    <Text style={styles.info}>
-                        {item.type === "translation" ? "Traduction" : "Compréhension"} —{" "}
-                        {item.inputMode === "input" ? "Saisie" : "QCM"}
-                    </Text>
+                    <Text style={styles.info}>{getLabel(item)}</Text>
                     <Text style={styles.date}>
                         {formatDistanceToNow(new Date(item.date), {
                             addSuffix: true,
@@ -65,7 +74,6 @@ export default function ScoreScreen() {
 
     return (
         <View style={styles.container}>
-            {/* -------- Header with delete button -------- */}
             <View style={styles.headerRow}>
                 <Text style={styles.title}>Historique des scores</Text>
                 {scores.length > 0 && (
@@ -79,7 +87,6 @@ export default function ScoreScreen() {
                 )}
             </View>
 
-            {/* -------- List of scores -------- */}
             {scores.length === 0 ? (
                 <Text style={styles.empty}>Aucun score enregistré.</Text>
             ) : (
@@ -87,10 +94,10 @@ export default function ScoreScreen() {
                     data={scores}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={renderItem}
+                    style={{ marginBottom: "10%" }}
                 />
             )}
 
-            {/* -------- Confirm delete modal -------- */}
             <AlertCustom
                 visible={showConfirm}
                 title="Réinitialiser les scores"
@@ -141,7 +148,7 @@ const styles = StyleSheet.create({
         width: 48,
         height: 48,
         marginRight: 12,
-        resizeMode: "contain"
+        resizeMode: "contain",
     },
     details: {
         flex: 1,

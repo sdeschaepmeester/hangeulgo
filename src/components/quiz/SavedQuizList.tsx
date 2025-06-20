@@ -1,4 +1,5 @@
 import React from "react";
+import { ScrollView } from "react-native-gesture-handler";
 import { View, StyleSheet } from "react-native";
 import type { SavedQuizEntry } from "@/types/SavedQuizEntry";
 import SavedQuizItem from "./SavedQuizItem";
@@ -11,20 +12,29 @@ type Props = {
 
 export default function SavedQuizList({ data, onDelete, onSelect }: Props) {
     return (
-        <View style={styles.container}>
-            {data.map((quiz) => (
-                <SavedQuizItem
-                    key={quiz.id}
-                    quiz={quiz}
-                    onDelete={onDelete}
-                    onSelect={onSelect}
-                />
-            ))}
-        </View>
+        <ScrollView
+            contentContainerStyle={styles.scrollContainer}
+            showsVerticalScrollIndicator={false}
+        >
+            <View style={styles.container}>
+                {data.map((quiz) => (
+                    <SavedQuizItem
+                        key={quiz.id}
+                        quiz={quiz}
+                        onDelete={onDelete}
+                        onSelect={onSelect}
+                    />
+                ))}
+            </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
+    scrollContainer: {
+        padding: 16,
+        paddingBottom: 32,
+    },
     container: {
         gap: 12,
     },

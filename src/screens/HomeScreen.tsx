@@ -1,13 +1,5 @@
 import React from "react";
-import {
-    View,
-    StyleSheet,
-    Dimensions,
-    Image,
-    TouchableOpacity,
-    Text,
-    ScrollView,
-} from "react-native";
+import { View, StyleSheet, Dimensions, Image, TouchableOpacity, Text, ScrollView, } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";

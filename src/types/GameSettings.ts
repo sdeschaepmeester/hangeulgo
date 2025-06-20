@@ -8,7 +8,7 @@ export type GameSubType =
     | "order"
     | "koToKo";
 
-export type InputMode = "multiple" | "input" | "order"; // QCM, Saisie, Remettre en ordre
+export type InputMode = "multiple" | "input" | "order"; // QCM, Saisie, puzzle
 
 export interface GameSettings {
     type: GameType;

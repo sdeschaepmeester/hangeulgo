@@ -74,6 +74,13 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         }
     }, [cooldownActive, lastSuggestionTime]);
 
+    useEffect(() => {
+        if (edit && initialData?.fr.includes("(") && phonetic.trim()) {
+            const baseFr = initialData.fr.split("(")[0].trim();
+            setFr(`${baseFr} (${phonetic.trim()})`);
+        }
+    }, [phonetic]);
+
     const handleKoreanSuggestion = async () => {
         if (!fr.trim() || !isConnected || cooldownActive) return;
 
@@ -91,14 +98,24 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         }
     };
 
+    // Check if Korean word exists in the lexicon. A korean word cannot be duplicated.
     const handleKoBlur = async () => {
-        if (!ko.trim()) {
+        const trimmed = ko.trim();
+        if (!trimmed) {
             setKoreanExists(false);
             return;
         }
-        const exists = await checkIfKoreanWordExists(ko.trim());
+
+        // If editing and the initial data is the same, skip the check
+        if (edit && initialData?.ko.trim() === trimmed) {
+            setKoreanExists(false);
+            return;
+        }
+
+        const exists = await checkIfKoreanWordExists(trimmed);
         setKoreanExists(exists);
     };
+
 
     const handleSubmit = async () => {
         if (!isValid || koreanExists) return;
