@@ -4,7 +4,7 @@ import NetInfo from "@react-native-community/netinfo";
 import SelectPill from "@/components/SelectPill";
 import type { Difficulty } from "@/types/Difficulty";
 import TagSelector from "../tags/TagSelector";
-import { getAllUniqueTags } from "@/services/tags";
+import { getAllUniqueTags, isTagsLimitReached } from "@/services/tags";
 import { suggestKoreanTranslation } from "@/services/translator";
 import { saveWord, checkIfKoreanWordExists } from "@/services/lexicon";
 import { useNavigation } from "@react-navigation/native";
@@ -44,6 +44,8 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
     const [loadingSuggestion, setLoadingSuggestion] = useState(false);
     const [noSuggestionFound, setNoSuggestionFound] = useState(false);
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    const [tagLimitReached, setTagLimitReached] = useState(false);
+
 
     const frRef = useRef<TextInput>(null);
     const koRef = useRef<TextInput>(null);
@@ -56,7 +58,9 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         NetInfo.fetch().then((state) => {
             setIsConnected(state.isConnected === true);
         });
+        isTagsLimitReached().then(setTagLimitReached);
     }, []);
+
 
     const refreshTags = async () => {
         const tags = await getAllUniqueTags();
@@ -221,10 +225,16 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
             </View>
 
             {/* ----------------- Tags input ----------------- */}
+            {tagLimitReached && (
+                <Text style={{ color: "#f57c00", fontSize: 13, marginBottom: 6 }}>
+                    Vous ne pouvez plus créer de nouveaux thèmes.
+                </Text>
+            )}
+
             <TagSelector
-                mode="edit"
+                mode={tagLimitReached ? "select" : "edit"}
                 allTags={allTags}
-                selectedTags={tags.split(",").map(t => t.trim())}
+                selectedTags={tags.split(",").map((t) => t.trim())}
                 onChange={(newTags) => setTags(newTags.join(", "))}
             />
 
