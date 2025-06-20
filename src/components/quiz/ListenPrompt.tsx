@@ -1,24 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import * as Speech from "expo-speech";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Question } from "@/types/Question";
-import { GameSettings } from "@/types/GameSettings";
+import * as Speech from "expo-speech";
 
-interface PromptBoxProps {
-    settings: GameSettings;
-    currentQuestion: Question;
-}
+type Props = {
+    prompt: string;
+    tags?: string[];
+};
 
-export default function PromptBox({ settings, currentQuestion }: PromptBoxProps) {
+export default function ListenPrompt({ prompt, tags = [] }: Props) {
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [showTags, setShowTags] = useState(false);
 
-    const shouldShowSpeaker = settings.subType === "koToFr";
-
     const handleSpeak = () => {
         setIsSpeaking(true);
-        Speech.speak(currentQuestion.prompt, {
+        Speech.speak(prompt, {
             language: "ko-KR",
             rate: 0.9,
             pitch: 1.0,
@@ -30,16 +26,22 @@ export default function PromptBox({ settings, currentQuestion }: PromptBoxProps)
 
     useEffect(() => {
         setShowTags(false);
-    }, [currentQuestion]);
+    }, [prompt]);
 
     return (
         <View style={styles.promptWrapper}>
-            <View style={styles.promptBox}>
-                <Text style={styles.prompt}>{currentQuestion.prompt}</Text>
-
-                <View style={styles.iconGroup}>
-                    {currentQuestion.tags?.length > 0 && (
-                        <TouchableOpacity onPress={() => setShowTags((prev) => !prev)}>
+            <TouchableOpacity onPress={handleSpeak}>
+                <View style={styles.promptBox}>
+                    <MaterialCommunityIcons
+                        name={isSpeaking ? "volume-off" : "volume-high"}
+                        size={38}
+                        color={isSpeaking ? "#aaa" : "#333"}
+                    />
+                    {tags.length > 0 && (
+                        <TouchableOpacity
+                            onPress={() => setShowTags((prev) => !prev)}
+                            style={styles.infoIcon}
+                        >
                             <MaterialCommunityIcons
                                 name="information-outline"
                                 size={26}
@@ -47,21 +49,12 @@ export default function PromptBox({ settings, currentQuestion }: PromptBoxProps)
                             />
                         </TouchableOpacity>
                     )}
-                    {shouldShowSpeaker && (
-                        <TouchableOpacity onPress={handleSpeak} style={{ marginLeft: 12 }}>
-                            <MaterialCommunityIcons
-                                name="volume-high"
-                                size={28}
-                                color={isSpeaking ? "#7f8bff" : "#333"}
-                            />
-                        </TouchableOpacity>
-                    )}
                 </View>
-            </View>
+            </TouchableOpacity>
 
-            {showTags && currentQuestion.tags?.length > 0 && (
+            {showTags && tags.length > 0 && (
                 <View style={styles.tagsContainer}>
-                    {currentQuestion.tags.map((tag: string) => (
+                    {tags.map((tag) => (
                         <View key={tag} style={styles.tag}>
                             <Text style={styles.tagText}>{tag}</Text>
                         </View>
@@ -87,18 +80,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
         position: "relative",
     },
-    prompt: {
-        fontSize: 24,
-        fontWeight: "bold",
-        textAlign: "center",
-        flexShrink: 1,
-    },
-    iconGroup: {
-        flexDirection: "row",
+    infoIcon: {
         position: "absolute",
-        right: 12,
+        right: 10,
         top: "50%",
-        transform: [{ translateY: -14 }],
+        transform: [{ translateY: -13 }],
     },
     tagsContainer: {
         flexDirection: "row",

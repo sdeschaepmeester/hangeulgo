@@ -7,11 +7,13 @@ type Props = {
     allTags: string[];
     selectedTags: string[];
     onChange: (tags: string[]) => void;
-    placeholder?: string;
     label?: string;
+    withLimits?: boolean;
 };
 
-export default function TagSelector({ mode, allTags, selectedTags, onChange, placeholder = "Ajouter ou rechercher un mot-clé...", label = "Mots-clés", }: Props) {
+const MAX_TAGS_PER_WORD = 4;
+
+export default function TagSelector({ mode, allTags, selectedTags, onChange, label = "Thèmes", withLimits = true, }: Props) {
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState("");
     const [isTouchingList, setIsTouchingList] = useState(false);
@@ -21,8 +23,12 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, pla
         return allTags.filter((tag) => tag.toLowerCase().includes(lower));
     }, [input, allTags]);
 
+    const canAddTag = !withLimits || selectedTags.length < MAX_TAGS_PER_WORD;
+
     const handleToggle = (tag: string) => {
         const isSelected = selectedTags.includes(tag);
+        if (!isSelected && !canAddTag) return;
+
         const newTags = isSelected
             ? selectedTags.filter((t) => t !== tag)
             : [...selectedTags, tag];
@@ -40,11 +46,9 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, pla
 
     const handleAdd = () => {
         const tag = input.trim();
-        if (!tag) return;
+        if (!tag || selectedTags.includes(tag) || !canAddTag) return;
 
-        if (!selectedTags.includes(tag)) {
-            onChange([...selectedTags, tag]);
-        }
+        onChange([...selectedTags, tag]);
         setInput("");
         setOpen(false);
         Keyboard.dismiss();
@@ -74,8 +78,10 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, pla
                             <TextInput
                                 value={input}
                                 onChangeText={(text) => {
-                                    setInput(text);
-                                    setOpen(text.length > 0);
+                                    if (text.length <= 50) {
+                                        setInput(text);
+                                        setOpen(text.length > 0);
+                                    }
                                 }}
                                 onFocus={() => setOpen(true)}
                                 onBlur={() => {
@@ -84,9 +90,11 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, pla
                                     }
                                 }}
                                 onSubmitEditing={handleAdd}
-                                placeholder={placeholder}
+                                placeholder={"Ajouter ou rechercher un mot-clé..."}
                                 placeholderTextColor="#999"
-                                style={{ flex: 1, color: "#000" }}
+                                style={{ flex: 1, color: "#000", backgroundColor: "#fff" }}
+                                maxLength={25}
+                                editable={canAddTag}
                             />
                         ) : (
                             <Text style={{ color: "#333" }}>
@@ -117,30 +125,33 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, pla
                                 contentContainerStyle={{ paddingVertical: 4 }}
                                 nestedScrollEnabled={true}
                             >
-                                {filteredTags.map((tag) => (
-                                    <TouchableOpacity
-                                        key={tag}
-                                        style={[
-                                            styles.tagItemFlat,
-                                            selectedTags.includes(tag) && styles.tagItemSelected,
-                                        ]}
-                                        onPress={() => handleToggle(tag)}
-                                    >
-                                        <Text
-                                            style={{
-                                                color: selectedTags.includes(tag)
-                                                    ? "#fff"
-                                                    : "#333",
-                                            }}
+                                {filteredTags.map((tag) => {
+                                    const isSelected = selectedTags.includes(tag);
+                                    const isDisabled = !isSelected && !canAddTag;
+                                    return (
+                                        <TouchableOpacity
+                                            key={tag}
+                                            style={[
+                                                styles.tagItemFlat,
+                                                isSelected && styles.tagItemSelected,
+                                                isDisabled && { opacity: 0.3 },
+                                            ]}
+                                            onPress={() => handleToggle(tag)}
+                                            disabled={isDisabled}
                                         >
-                                            {tag}
-                                        </Text>
-                                    </TouchableOpacity>
-                                ))}
+                                            <Text style={{
+                                                color: isSelected ? "#fff" : "#333"
+                                            }}>
+                                                {tag}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    );
+                                })}
 
                                 {mode === "edit" &&
                                     input.trim() !== "" &&
-                                    !allTags.includes(input.trim()) && (
+                                    !allTags.includes(input.trim()) &&
+                                    canAddTag && (
                                         <TouchableOpacity
                                             onPress={handleAdd}
                                             style={styles.newTagButton}
@@ -155,6 +166,12 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, pla
                     )}
 
                     {/* ------------ Selected tags ------------ */}
+                    {withLimits && selectedTags.length >= MAX_TAGS_PER_WORD && (
+                        <Text style={{ color: "#f57c00", fontSize: 13, marginTop: 6 }}>
+                            La limite de {MAX_TAGS_PER_WORD} mots-clés est atteinte.
+                        </Text>
+                    )}
+
                     {selectedTags.filter(Boolean).length > 0 && (
                         <View style={styles.selectedTagsContainer}>
                             {selectedTags.filter(Boolean).map((tag) => (

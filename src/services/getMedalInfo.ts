@@ -7,7 +7,7 @@ export const getMedalInfo = (percent: number) => {
     if (percent === 0) {
         return {
             medal: terrible,
-            message: "Non là tu le fais exprès ?",
+            message: "...",
             glowColor: "#cd7f32",
         };
     }

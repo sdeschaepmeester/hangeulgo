@@ -35,7 +35,7 @@ export default function LexiconFilters({ selectedDifficulties, onToggleDifficult
                         if (!tags.includes(tag)) onToggleTag(tag);
                     });
                 }}
-                placeholder="Rechercher ou sélectionner..."
+                withLimits={false}
             />
         </View>
     );
