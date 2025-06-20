@@ -5,13 +5,14 @@ import type { RootStackParamList } from "@/App";
 import type { Difficulty } from "@/types/Difficulty";
 import type { GameSettings, GameType, GameSubType, InputMode } from "@/types/GameSettings";
 import { getAllUniqueTags } from "@/services/tags";
-import { getSavedSettings, saveSettings, clearSettings } from "@/services/settings";
+import { getAvailableDifficultiesFromTags } from "@/services/lexicon";
 import StepStructure from "@/components/chooseSettings/StepStructure";
 import StepDifficulty from "@/components/chooseSettings/StepDifficulty";
 import StepDuration from "@/components/chooseSettings/StepDuration";
 import StepThemes from "@/components/chooseSettings/StepThemes";
 import StepType from "@/components/chooseSettings/StepType";
-import { getAvailableDifficultiesFromTags } from "@/services/lexicon";
+import StepSaveQuiz from "@/components/chooseSettings/StepSaveQuiz";
+import { saveCustomQuiz } from "@/services/quiz";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const windowHeight = Dimensions.get("window").height;
@@ -38,10 +39,12 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
   const [step, setStep] = useState(0);
   const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
   const [length, setLength] = useState<number>(10);
-  const [rememberSettings, setRememberSettings] = useState(false);
   const [allTags, setAllTags] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [disabledDifficulties, setDisabledDifficulties] = useState<Difficulty[]>([]);
+
+  const [shouldSave, setShouldSave] = useState(false);
+  const [saveName, setSaveName] = useState("");
 
   const shouldAskSubType = type === "comprehension" || type === "ecoute";
 
@@ -57,13 +60,6 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
 
   useEffect(() => {
     getAllUniqueTags().then(setAllTags);
-    getSavedSettings().then((saved) => {
-      if (!saved) return;
-      setSelectedDifficulties(saved.difficulties);
-      setLength(saved.length);
-      if (saved.tags) setSelectedTags(saved.tags);
-      setTimeout(() => setRememberSettings(true), 0);
-    });
   }, []);
 
   useEffect(() => {
@@ -80,9 +76,17 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
     ...(shouldAskSubType
       ? [() => <StepType available={multipleSubTypes[type]} selected={subType} onChange={setSubType} />]
       : []),
-    () => <StepThemes selectedTags={selectedTags} onChange={setSelectedTags} allTags={allTags} preselectedTags={rememberSettings ? selectedTags : undefined} />,
+    () => <StepThemes selectedTags={selectedTags} onChange={setSelectedTags} allTags={allTags} />,
     () => <StepDifficulty selected={selectedDifficulties} onChange={setSelectedDifficulties} disabledDifficultyList={disabledDifficulties} />,
     () => <StepDuration selected={length} onSelect={setLength} />,
+    () => (
+      <StepSaveQuiz
+        saveEnabled={shouldSave}
+        saveName={saveName}
+        onToggleSave={() => setShouldSave((prev) => !prev)}
+        onChangeName={setSaveName}
+      />
+    ),
   ];
 
   const maxStep = steps.length - 1;
@@ -90,7 +94,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
   const stepIsDifficulty = step === (shouldAskSubType ? 2 : 1);
   const isDisabled = stepIsDifficulty && selectedDifficulties.length === 0;
 
-  const startGame = () => {
+  const startGame = async () => {
     if (!subType) return;
 
     const settings: GameSettings = {
@@ -101,41 +105,37 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
       length,
       ...(selectedTags.length > 0 && { tags: selectedTags }),
     };
-    if (rememberSettings) {
-      saveSettings(selectedDifficulties, length, inputMode, selectedTags);
+
+    if (shouldSave && saveName.trim()) {
+      await saveCustomQuiz(saveName.trim(), settings);
     }
+
     navigation.navigate("Quiz", { settings });
   };
 
   const next = () => setStep((s) => s + 1);
   const back = () => setStep((s) => Math.max(0, s - 1));
-  const toggleRememberSettings = () => {
-    const newValue = !rememberSettings;
-    setRememberSettings(newValue);
-    if (!newValue) clearSettings();
-    else saveSettings(selectedDifficulties, length, inputMode, selectedTags);
-  };
 
-  const renderStep = () => (
-    <StepStructure step={step}>
-      {steps[step]()}
-    </StepStructure>
-  );
+  const renderStep = () => <StepStructure step={step}>{steps[step]()}</StepStructure>;
+
+  const getQuizName = (type: GameType) => {
+    switch (type) {
+      case "comprehension": return "de compréhension";
+      case "ecoute": return "d'écoute";
+      case "arrangement": return "d'arrangement";
+      case "ecriture": return "d'écriture";
+      default: return "";
+    }
+  };
 
   return (
     <View style={styles.container}>
       <ImageBackground source={arcadeBg} style={styles.background} resizeMode="cover">
         <View style={styles.top}>
-          <Text style={styles.quizType}>Quiz de {type}</Text>
-          <TouchableOpacity style={styles.checkbox} onPress={toggleRememberSettings}>
-            <View style={[styles.box, rememberSettings && styles.boxChecked]} />
-            <Text style={styles.checkboxLabel}>Conserver les réglages</Text>
-          </TouchableOpacity>
+          <Text style={styles.quizType}>Quiz {getQuizName(type)}</Text>
         </View>
 
-        <View style={styles.middle}>
-          {renderStep()}
-        </View>
+        <View style={styles.middle}>{renderStep()}</View>
 
         <View style={styles.bottom}>
           {!isLastStep ? (
@@ -145,10 +145,8 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
                 style={[styles.button, styles.leftButton]}
               >
                 <Text style={styles.text}>
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <MaterialCommunityIcons name="chevron-left" size={18} color="white" style={{ marginRight: 4 }} />
-                    {step === 0 && <Text style={{ fontSize: 16, color: "white" }}>Quitter</Text>}
-                  </View>
+                  <MaterialCommunityIcons name="chevron-left" size={18} color="white" style={{ marginRight: 4 }} />
+                  {step === 0 && "Quitter"}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -156,10 +154,8 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
                 disabled={isDisabled}
                 style={[styles.button, styles.rightButton, isDisabled && styles.disabled]}
               >
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <MaterialCommunityIcons name="chevron-right" size={18} color="white" style={{ marginRight: 4 }} />
-                  <Text style={{ fontSize: 16, color: "white" }}>Suivant</Text>
-                </View>
+                <MaterialCommunityIcons name="chevron-right" size={18} color="white" style={{ marginRight: 4 }} />
+                <Text style={styles.text}>Suivant</Text>
               </TouchableOpacity>
             </View>
           ) : (
@@ -172,10 +168,8 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
                 disabled={isDisabled || !subType}
                 style={[styles.button, styles.rightButton, (isDisabled || !subType) && styles.disabled]}
               >
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <MaterialCommunityIcons name="gamepad-variant" size={18} color="white" style={{ marginRight: 4 }} />
-                  <Text style={{ fontSize: 16, color: "white" }}>Commencer</Text>
-                </View>
+                <MaterialCommunityIcons name="gamepad-variant" size={18} color="white" style={{ marginRight: 4 }} />
+                <Text style={styles.text}>Commencer</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -186,18 +180,12 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
-  container: {
-    width: "100%",
-    height: "100%",
-  },
+  background: { flex: 1 },
+  container: { width: "100%", height: "100%" },
   top: {
     height: windowHeight * 0.15,
     alignItems: "center",
     justifyContent: "center",
-    gap: 8,
   },
   middle: {
     height: windowHeight * 0.60,
@@ -224,31 +212,13 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     marginTop: 12,
   },
-  checkbox: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  box: {
-    width: 20,
-    height: 20,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: "#fff",
-    marginRight: 8,
-  },
-  boxChecked: {
-    backgroundColor: "#C60C30",
-  },
-  checkboxLabel: {
-    fontSize: 16,
-    color: "#C60C30",
-  },
   button: {
     width: windowWidth / 2.2,
     paddingVertical: 24,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 8,
+    flexDirection: "row",
   },
   leftButton: {
     backgroundColor: "#003478",
@@ -263,6 +233,7 @@ const styles = StyleSheet.create({
   text: {
     color: "white",
     fontWeight: "bold",
+    fontSize: 16,
   },
   disabled: {
     opacity: 0.5,

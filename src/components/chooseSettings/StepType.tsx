@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, StyleSheet } from "react-native";
 import SelectPill from "@/components/SelectPill";
 import type { GameSubType } from "@/types/GameSettings";
@@ -17,6 +17,13 @@ const labelMap: Record<GameSubType, string> = {
 };
 
 export default function StepType({ available, selected, onChange }: Props) {
+    // Preselect the first available option if none is selected
+    useEffect(() => {
+        if (!selected && available.length > 0) {
+            onChange(available[0]);
+        }
+    }, [available, selected]);
+
     const options = available.map((value) => ({
         label: labelMap[value],
         value,
