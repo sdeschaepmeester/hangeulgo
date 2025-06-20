@@ -98,6 +98,12 @@ export default function QuizScreen({ route, navigation }: Props) {
 
   const isPuzzle = settings.inputMode === "order";
   const correctLength = currentQuestion.correctAnswer.trim().length;
+  const isDisabled =
+    !showResult &&
+    (
+      !userInput ||
+      (isPuzzle && userInput.trim().length !== correctLength)
+    );
 
   return (
     <ImageBackground source={bgImage} style={styles.background} imageStyle={{ opacity: 0.8 }}>
@@ -184,7 +190,7 @@ export default function QuizScreen({ route, navigation }: Props) {
             {/* ----------- Validate / Next button ----------- */}
             {(settings.inputMode === "input" || settings.inputMode === "order") ? (
               <TouchableOpacity
-                style={[styles.nextButton, (!userInput && !showResult) && { opacity: 0.4 }]}
+                style={[styles.nextButton, isDisabled && { opacity: 0.4 }]}
                 onPress={() => {
                   if (showResult) {
                     next();
@@ -192,13 +198,7 @@ export default function QuizScreen({ route, navigation }: Props) {
                     checkAnswer(userInput);
                   }
                 }}
-                disabled={
-                  !showResult &&
-                  (
-                    !userInput ||
-                    (isPuzzle && userInput.trim().length !== correctLength)
-                  )
-                }
+                disabled={isDisabled}
               >
                 <Text style={styles.nextButtonText}>
                   {showResult
