@@ -1,11 +1,5 @@
 import React from "react";
-import {
-    View,
-    StyleSheet,
-    Image,
-    TouchableOpacity,
-    Text,
-} from "react-native";
+import { View, StyleSheet, Image, TouchableOpacity, Text, } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
@@ -17,7 +11,7 @@ export default function HomeScreen() {
 
     return (
         <MainLayout scrollable>
-            {/* ----------- Image top full width ----------- */}
+            {/* ----------- Image ----------- */}
             <View style={styles.topSection}>
                 <Image
                     source={require("../../assets/background_home.png")}
@@ -34,7 +28,7 @@ export default function HomeScreen() {
                 </View>
             </View>
 
-            {/* ----------- Contenu scrollable (avec padding via MainLayout) ----------- */}
+            {/* ----------- Content ----------- */}
             <HomeSections />
         </MainLayout>
     );
@@ -53,7 +47,7 @@ const styles = StyleSheet.create({
     },
     bottomOverlay: {
         position: "absolute",
-        bottom: 0,
+        bottom: -1,
         width: "100%",
         height: 50,
         backgroundColor: "#e5e8ff",

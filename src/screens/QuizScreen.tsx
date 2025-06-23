@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator, TouchableOpacity, TextInput, ImageBackground, PanResponder, Vibration, Platform, UIManager, StyleSheet, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
+import { View, Text, ActivityIndicator, TouchableOpacity, TextInput, ImageBackground, PanResponder, Vibration, Platform, UIManager, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   nextButton: {
-    marginTop: 16,
+    marginBottom: 32,
     backgroundColor: "#7f8bff",
     paddingVertical: 14,
     borderRadius: 8,

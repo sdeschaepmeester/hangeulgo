@@ -7,6 +7,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import AlertCustom from "@/components/AlertCustom";
 import IconButton from "@/components/IconButton";
 import MainLayout from "@/layouts/MainLayout";
+import { SavedQuizEntry } from "@/types/SavedQuizEntry";
 
 export default function ScoreScreen() {
     const [scores, setScores] = useState<SavedScore[]>([]);
@@ -34,6 +35,16 @@ export default function ScoreScreen() {
         return require("../../assets/bronze_medal.png");
     };
 
+    const getQuizTypeLabel = (type: string) => {
+        switch (type) {
+            case "comprehension": return "Quiz de compréhension";
+            case "ecoute": return "Quiz d'écoute";
+            case "arrangement": return "Quiz puzzle";
+            case "ecriture": return "Quiz d'écriture";
+            default: return "Quiz";
+        }
+    };
+
     const renderItem = ({ item }: { item: SavedScore }) => {
         const percent = Math.round((item.score / item.total) * 100);
         return (
@@ -42,7 +53,7 @@ export default function ScoreScreen() {
                 <View style={styles.details}>
                     <Text style={styles.percent}>{percent}%</Text>
                     <Text style={styles.info}>{item.score} / {item.total}</Text>
-                    <Text style={styles.info}>{item.type}</Text>
+                    <Text style={styles.info}>{getQuizTypeLabel(item.type)}</Text>
                     <Text style={styles.date}>
                         {formatDistanceToNow(new Date(item.date), { addSuffix: true, locale: fr })}
                     </Text>
