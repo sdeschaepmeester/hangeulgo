@@ -27,15 +27,11 @@ Vous pouvez personnalisez vos quiz en associant des mots clés à vos mots.
 
 ## Aperçu
 
+<img src="screenshots/intro.png" alt="Introduction" width="900"/>
+
 <img src="screenshots/gametypes.png" alt="Jeux" width="900"/>
 
-<img src="screenshots/2.png" alt="Ajout de vocabulaire" width="300"/>
-
-<img src="screenshots/3.png" alt="Quiz Traduction" width="300"/>
-
-<img src="screenshots/7.png" alt="Quiz Traduction" width="300"/>
-
-<img src="screenshots/6.png" alt="Résultat" width="300"/>
+<img src="screenshots/end.png" alt="Ending" width="900"/>
 
 ## Fonctionnalités
 
