@@ -46,11 +46,16 @@ Vous pouvez personnalisez vos quiz en associant des mots clés à vos mots.
   - Édition et suppression de mots
 
 - **Quiz interactifs**
-  - Traduction (FR → KO) : en QCM ou saisie libre
-  - Compréhension (KO → FR)
+  - Compréhension (FR → KO ou KO → FR)
+  - Écoute (FR → KO ou KO → FR)
+  - Traduction (FR → KO)
+  - Puzzle
   - Durées de jeu personnalisables : court, normal, long
   - Filtres par difficulté et thèmes
   - Génération aléatoire des questions
+
+- **Sauvegarde de quiz**
+  - Sauvegarder les paramètres d'un quiz pour y rejouer facilement
 
 - **Résultats et progression**
   - Score final avec médaille (or, argent, bronze)
