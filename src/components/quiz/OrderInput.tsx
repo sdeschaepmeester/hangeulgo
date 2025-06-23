@@ -48,7 +48,7 @@ export default function OrderInput({ correctAnswer, onChange, questionKey, disab
                     editable={false}
                 />
                 {userPieces.length > 0 && (
-                    <TouchableOpacity style={styles.clearIcon} onPress={() => setUserPieces([])}>
+                    <TouchableOpacity style={styles.clearIcon} onPress={() => setUserPieces([])} disabled={disabled}>
                         <MaterialCommunityIcons name="close-circle" size={22} color="#666" />
                     </TouchableOpacity>
                 )}
