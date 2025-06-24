@@ -32,7 +32,8 @@
         "title": "Edit a word"
     },
     "myQuizzes": {
-        "title": "My quizzes"
+        "title": "My quizzes",
+        "noSavedQuiz": "No saved quiz."
     },
     "quizTypes": {
         "comprehension": "Comprehension",
@@ -40,7 +41,18 @@
         "listening": "Listening",
         "puzzle": "Puzzle",
         "classic": "Classic quizzes",
-        "other": "Other games"
+        "other": "Other games",
+        "quizComprehension": "Comprehension quiz",
+        "quizWriting": "Writing quiz",
+        "quizListening": "Listening quiz",
+        "quizPuzzle": "Puzzle quiz",
+        "quiz": "Quiz"
+    },
+    "duration": {
+        "unlimited": "Unlimited",
+        "short": "Short",
+        "medium": "Medium",
+        "long": "Long"
     },
     "lexicon": {
         "title": "Lexicon",

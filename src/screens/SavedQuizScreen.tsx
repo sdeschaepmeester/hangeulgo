@@ -11,6 +11,7 @@ import MainLayout from "@/layouts/MainLayout";
 import { getAllSavedQuizzes, deleteSavedQuiz, isQuizValid } from "@/services/quiz";
 import type { SavedQuizEntry } from "@/types/SavedQuizEntry";
 import { RootStackParamList } from "@/App";
+import i18n from "@/i18n";
 
 if (Platform.OS === "android") {
     UIManager.setLayoutAnimationEnabledExperimental?.(true);
@@ -72,10 +73,10 @@ export default function SavedQuizScreen() {
         <MainLayout scrollable={false}>
             {/* --------- Header --------- */}
             <View style={styles.header}>
-                <Text style={styles.title}>Mes quiz</Text>
+                <Text style={styles.title}>{i18n.t("myQuizzes.title")}</Text>
                 {quizzes.length > 0 && (
                     <IconButton
-                        label="Supprimer tout"
+                        label={i18n.t("actions.deleteAll")}
                         icon="delete-empty"
                         onPress={() => setConfirmDeleteAll(true)}
                         backgroundColor="#fcebea"
@@ -91,7 +92,7 @@ export default function SavedQuizScreen() {
                 showsVerticalScrollIndicator={false}
             >
                 {quizzes.length === 0 ? (
-                    <Text style={styles.empty}>Aucun quiz sauvegardé.</Text>
+                    <Text style={styles.empty}>{i18n.t("myQuizzes.noSavedQuiz")}</Text>
                 ) : (
                     <SavedQuizList
                         data={quizzes}
@@ -107,12 +108,12 @@ export default function SavedQuizScreen() {
                     visible={true}
                     icon={<MaterialCommunityIcons name="delete" size={30} color="#e53935" />}
                     iconColor="#e53935"
-                    title="Supprimer"
-                    description="Confirmer la suppression de ce quiz sauvegardé ?"
+                    title={i18n.t("actions.delete")}
+                    description={i18n.t("modaleDelete.confirmDeletionQuizText")}
                     onClose={() => setConfirmDeleteId(null)}
                     onConfirm={handleConfirmDelete}
-                    confirmText="Supprimer"
-                    cancelText="Annuler"
+                    confirmText={i18n.t("actions.delete")}
+                    cancelText={i18n.t("actions.cancel")}
                 />
             )}
 
@@ -121,12 +122,12 @@ export default function SavedQuizScreen() {
                     visible={true}
                     icon={<MaterialCommunityIcons name="delete-alert" size={30} color="#e53935" />}
                     iconColor="#e53935"
-                    title="Tout supprimer"
-                    description={`Cela va supprimer ${quizzes.length} quiz sauvegardé${quizzes.length > 1 ? "s" : ""}. Continuer ?`}
+                    title={i18n.t("actions.deleteAll")}
+                    description={`Cela va supprimer ${quizzes.length} quiz sauvegardé${quizzes.length > 1 ? "s" : ""}. Continuer ?`} //! TODO
                     onClose={() => setConfirmDeleteAll(false)}
                     onConfirm={handleConfirmDeleteAll}
-                    confirmText="Supprimer tout"
-                    cancelText="Annuler"
+                    confirmText={i18n.t("actions.deleteAll")}
+                    cancelText={i18n.t("actions.cancel")}
                 />
             )}
         </MainLayout>

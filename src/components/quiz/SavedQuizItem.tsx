@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { SavedQuizEntry } from "@/types/SavedQuizEntry";
+import i18n from "@/i18n";
 
 type Props = {
     quiz: SavedQuizEntry;
@@ -11,19 +12,19 @@ type Props = {
 
 const getQuizTypeLabel = (type: SavedQuizEntry["type"]) => {
     switch (type) {
-        case "comprehension": return "Quiz de compréhension";
-        case "ecoute": return "Quiz d'écoute";
-        case "arrangement": return "Quiz puzzle";
-        case "ecriture": return "Quiz d'écriture";
-        default: return "Quiz";
+        case "comprehension": return i18n.t("quizTypes.quizComprehension");
+        case "ecoute": return i18n.t("quizTypes.quizListening");
+        case "arrangement": return i18n.t("quizTypes.quizPuzzle");
+        case "ecriture": return i18n.t("quizTypes.quizWriting");
+        default: return i18n.t("quizTypes.quiz");
     }
 };
 
 const getLengthLabel = (length: number | "unlimited") => {
-    if (length === "unlimited") return "Illimité";
-    if (length <= 10) return "court";
-    if (length <= 20) return "moyen";
-    return "long";
+    if (length === "unlimited") return i18n.t("duration.unlimited");
+    if (length <= 10) return i18n.t("duration.short");
+    if (length <= 20) return i18n.t("duration.medium");
+    return i18n.t("duration.long");
 };
 
 export default function SavedQuizItem({ quiz, onDelete, onSelect }: Props) {
@@ -60,7 +61,7 @@ export default function SavedQuizItem({ quiz, onDelete, onSelect }: Props) {
 
             <View style={styles.actions}>
                 <TouchableOpacity onPress={() => onSelect(quiz)} style={styles.playButton}>
-                    <Text style={styles.playButtonText}>Jouer</Text>
+                    <Text style={styles.playButtonText}>{i18n.t("actions.play")}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => onDelete(quiz.id)} style={styles.icon}>

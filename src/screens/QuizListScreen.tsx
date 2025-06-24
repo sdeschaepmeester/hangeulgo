@@ -7,6 +7,7 @@ import { RootStackParamList } from "@/App";
 import MainLayout from "@/layouts/MainLayout";
 import SquareButton from "@/components/SquareButton";
 import SectionCardGame from "@/components/sections/SectionCardGame";
+import i18n from "@/i18n";
 
 export default function QuizListScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -14,32 +15,32 @@ export default function QuizListScreen() {
     return (
         <MainLayout scrollable>
             {/* --- Section 1 : Quiz classiques --- */}
-            <SectionCardGame title="Quiz classiques">
+            <SectionCardGame title={i18n.t("quizTypes.classic")}>
                 <SquareButton
                     icon={<MaterialCommunityIcons name="eye" style={styles.icon} />}
-                    label="Compréhension"
+                    label={i18n.t("quizTypes.comprehension")}
                     bgColor="#f6c6c6"
                     onClick={() => navigation.navigate("ChooseSettings", { type: "comprehension" })}
                 />
                 <SquareButton
                     icon={<MaterialCommunityIcons name="ear-hearing" style={styles.icon} />}
-                    label="Écoute"
+                    label={i18n.t("quizTypes.listening")}
                     bgColor="#f6c6c6"
                     onClick={() => navigation.navigate("ChooseSettings", { type: "ecoute" })}
                 />
             </SectionCardGame>
 
             {/* --- Section 2 : Autres jeux --- */}
-            <SectionCardGame title="Autres jeux">
+            <SectionCardGame title={i18n.t("quizTypes.other")}>
                 <SquareButton
                     icon={<MaterialCommunityIcons name="puzzle" style={styles.icon} />}
-                    label="Quiz puzzle"
+                    label={i18n.t("quizTypes.puzzle")}
                     bgColor="#c6cbf6"
                     onClick={() => navigation.navigate("ChooseSettings", { type: "arrangement" })}
                 />
                 <SquareButton
                     icon={<MaterialCommunityIcons name="pencil" style={styles.icon} />}
-                    label="Écriture"
+                    label={i18n.t("quizTypes.writing")}
                     bgColor="#c6cbf6"
                     onClick={() => navigation.navigate("ChooseSettings", { type: "ecriture" })}
                 />
@@ -48,7 +49,7 @@ export default function QuizListScreen() {
                 onPress={() => navigation.navigate("SavedQuiz")}
                 style={styles.savedButton}
             >
-                <Text style={styles.savedButtonText}>Voir mes quiz sauvegardés</Text>
+                <Text style={styles.savedButtonText}>{i18n.t("actions.seeSavedQuiz")}</Text>
             </TouchableOpacity>
         </MainLayout>
     );

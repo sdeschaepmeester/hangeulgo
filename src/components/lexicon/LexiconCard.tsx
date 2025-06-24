@@ -118,7 +118,7 @@ export default React.memo(function LexiconCard({ id, fr, ko, phonetic, tags, dif
                     behavior={Platform.OS === "ios" ? "padding" : undefined}
                 >
                     <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 40 }}>
-                        <Text style={styles.title}>Modifier un mot</Text>
+                        <Text style={styles.title}>{i18n.t("editWord.title")}</Text>
                         <WordForm
                             edit
                             initialData={{
