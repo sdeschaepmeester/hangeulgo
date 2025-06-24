@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import WordForm from "../form/WordForm";
 import type { Difficulty } from "@/types/Difficulty";
 import * as Speech from "expo-speech";
+import i18n from "@/i18n";
 
 type Props = {
     id: number;
@@ -50,7 +51,7 @@ export default React.memo(function LexiconCard({ id, fr, ko, phonetic, tags, dif
                     </Text>
                     {tags && (
                         <View style={styles.tagsContainer}>
-                            <Text style={styles.tagsLabel}>Thèmes :</Text>
+                            <Text style={styles.tagsLabel}>{i18n.t("lexicon.themes")}{i18n.t("colon")}</Text>
                             <View style={styles.tagsRow}>
                                 {tags.split(",").map((tag) => (
                                     <View key={tag.trim()} style={styles.tag}>
@@ -81,13 +82,13 @@ export default React.memo(function LexiconCard({ id, fr, ko, phonetic, tags, dif
                                 styles.listenText,
                                 isSpeaking && { color: "#fff" }
                             ]}>
-                                {isSpeaking ? "Lecture..." : "Écouter"}
+                                {isSpeaking ? i18n.t("lexicon.isListening") : i18n.t("lexicon.listen")} 
                             </Text>
                         </View>
                     </TouchableOpacity>
 
                     <View style={styles.switchRow}>
-                        <Text style={styles.switchLabel}>Activé</Text>
+                        <Text style={styles.switchLabel}>{i18n.t("lexicon.activated")}</Text>
                         <Switch value={active === 1} onValueChange={onToggle} />
                     </View>
 

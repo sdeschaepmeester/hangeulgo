@@ -9,6 +9,7 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { isLexiconLimitReached } from "@/services/lexicon";
 import WarningLimit from "@/components/WarningLimit";
 import MainLayout from "@/layouts/MainLayout";
+import i18n from "@/i18n";
 
 export default function AddWordScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -27,7 +28,7 @@ export default function AddWordScreen() {
     <MainLayout scrollable>
       {/* ---------- Header ---------- */}
       <View style={styles.headerRow}>
-        <Text style={styles.title}>Ajouter du vocabulaire</Text>
+        <Text style={styles.title}>{i18n.t("addWord.title")}</Text>
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
           <MaterialIcons name="close" size={24} color="#999" />
         </TouchableOpacity>
@@ -36,7 +37,7 @@ export default function AddWordScreen() {
       {/* ---------- Alerte number max lexicon entry ---------- */}
       {isLimitReached && (
         <WarningLimit
-          label="La limite de mots du lexique est atteinte, supprimez-en pour en ajouter d'autres."
+          label={i18n.t("limits.limitWordsReached")}
           onClick={() => navigation.navigate("Lexicon")}
         />
       )}
@@ -55,8 +56,8 @@ export default function AddWordScreen() {
         visible={showSuccess}
         icon={<MaterialCommunityIcons name="check-circle" size={30} color="#4caf50" />}
         iconColor="#4caf50"
-        title="Ajouté !"
-        description="Le mot a été ajouté au lexique."
+        title={i18n.t("actions.added")}
+        description={i18n.t("limits.success")}
         onClose={() => setShowSuccess(false)}
       />
     </MainLayout>

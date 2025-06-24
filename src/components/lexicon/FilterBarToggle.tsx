@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 
@@ -21,14 +22,14 @@ export default function FilterBarToggle({
                 style={[styles.box, isSortOpen && styles.boxActive]}
                 onPress={onToggleSort}
             >
-                <Text style={[styles.text, isSortOpen && styles.textActive]}>Ordre</Text>
+                <Text style={[styles.text, isSortOpen && styles.textActive]}>{i18n.t("lexicon.order")}</Text>
             </TouchableOpacity>
             <View style={styles.divider} />
             <TouchableOpacity
                 style={[styles.box, isFilterOpen && styles.boxActive]}
                 onPress={onToggleFilter}
             >
-                <Text style={[styles.text, isFilterOpen && styles.textActive]}>Filtrer</Text>
+                <Text style={[styles.text, isFilterOpen && styles.textActive]}>{i18n.t("lexicon.filter")}</Text>
             </TouchableOpacity>
         </View>
     );

@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, View, Text } from "react-native";
 import type { LexiconEntry } from "@/types/LexiconEntry";
 import LexiconCard from "@/components/lexicon/LexiconCard";
 import IconButton from "../IconButton";
+import i18n from "@/i18n";
 
 type Props = {
     data: LexiconEntry[];
@@ -16,10 +17,10 @@ export default function LexiconList({ data, onToggle, onDelete, onDeleteAll, onU
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.title}>Lexique</Text>
+                <Text style={styles.title}>{i18n.t("lexicon.title")}</Text>
 
                 <IconButton
-                    label="Supprimer tout"
+                    label={i18n.t("actions.deleteAll")}
                     icon="delete-empty"
                     onPress={onDeleteAll}
                     backgroundColor="#fcebea"

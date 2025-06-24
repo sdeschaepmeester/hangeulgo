@@ -5,6 +5,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
 import HomeSections from "@/components/sections/HomeSection";
 import MainLayout from "@/layouts/MainLayout";
+import i18n from "@/i18n";
 
 export default function HomeScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -23,7 +24,7 @@ export default function HomeScreen() {
                         style={styles.scoreButton}
                         onPress={() => navigation.navigate("Score")}
                     >
-                        <Text style={styles.scoreText}>Scores</Text>
+                        <Text style={styles.scoreText}>{i18n.t("home.scores")}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

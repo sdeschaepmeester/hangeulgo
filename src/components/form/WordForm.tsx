@@ -10,11 +10,12 @@ import { saveWord, checkIfKoreanWordExists } from "@/services/lexicon";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
+import i18n from "@/i18n";
 
 const difficulties = [
-    { label: "Facile", value: "easy", color: "green" },
-    { label: "Moyen", value: "medium", color: "orange" },
-    { label: "Difficile", value: "hard", color: "red" },
+    { label: i18n.t("difficulties.easy"), value: "easy", color: "green" },
+    { label: i18n.t("difficulties.medium"), value: "medium", color: "orange" },
+    { label: i18n.t("difficulties.hard"), value: "hard", color: "red" },
 ];
 
 const MIN_DELAY = 10000; // 10s cooldown
@@ -150,7 +151,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         <View style={styles.form}>
             {/* ----------------- French input ----------------- */}
             <View style={styles.field}>
-                <Text style={styles.label}>🇫🇷 Français</Text>
+                <Text style={styles.label}>🇫🇷 {i18n.t("addWord.frinput")}</Text>
                 <TextInput
                     ref={frRef}
                     value={fr}
@@ -161,7 +162,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                         }
                     }}
                     style={[styles.input, { backgroundColor: "#fff" }]}
-                    placeholder="Ex : Bonjour"
+                    placeholder={i18n.t("addWord.egfrinput")}
                     placeholderTextColor={"#696969"}
                     returnKeyType="next"
                     onSubmitEditing={() => koRef.current?.focus()}
@@ -182,15 +183,15 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                         >
                             <Text style={styles.suggestionText}>
                                 {loadingSuggestion
-                                    ? "⏳ Recherche en cours..."
+                                    ? i18n.t("addWord.searching")
                                     : cooldownActive
-                                        ? "⏳ Attendez un peu avant de suggérer à nouveau"
-                                        : "💡 Suggérer une traduction coréenne"}
+                                        ? i18n.t("addWord.waitBeforeAction")
+                                        : i18n.t("addWord.suggestion")}
                             </Text>
                         </TouchableOpacity>
                     )}
                     {noSuggestionFound && !loadingSuggestion && (
-                        <Text style={styles.warningText}>❌ Aucune suggestion trouvée pour ce mot.</Text>
+                        <Text style={styles.warningText}>❌ {i18n.t("addWord.noSuggestionFound")}</Text>
                     )}
                     {koSuggested && !loadingSuggestion && (
                         <TouchableOpacity
@@ -202,7 +203,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                             }}
                         >
                             <Text style={styles.suggestionBox}>
-                                👉 Appuyer pour remplir avec : {koSuggested}
+                                👉 {i18n.t("addWord.tapToFill")} {koSuggested}
                             </Text>
                         </TouchableOpacity>
                     )}
@@ -211,7 +212,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
 
             {/* ----------------- Korean input ----------------- */}
             <View style={styles.field}>
-                <Text style={styles.label}>🇰🇷 Coréen</Text>
+                <Text style={styles.label}>🇰🇷 {i18n.t("addWord.koinput")}</Text>
                 <TextInput
                     ref={koRef}
                     value={ko}
@@ -223,21 +224,21 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     }}
                     onBlur={handleKoBlur}
                     style={[styles.input, { backgroundColor: "#fff" }]}
-                    placeholder="Ex : 안녕하세요"
+                    placeholder={i18n.t("addWord.egkorean")}
                     placeholderTextColor={"#696969"}
                     returnKeyType="next"
                     onSubmitEditing={() => phoneticRef.current?.focus()}
                 />
                 {koreanExists && (
                     <Text style={styles.warningText}>
-                        ⚠️ Ce mot existe déjà dans votre lexique. Modifiez-le si besoin.
+                        {i18n.t("addWord.wordExists")}
                     </Text>
                 )}
             </View>
 
             {/* ----------------- Phonetic input ----------------- */}
             <View style={styles.field}>
-                <Text style={styles.label}>Phonétique</Text>
+                <Text style={styles.label}>{i18n.t("addWord.phonetic")}</Text>
                 <TextInput
                     ref={phoneticRef}
                     value={phonetic}
@@ -255,7 +256,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
             {/* ----------------- Tags -----------------*/}
             {tagLimitReached && (
                 <Text style={{ color: "#f57c00", fontSize: 13, marginBottom: 6 }}>
-                    Vous ne pouvez plus créer de nouveaux thèmes.
+                    {i18n.t("addWord.cannotCreateTheme")}
                 </Text>
             )}
             <TagSelector
@@ -266,7 +267,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
             />
 
             {/* ----------------- Difficulty of word ----------------- */}
-            <Text style={[styles.label, { marginTop: 16 }]}>Difficulté</Text>
+            <Text style={[styles.label, { marginTop: 16 }]}>{i18n.t("addWord.difficulty")}</Text>
             <SelectPill
                 options={difficulties}
                 selectedValue={difficulty}
@@ -279,7 +280,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     onPress={() => navigation.goBack()}
                     style={styles.cancelButton}
                 >
-                    <Text style={styles.cancelButtonText}>Annuler</Text>
+                    <Text style={styles.cancelButtonText}>{i18n.t("actions.cancel")}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -288,7 +289,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     disabled={!isValid || koreanExists}
                 >
                     <Text style={styles.confirmButtonText}>
-                        {edit ? "Confirmer" : "Ajouter"}
+                        {edit ? i18n.t("actions.confirm") : i18n.t("actions.add")}
                     </Text>
                 </TouchableOpacity>
             </View>

@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Pressable } from "react-native";
 
@@ -15,7 +16,7 @@ export default function SortOptions({ currentOrder, onChange }: Props) {
     return (
         <View style={styles.container}>
             {/* ----------------- Sort by label  ----------------- */}
-            <Text style={styles.label}>Ordre alphabétique :</Text>
+            <Text style={styles.label}>{i18n.t("lexicon.alphabeticalOrder")}{i18n.t("colon")}</Text>
             <TouchableOpacity style={styles.dropdown} onPress={() => setOpen(true)}>
                 <Text style={styles.dropdownText}>
                     {labelFromValue(currentOrder)}

@@ -1,0 +1,109 @@
+{
+    "home": {
+        "play": "Jouer",
+        "myquiz": "Mes quiz",
+        "lexicon": "Réviser",
+        "addWord": "Ajouter un mot",
+        "scores": "Scores"
+    },
+    "addWord": {
+        "title": "Nouveau mot",
+        "frinput": "Français",
+        "koinput": "Coréen",
+        "phonetic": "Phonétique",
+        "themes": "Thèmes",
+        "difficulty": "Difficulté",
+        "success": "Le mot a été ajouté au lexique.",
+        "egfrinput": "Ex : Bonjour",
+        "searching": "⏳ Recherche en cours...",
+        "waitBeforeAction": "⏳ Attendez un peu avant de suggérer à nouveau",
+        "suggestion": "💡 Suggérer une traduction coréenne",
+        "noSuggestionFound": "Aucune suggestion trouvée pour ce mot.",
+        "tapToFill": "Appuyer pour remplir avec :",
+        "egkorean": "Ex : 안녕하세요",
+        "wordExists": "⚠️ Ce mot existe déjà dans votre lexique. Modifiez-le si besoin.",
+        "cannotCreateTheme": "Vous ne pouvez plus créer de nouveaux thèmes.",
+        "addorsearch": "Ajouter ou rechercher un mot-clé..."
+    },
+    "scores": {
+        "title": "Historique des scores"
+    },
+    "editWord": {
+        "title": "Modifier un mot"
+    },
+    "myQuizzes": {
+        "title": "Mes quiz"
+    },
+    "quizTypes": {
+        "comprehension": "Compréhension",
+        "writing": "Écriture",
+        "listening": "Écoute",
+        "puzzle": "Puzzle",
+        "classic": "Quiz classiques",
+        "other": "Autres jeux"
+    },
+    "lexicon": {
+        "title": "Lexique",
+        "searchWord": "Rechercher un mot",
+        "order": "Ordre",
+        "filter": "Filtrer",
+        "listen": "Écouter",
+        "isListening": "Lecture...",
+        "activated": "Activé",
+        "themes": "Thèmes",
+        "alphabeticalOrder": "Ordre alphabétique"
+    },
+    "navbar": {
+        "play": "Jouer",
+        "home": "Accueil",
+        "lexicon": "Réviser",
+        "addWord": "Ajouter"
+    },
+    "topbar": {
+        "lexicon": "Réviser",
+        "quizList": "Types de quiz",
+        "addWord": "Ajouter un mot"
+    },
+    "modaleDelete": {
+        "confirmDeletionQuizTitle": "Suppression d'un quiz sauvegardé",
+        "confirmDeletionQuizText": "Confirmer la suppression de ce quiz ?",
+        "confirmDeletionAllQuizTitle": "Suppression des quiz sauvegardés",
+        "confirmDeletionAllQuizText": "Cela va supprimer {{managePlural}}. Continuer ?",
+        "confirmDeletionWordTitle": "Suppression d'un mot",
+        "confirmDeletionWordText": "Confirmer la suppression de ce mot du lexique ?",
+        "confirmDeletionAllWordTitle": "Suppression d'un quiz sauvegardé",
+        "confirmDeletionAllWordText": "Cela va supprimer {{managePlural}} du lexique. Continuer ?"
+    },
+    "actions": {
+        "delete": "Supprimer",
+        "deleteAll": "Tout supprimer",
+        "add": "Ajouter",
+        "cancel": "Annuler",
+        "confirm": "Confirmer",
+        "play": "Jouer",
+        "seeSavedQuiz": "Voir mes quiz sauvegardés",
+        "added": "Ajouté !"
+    },
+    "managePlural": {
+        "quizCount": {
+            "one": "{{count}} quiz sauvegardé",
+            "other": "{{count}} quiz sauvegardés"
+        },
+        "wordCount": {
+            "one": "{{count}} mot",
+            "other": "{{count}} mots"
+        }
+    },
+    "colon": " :",
+    "noSelectedTheme": "Aucun thème sélectionné",
+    "limits": {
+        "limitOf": "La limite de",
+        "themeIsReached": "thèmes a été atteinte.",
+        "limitWordsReached": "La limite de mots du lexique est atteinte, supprimez-en pour en ajouter d'autres."
+    },
+    "difficulties": {
+        "easy": "Facile",
+        "medium": "Moyen",
+        "hard": "Difficile"
+    }
+}

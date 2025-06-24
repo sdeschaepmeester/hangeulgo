@@ -6,6 +6,7 @@ import SectionCardGame from "@/components/sections/SectionCardGame";
 import SquareButton from "@/components/SquareButton";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
+import i18n from "@/i18n";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -15,16 +16,16 @@ export default function HomeSections() {
     return (
         <View style={styles.container}>
             {/* Play Section */}
-            <SectionCardGame title="Jouer">
+            <SectionCardGame title={i18n.t("actions.play")}>
                 <SquareButton
                     icon={<MaterialCommunityIcons name="gamepad-variant" style={styles.icon} />}
-                    label="Jouer"
+                    label={i18n.t("home.play")}
                     bgColor="#f6c6c6"
                     onClick={() => navigation.navigate("QuizList")}
                 />
                 <SquareButton
                     icon={<MaterialCommunityIcons name="content-save-outline" style={styles.icon} />}
-                    label="Mes quiz"
+                    label={i18n.t("home.myquiz")}
                     bgColor="#f6c6c6"
                     onClick={() => navigation.navigate("SavedQuiz")}
                 />
@@ -32,16 +33,16 @@ export default function HomeSections() {
 
             {/* Lexique section */}
             <View style={styles.sectionSpacing}>
-                <SectionCardGame title="Lexique">
+                <SectionCardGame title={i18n.t("lexicon.title")}>
                     <SquareButton
                         icon={<MaterialCommunityIcons name="book-open-variant" style={styles.icon} />}
-                        label="Réviser"
+                        label={i18n.t("home.lexicon")}
                         bgColor="#c6cbf6"
                         onClick={() => navigation.navigate("Lexicon")}
                     />
                     <SquareButton
                         icon={<MaterialCommunityIcons name="layers-plus" style={styles.icon} />}
-                        label="Ajouter un mot"
+                        label={i18n.t("home.addWord")}
                         bgColor="#c6cbf6"
                         onClick={() => navigation.navigate("AddWord")}
                     />

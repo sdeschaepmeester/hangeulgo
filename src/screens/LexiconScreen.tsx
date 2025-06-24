@@ -11,6 +11,7 @@ import { getFilteredLexicon, toggleLexiconActive, deleteLexiconEntry, updateFren
 import { getAllUniqueTags } from "@/services/tags";
 import LexiconList from "@/components/lexicon/LexiconList";
 import MainLayout from "@/layouts/MainLayout";
+import i18n from "@/i18n";
 
 if (Platform.OS === "android") {
   UIManager.setLayoutAnimationEnabledExperimental?.(true);
@@ -99,7 +100,7 @@ export default function LexiconScreen() {
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Recherche par mot"
+          placeholder={i18n.t("lexicon.searchWord")}
           value={searchTerm}
           onChangeText={setSearchTerm}
           placeholderTextColor="#888"
@@ -159,12 +160,12 @@ export default function LexiconScreen() {
           visible={true}
           icon={<MaterialCommunityIcons name="delete" size={30} color="#e53935" />}
           iconColor="#e53935"
-          title="Supprimer"
-          description="Confirmer la suppression de ce mot du lexique ?"
+          title={i18n.t("modaleDelete.confirmDeletionWordTitle")}
+          description={i18n.t("modaleDelete.confirmDeletionWordText")}
           onClose={() => setConfirmDeleteId(null)}
           onConfirm={handleConfirmDelete}
-          confirmText="Supprimer"
-          cancelText="Annuler"
+          confirmText={i18n.t("actions.delete")}
+          cancelText={i18n.t("actions.cancel")}
         />
       )}
       {confirmDeleteSeverals && (
@@ -172,12 +173,12 @@ export default function LexiconScreen() {
           visible={true}
           icon={<MaterialCommunityIcons name="delete-alert" size={30} color="#e53935" />}
           iconColor="#e53935"
-          title="Tout supprimer"
-          description={`Cela va supprimer ${lexicon.length} mot${lexicon.length > 1 ? "s" : ""} du lexique. Continuer ?`}
+          title={i18n.t("actions.deleteAll")}
+          description={`Cela va supprimer ${lexicon.length} mot${lexicon.length > 1 ? "s" : ""} du lexique. Continuer ?`} //! TODO
           onClose={() => setConfirmDeleteSeverals(false)}
           onConfirm={handleConfirmDeleteSeveral}
-          confirmText="Supprimer tout"
-          cancelText="Annuler"
+          confirmText={i18n.t("actions.deleteAll")}
+          cancelText={i18n.t("actions.cancel")}
         />
       )}
     </MainLayout>

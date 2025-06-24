@@ -1,0 +1,109 @@
+{
+    "home": {
+        "play": "Play",
+        "myquiz": "My quizzes",
+        "lexicon": "Review",
+        "addWord": "Add a word",
+        "scores": "Scores"
+    },
+    "addWord": {
+        "title": "New word",
+        "frinput": "French",
+        "koinput": "Korean",
+        "phonetic": "Phonetic",
+        "themes": "Themes",
+        "difficulty": "Difficulty",
+        "success": "The word has been added to the lexicon.",
+        "egfrinput": "Eg: Hello",
+        "searching": "⏳ Searching...",
+        "waitBeforeAction": "⏳ Please wait a moment before suggesting again",
+        "suggestion": "💡 Suggest a Korean translation",
+        "noSuggestionFound": "No suggestion found.",
+        "tapToFill": "Tap to fill with: ",
+        "egkorean": "Eg: 안녕하세요",
+        "wordExists": "⚠️ This word already exists in your lexicon. Edit it if needed.",
+        "cannotCreateTheme": "You can't create more theme.",
+        "addorsearch": "Add or search for a theme..."
+    },
+    "scores": {
+        "title": "Score history"
+    },
+    "editWord": {
+        "title": "Edit a word"
+    },
+    "myQuizzes": {
+        "title": "My quizzes"
+    },
+    "quizTypes": {
+        "comprehension": "Comprehension",
+        "writing": "Writing",
+        "listening": "Listening",
+        "puzzle": "Puzzle",
+        "classic": "Classic quizzes",
+        "other": "Other games"
+    },
+    "lexicon": {
+        "title": "Lexicon",
+        "searchWord": "Search a word",
+        "order": "Order",
+        "filter": "Filter",
+        "listen": "Listen",
+        "isListening": "Playing...",
+        "activated": "Activated",
+        "themes": "Themes",
+        "alphabeticalOrder": "Alphabetical order"
+    },
+    "navbar": {
+        "play": "Play",
+        "home": "Home",
+        "lexicon": "Review",
+        "addWord": "Add"
+    },
+    "topbar": {
+        "lexicon": "Review",
+        "quizList": "Quiz types",
+        "addWord": "Add a word"
+    },
+    "modaleDelete": {
+        "confirmDeletionQuizTitle": "Delete saved quiz",
+        "confirmDeletionQuizText": "Do you confirm the deletion of this quiz?",
+        "confirmDeletionAllQuizTitle": "Delete saved quizzes",
+        "confirmDeletionAllQuizText": "This will delete {{managePlural}}. Continue?",
+        "confirmDeletionWordTitle": "Delete word",
+        "confirmDeletionWordText": "Do you confirm the deletion of this word from the lexicon?",
+        "confirmDeletionAllWordTitle": "Delete all words",
+        "confirmDeletionAllWordText": "This will delete {{managePlural}} from the lexicon. Continue?"
+    },
+    "actions": {
+        "delete": "Delete",
+        "deleteAll": "Delete all",
+        "add": "Add",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "play": "Play",
+        "seeSavedQuiz": "See my saved quizzes",
+        "added": "Added !"
+    },
+    "managePlural": {
+        "quizCount": {
+            "one": "{{count}} saved quiz",
+            "other": "{{count}} saved quizzes"
+        },
+        "wordCount": {
+            "one": "{{count}} word",
+            "other": "{{count}} words"
+        }
+    },
+    "colon": ":",
+    "noSelectedTheme": "No selected theme",
+    "limits": {
+        "limitOf": "The limit of",
+        "themeIsReached": "themes has been reached.",
+        "limitWordsReached": "The lexicon word limit has been reached. Please remove some to add new ones."
+    },
+    "difficulties": {
+        "easy": "Easy",
+        "medium": "Medium",
+        "hard": "Hard"
+    }
+}

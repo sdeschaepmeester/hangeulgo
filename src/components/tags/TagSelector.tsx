@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { View, Text, TouchableOpacity, TextInput, StyleSheet, Keyboard, ScrollView, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import i18n from "@/i18n";
 
 type Props = {
     mode: "edit" | "select";
@@ -13,7 +14,7 @@ type Props = {
 
 const MAX_TAGS_PER_WORD = 4;
 
-export default function TagSelector({ mode, allTags, selectedTags, onChange, label = "Thèmes", withLimits = true, }: Props) {
+export default function TagSelector({ mode, allTags, selectedTags, onChange, label = i18n.t("lexicon.themes"), withLimits = true, }: Props) {
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState("");
     const [isTouchingList, setIsTouchingList] = useState(false);
@@ -90,7 +91,7 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, lab
                                     }
                                 }}
                                 onSubmitEditing={handleAdd}
-                                placeholder={"Ajouter ou rechercher un mot-clé..."}
+                                placeholder={i18n.t("addWord.addorsearch")}
                                 placeholderTextColor="#999"
                                 style={{ flex: 1, color: "#000", backgroundColor: "#fff" }}
                                 maxLength={25}
@@ -100,7 +101,7 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, lab
                             <Text style={{ color: "#333" }}>
                                 {selectedTags.length > 0
                                     ? selectedTags.join(", ")
-                                    : "Aucun mot clé sélectionné"}
+                                    : i18n.t("noSelectedTheme")}
                             </Text>
                         )}
 
@@ -157,7 +158,7 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, lab
                                             style={styles.newTagButton}
                                         >
                                             <Text style={{ color: "#333" }}>
-                                                ➕ Ajouter "{input.trim()}"
+                                                ➕ {i18n.t("actions.add")} {input.trim()}"
                                             </Text>
                                         </TouchableOpacity>
                                     )}
@@ -168,7 +169,7 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, lab
                     {/* ------------ Selected tags ------------ */}
                     {withLimits && selectedTags.length >= MAX_TAGS_PER_WORD && (
                         <Text style={{ color: "#f57c00", fontSize: 13, marginTop: 6 }}>
-                            La limite de {MAX_TAGS_PER_WORD} mots-clés est atteinte.
+                           {i18n.t("limits.limitOf")} {MAX_TAGS_PER_WORD} {i18n.t("limits.themeIsReached")}
                         </Text>
                     )}
 

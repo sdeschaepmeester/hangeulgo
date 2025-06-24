@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import MultiSelectPill from "./MultiSelectPill";
 import type { Difficulty } from "@/types/Difficulty";
+import i18n from "@/i18n";
 
 interface FilterBarProps {
     selectedDifficulties: Difficulty[];
@@ -9,9 +10,9 @@ interface FilterBarProps {
 }
 
 const difficultyOptions: { label: string; value: Difficulty; color: string }[] = [
-    { label: "Facile", value: "easy", color: "green" },
-    { label: "Moyen", value: "medium", color: "orange" },
-    { label: "Difficile", value: "hard", color: "red" },
+    { label: i18n.t("difficulties.easy"), value: "easy", color: "green" },
+    { label: i18n.t("difficulties.medium"), value: "medium", color: "orange" },
+    { label: i18n.t("difficulties.hard"), value: "hard", color: "red" },
 ];
 
 export default function FilterBar({
