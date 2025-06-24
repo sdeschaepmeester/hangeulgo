@@ -104,7 +104,7 @@ export default function App() {
                 title,
                 headerLeft: () => goHomeButton(navigation),
                 headerTitle: () => (
-                  <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{marginLeft: 10}}>
+                  <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{ marginLeft: 10 }}>
                     <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
                       {title}
                     </Text>

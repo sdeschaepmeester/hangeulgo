@@ -1,40 +1,9 @@
 import { dbPromise } from "@/db/database";
+import { initDatabase } from "@/db/database";
 
 export async function injectPreviewLexicon() {
+  await initDatabase();
   const db = await dbPromise;
-
-  await db.runAsync(`
-    CREATE TABLE IF NOT EXISTS lexicon (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      fr TEXT NOT NULL,
-      ko TEXT NOT NULL,
-      phonetic TEXT,
-      difficulty TEXT CHECK(difficulty IN ('easy', 'medium', 'hard')),
-      active INTEGER NOT NULL DEFAULT 1
-    );
-  `);
-
-  await db.runAsync(`
-    CREATE TABLE IF NOT EXISTS lexicon_tags (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      lexicon_id INTEGER,
-      tag TEXT,
-      FOREIGN KEY (lexicon_id) REFERENCES lexicon(id)
-    );
-  `);
-
-  await db.runAsync(`
-    CREATE TABLE IF NOT EXISTS saved_quiz (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT,
-      type TEXT,
-      subType TEXT,
-      inputMode TEXT,
-      length TEXT,
-      difficulties TEXT,
-      tags TEXT
-    );
-  `);
 
   const entries: {
     fr: string;
@@ -43,14 +12,22 @@ export async function injectPreviewLexicon() {
     difficulty: "easy" | "medium" | "hard";
     tags: string[];
   }[] = [
-      // Communs
-      { fr: "Bonjour", ko: "안녕하세요", phonetic: "annyeonghaseyo", difficulty: "easy", tags: ["Courant"] },
-      { fr: "Enchanté", ko: "반갑습니다", phonetic: "bangapseumnida", difficulty: "easy", tags: ["Soutenu"] },
-      { fr: "Merci (familier)", ko: "고마워", phonetic: "gomawo", difficulty: "easy", tags: ["Familier"] },
-      { fr: "Merci (courant)", ko: "고맙습니다", phonetic: "gomapseumnida", difficulty: "easy", tags: ["Courant"] },
-      { fr: "Merci (soutenu)", ko: "감사합니다", phonetic: "gamsahamnida", difficulty: "easy", tags: ["Soutenu"] },
-      { fr: "Oui", ko: "네", phonetic: "ne", difficulty: "easy", tags: [] },
-      { fr: "Non", ko: "아니요", phonetic: "aniyo", difficulty: "easy", tags: [] },
+      // Formules
+      { fr: "Bonjour", ko: "안녕하세요", phonetic: "annyeonghaseyo", difficulty: "easy", tags: ["Formules", "Courant"] },
+      { fr: "Enchanté", ko: "반갑습니다", phonetic: "bangapseumnida", difficulty: "easy", tags: ["Formules", "Soutenu"] },
+      { fr: "Merci (gomawo)", ko: "고마워", phonetic: "gomawo", difficulty: "easy", tags: ["Formules", "Familier"] },
+      { fr: "Merci (gomapseumnida)", ko: "고맙습니다", phonetic: "gomapseumnida", difficulty: "easy", tags: ["Formules", "Courant"] },
+      { fr: "Merci (gamsahamnida)", ko: "감사합니다", phonetic: "gamsahamnida", difficulty: "easy", tags: ["Formules", "Soutenu"] },
+      { fr: "De rien", ko: "천만에요", phonetic: "cheonmaneyo", difficulty: "medium", tags: ["Formules", "Soutenu"] },
+      { fr: "Désolé", ko: "미안해요", phonetic: "mianhaeyo", difficulty: "easy", tags: ["Formules", "Courant"] },
+      { fr: "Pardon (poli)", ko: "죄송합니다", phonetic: "joesonghamnida", difficulty: "medium", tags: ["Formules", "Soutenu"] },
+      { fr: "Au revoir", ko: "안녕히 가세요", phonetic: "annyeonghi gaseyo", difficulty: "easy", tags: ["Formules", "Soutenu"] },
+      { fr: "Bonne nuit", ko: "안녕히 주무세요", phonetic: "annyeonghi jumuseyo", difficulty: "medium", tags: ["Formules", "Soutenu"] },
+      { fr: "Oui", ko: "네", phonetic: "ne", difficulty: "easy", tags: ["Formules"] },
+      { fr: "Non", ko: "아니요", phonetic: "aniyo", difficulty: "easy", tags: ["Formules"] },
+      { fr: "Je ne sais pas", ko: "모르겠어요", phonetic: "moreugesseoyo", difficulty: "medium", tags: ["Formules", "Courant"] },
+      { fr: "C’est bon", ko: "괜찮아요", phonetic: "gwaenchanayo", difficulty: "easy", tags: ["Formules", "Courant"] },
+      { fr: "Félicitations", ko: "축하합니다", phonetic: "chukahamnida", difficulty: "medium", tags: ["Formules", "Soutenu"] },
       // Famille
       { fr: "Maman", ko: "엄마", phonetic: "eomma", difficulty: "easy", tags: ["Famille"] },
       { fr: "Papa", ko: "아빠", phonetic: "appa", difficulty: "easy", tags: ["Famille"] },
@@ -75,10 +52,42 @@ export async function injectPreviewLexicon() {
       { fr: "Japon", ko: "일본", phonetic: "ilbon", difficulty: "easy", tags: ["Pays"] },
       { fr: "Chine", ko: "중국", phonetic: "jungguk", difficulty: "easy", tags: ["Pays"] },
       { fr: "États-Unis", ko: "미국", phonetic: "miguk", difficulty: "easy", tags: ["Pays"] },
+      // Dates
+      { fr: "Lundi", ko: "월요일", phonetic: "woryoil", difficulty: "easy", tags: ["Jours", "Date"] },
+      { fr: "Mardi", ko: "화요일", phonetic: "hwayoil", difficulty: "easy", tags: ["Jours", "Date"] },
+      { fr: "Mercredi", ko: "수요일", phonetic: "suyoil", difficulty: "easy", tags: ["Jours", "Date"] },
+      { fr: "Jeudi", ko: "목요일", phonetic: "mogyoil", difficulty: "easy", tags: ["Jours", "Date"] },
+      { fr: "Vendredi", ko: "금요일", phonetic: "geumyoil", difficulty: "easy", tags: ["Jours", "Date"] },
+      { fr: "Samedi", ko: "토요일", phonetic: "toyoil", difficulty: "easy", tags: ["Jours", "Date"] },
+      { fr: "Dimanche", ko: "일요일", phonetic: "iryoil", difficulty: "easy", tags: ["Jours", "Date"] },
+      { fr: "Janvier", ko: "1월", phonetic: "irwol", difficulty: "easy", tags: ["Mois", "Date"] },
+      { fr: "Février", ko: "2월", phonetic: "iwol", difficulty: "easy", tags: ["Mois", "Date"] },
+      { fr: "Mars", ko: "3월", phonetic: "samwol", difficulty: "easy", tags: ["Mois", "Date"] },
+      { fr: "Avril", ko: "4월", phonetic: "sawol", difficulty: "easy", tags: ["Mois", "Date"] },
+      { fr: "Mai", ko: "5월", phonetic: "owol", difficulty: "easy", tags: ["Mois", "Date"] },
+      { fr: "Juin", ko: "6월", phonetic: "yuwol", difficulty: "easy", tags: ["Mois", "Date"] },
+      { fr: "Juillet", ko: "7월", phonetic: "chirwol", difficulty: "easy", tags: ["Mois", "Date"] },
+      { fr: "Août", ko: "8월", phonetic: "parwol", difficulty: "easy", tags: ["Mois", "Date"] },
+      { fr: "Septembre", ko: "9월", phonetic: "guwol", difficulty: "easy", tags: ["Mois", "Date"] },
+      { fr: "Octobre", ko: "10월", phonetic: "sibwol", difficulty: "easy", tags: ["Mois", "Date"] },
+      { fr: "Novembre", ko: "11월", phonetic: "sibirwol", difficulty: "easy", tags: ["Mois", "Date"] },
+      { fr: "Décembre", ko: "12월", phonetic: "sibiwol", difficulty: "easy", tags: ["Mois", "Date"] },
+      { fr: "Printemps", ko: "봄", phonetic: "bom", difficulty: "easy", tags: ["Saisons", "Date"] },
+      { fr: "Été", ko: "여름", phonetic: "yeoreum", difficulty: "easy", tags: ["Saisons", "Date"] },
+      { fr: "Automne", ko: "가을", phonetic: "gaeul", difficulty: "easy", tags: ["Saisons", "Date"] },
+      { fr: "Hiver", ko: "겨울", phonetic: "gyeoul", difficulty: "easy", tags: ["Saisons", "Date"] },
     ];
 
   for (const entry of entries) {
     try {
+      // Check if entry is already in lexicon
+      const existing = await db.getFirstAsync<{ id: number }>(
+        `SELECT id FROM lexicon WHERE fr = ? AND ko = ?`,
+        [entry.fr, entry.ko]
+      );
+
+      if (existing?.id) continue;
+
       const inserted = await db.getFirstAsync<{ id: number }>(
         `INSERT INTO lexicon (fr, ko, phonetic, difficulty, active)
          VALUES (?, ?, ?, ?, ?) RETURNING id`,
@@ -98,34 +107,61 @@ export async function injectPreviewLexicon() {
     }
   }
 
-  // Quiz Famille
-  await db.runAsync(
-    `INSERT INTO saved_quiz (name, type, subType, inputMode, length, difficulties, tags)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
-    "Quiz Famille",
-    "comprehension",
-    "koToFr",
-    "multiple",
-    "20",
-    JSON.stringify(["easy", "medium"]),
-    JSON.stringify(["Famille"])
-  ).catch((err) => {
-    console.error("Error inserting Quiz Pays:", err);
-  });
 
-  // Quiz Pays
-  await db.runAsync(
-    `INSERT INTO saved_quiz (name, type, subType, inputMode, length, difficulties, tags)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
-    "Quiz Pays",
-    "comprehension",
-    "koToFr",
-    "multiple",
-    "20",
-    JSON.stringify(["easy"]),
-    JSON.stringify(["Pays"])
-  ).catch((err) => {
-    console.error("Error inserting Quiz Pays:", err);
-  });
+  const quizzesToInsert = [
+    {
+      name: "Quiz Dates",
+      type: "comprehension",
+      subType: "frToKo",
+      inputMode: "multiple",
+      length: "10",
+      difficulties: ["easy"],
+      tags: ["Date"]
+    },
+    {
+      name: "Quiz Famille",
+      type: "comprehension",
+      subType: "koToFr",
+      inputMode: "multiple",
+      length: "20",
+      difficulties: ["easy", "medium"],
+      tags: ["Famille"]
+    },
+    {
+      name: "Quiz Pays",
+      type: "comprehension",
+      subType: "koToFr",
+      inputMode: "multiple",
+      length: "20",
+      difficulties: ["easy"],
+      tags: ["Pays"]
+    }
+  ];
 
+  for (const quiz of quizzesToInsert) {
+    const existing = await db.getFirstAsync<{ id: number }>(
+      `SELECT id FROM saved_quiz WHERE name = ?`,
+      [quiz.name]
+    );
+
+    if (existing?.id) continue;
+
+    try {
+      await db.runAsync(
+        `INSERT INTO saved_quiz (name, type, subType, inputMode, length, difficulties, tags)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [
+          quiz.name,
+          quiz.type,
+          quiz.subType,
+          quiz.inputMode,
+          quiz.length,
+          JSON.stringify(quiz.difficulties),
+          JSON.stringify(quiz.tags)
+        ]
+      );
+    } catch (err) {
+      console.error(`Error inserting quiz: "${quiz.name}"`, err);
+    }
+  }
 }

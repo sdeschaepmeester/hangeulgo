@@ -18,6 +18,13 @@ export async function initDatabase() {
       tags TEXT
     );
 
+    CREATE TABLE IF NOT EXISTS lexicon_tags (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      lexicon_id INTEGER,
+      tag TEXT,
+      FOREIGN KEY (lexicon_id) REFERENCES lexicon(id)
+    );
+
     CREATE TABLE IF NOT EXISTS saved_quiz (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
