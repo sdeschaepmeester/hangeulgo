@@ -26,7 +26,8 @@
         "addorsearch": "Add or search for a theme..."
     },
     "scores": {
-        "title": "Score history"
+        "title": "Score history",
+        "noScore": "No score registered yet."
     },
     "editWord": {
         "title": "Edit a word"
@@ -84,7 +85,9 @@
         "confirmDeletionWordTitle": "Delete word",
         "confirmDeletionWordText": "Do you confirm the deletion of this word from the lexicon?",
         "confirmDeletionAllWordTitle": "Delete all words",
-        "confirmDeletionAllWordText": "This will delete {{managePlural}} from the lexicon. Continue?"
+        "confirmDeletionAllWordText": "This will delete {{managePlural}} from the lexicon. Continue?",
+        "confirmDeletionScoreTitle": "Erase all scores",
+        "confirmDeletionScoreText": "Every score is going to be cleared."
     },
     "actions": {
         "delete": "Delete",

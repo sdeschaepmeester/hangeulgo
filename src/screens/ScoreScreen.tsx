@@ -7,7 +7,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import AlertCustom from "@/components/AlertCustom";
 import IconButton from "@/components/IconButton";
 import MainLayout from "@/layouts/MainLayout";
-import { SavedQuizEntry } from "@/types/SavedQuizEntry";
+import i18n from "@/i18n";
 
 export default function ScoreScreen() {
     const [scores, setScores] = useState<SavedScore[]>([]);
@@ -37,11 +37,11 @@ export default function ScoreScreen() {
 
     const getQuizTypeLabel = (type: string) => {
         switch (type) {
-            case "comprehension": return "Quiz de compréhension";
-            case "ecoute": return "Quiz d'écoute";
-            case "arrangement": return "Quiz puzzle";
-            case "ecriture": return "Quiz d'écriture";
-            default: return "Quiz";
+            case "comprehension": return i18n.t("quizTypes.quizComprehension");
+            case "ecoute": return i18n.t("quizTypes.quizListening");
+            case "arrangement": return i18n.t("quizTypes.quizPuzzle");
+            case "ecriture": return i18n.t("quizTypes.quizWriting");
+            default: return i18n.t("quizTypes.quiz");
         }
     };
 
@@ -66,7 +66,7 @@ export default function ScoreScreen() {
         <MainLayout scrollable={false}>
             {/* -------- Header fixed -------- */}
             <View style={styles.headerRow}>
-                <Text style={styles.title}>Historique des scores</Text>
+                <Text style={styles.title}>{i18n.t("scores.title")}</Text>
                 {scores.length > 0 && (
                     <IconButton
                         label="Tout effacer"
@@ -80,7 +80,7 @@ export default function ScoreScreen() {
 
             {/* -------- List scrollable -------- */}
             {scores.length === 0 ? (
-                <Text style={styles.empty}>Aucun score enregistré.</Text>
+                <Text style={styles.empty}>{i18n.t("scores.noScore")}</Text>
             ) : (
                 <FlatList
                     data={scores}
@@ -94,11 +94,11 @@ export default function ScoreScreen() {
             {/* -------- Confirmation modale -------- */}
             <AlertCustom
                 visible={showConfirm}
-                title="Réinitialiser les scores"
-                description="Tous les scores vont être supprimés. Cette action est irréversible."
+                title={i18n.t("modaleDelete.confirmDeletionScoreTitle")}
+                description={i18n.t("modaleDelete.confirmDeletionScoreText")}
                 onClose={() => setShowConfirm(false)}
-                confirmText="Confirmer"
-                cancelText="Annuler"
+                confirmText={i18n.t("actions.confirm")}
+                cancelText={i18n.t("actions.cancel")}
                 onConfirm={handleClear}
                 icon={<MaterialIcons name="delete-forever" size={30} color="#e53935" />}
                 iconColor="#e53935"

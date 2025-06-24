@@ -19,9 +19,13 @@ import { injectPreviewLexicon } from "@/data/injectPreviewLexicon";
 import { isFirstLaunch } from "./services/firstLaunch";
 import { initDatabase } from "@/db/database";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import SplashScreen from "./screens/SplashScreen";
+import ChooseLanguageScreen from "./screens/ChooseLanguageScreen";
 
 export type RootStackParamList = {
   Home: undefined;
+  Splash: undefined;
+  ChooseLanguage: undefined;
   AddWord: undefined;
   Lexicon: undefined;
   ChooseSettings: { type: GameType };
@@ -39,14 +43,6 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
-  useEffect(() => {
-    initDatabase().catch(console.error);
-    isFirstLaunch().then((firstTime) => {
-      if (firstTime) {
-        injectPreviewLexicon();
-      }
-    });
-  }, []);
 
   const goHomeButton = (navigation: any) => (
     <TouchableOpacity
@@ -58,6 +54,15 @@ export default function App() {
         size={32}
         color="#fff"
       />
+    </TouchableOpacity>
+  );
+
+  const goSettingsButton = (navigation: any) => (
+    <TouchableOpacity
+      onPress={() => navigation.navigate("ChooseLanguage")}
+      style={{ marginRight: 10 }}
+    >
+      <MaterialCommunityIcons name="cog" size={26} color="#fff" />
     </TouchableOpacity>
   );
 
@@ -78,22 +83,35 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Home"
+          initialRouteName="Splash"
           screenOptions={{
             headerStyle: { backgroundColor: "#9da7ff" },
             headerTintColor: "#fff",
             headerTitleStyle: { fontWeight: "bold" },
           }}
         >
+          <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
           <Stack.Screen
             name="Home"
             component={HomeScreen}
-            options={{
+            options={({ navigation }) => ({
               title: "",
               headerLeft: () => null,
-              headerRight: () => null,
               headerTitle: () => null,
-            }}
+              headerRight: () => (
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("ChooseLanguage")}
+                  style={{ marginRight: 10 }}
+                >
+                  <MaterialCommunityIcons name="cog" size={26} color="#fff" />
+                </TouchableOpacity>
+              ),
+            })}
+          />
+          <Stack.Screen
+            name="ChooseLanguage"
+            component={ChooseLanguageScreen}
+            options={{ headerShown: false }}
           />
           {screens.map(({ name, component, title }) => (
             <Stack.Screen
@@ -103,6 +121,7 @@ export default function App() {
               options={({ navigation }) => ({
                 title,
                 headerLeft: () => goHomeButton(navigation),
+                headerRight: () => goSettingsButton(navigation),
                 headerTitle: () => (
                   <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{ marginLeft: 10 }}>
                     <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>

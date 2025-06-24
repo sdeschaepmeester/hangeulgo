@@ -5,6 +5,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import i18n from "@/i18n";
 
 export default function NavBar() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -22,28 +23,28 @@ export default function NavBar() {
             <NavItem
                 route="Home"
                 icon="home"
-                label="Accueil"
+                label={i18n.t("navbar.home")}
                 currentRoute={currentRoute}
                 onPress={() => navigation.navigate("Home")}
             />
             <NavItem
                 route="Lexicon"
                 icon="book-open-page-variant"
-                label="Réviser"
+                label={i18n.t("navbar.lexicon")}
                 currentRoute={currentRoute}
                 onPress={() => navigation.navigate("Lexicon")}
             />
             <NavItem
                 route="AddWord"
                 icon="plus-circle"
-                label="Ajouter"
+                label={i18n.t("navbar.addWord")}
                 currentRoute={currentRoute}
                 onPress={() => navigation.navigate("AddWord")}
             />
             <NavItem
                 route="QuizList"
                 icon="gamepad-variant"
-                label="Jouer"
+                label={i18n.t("navbar.play")}
                 currentRoute={currentRoute}
                 onPress={() => navigation.navigate("QuizList")}
             />

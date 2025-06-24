@@ -2,7 +2,7 @@ import { dbPromise } from "@/db/database";
 import { initDatabase } from "@/db/database";
 
 export async function injectPreviewLexicon() {
-  await initDatabase();
+  //await initDatabase();
   const db = await dbPromise;
 
   const entries: {

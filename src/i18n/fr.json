@@ -26,7 +26,8 @@
         "addorsearch": "Ajouter ou rechercher un mot-clé..."
     },
     "scores": {
-        "title": "Historique des scores"
+        "title": "Historique des scores",
+        "noScore": "Aucun score enregistré."
     },
     "editWord": {
         "title": "Modifier un mot"
@@ -84,7 +85,9 @@
         "confirmDeletionWordTitle": "Suppression d'un mot",
         "confirmDeletionWordText": "Confirmer la suppression de ce mot du lexique ?",
         "confirmDeletionAllWordTitle": "Suppression d'un quiz sauvegardé",
-        "confirmDeletionAllWordText": "Cela va supprimer {{managePlural}} du lexique. Continuer ?"
+        "confirmDeletionAllWordText": "Cela va supprimer {{managePlural}} du lexique. Continuer ?",
+        "confirmDeletionScoreTitle": "Réinitialiser les scores",
+        "confirmDeletionScoreText": "Tous les scores vont être supprimés. Cette action est irréversible."
     },
     "actions": {
         "delete": "Supprimer",
