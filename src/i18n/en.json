@@ -6,6 +6,12 @@
         "addWord": "Add a word",
         "scores": "Scores"
     },
+    "quiz": {
+        "question": "Question",
+        "seeResults": "See the results",
+        "nextQuestion": "Next question »",
+        "validateAnswer": "Confirm answer"
+    },
     "addWord": {
         "title": "New word",
         "frinput": "French",
@@ -120,5 +126,11 @@
         "easy": "Easy",
         "medium": "Medium",
         "hard": "Hard"
+    },
+    "medal": {
+        "bad": "...",
+        "bronze": "Continue your learning !",
+        "silver": "Good !",
+        "gold": "Well done !"
     }
 }

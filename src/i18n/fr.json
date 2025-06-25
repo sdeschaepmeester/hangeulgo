@@ -6,6 +6,12 @@
         "addWord": "Ajouter un mot",
         "scores": "Scores"
     },
+    "quiz": {
+        "question": "Question",
+        "seeResults": "Voir les résultats",
+        "nextQuestion": "Prochaine question »",
+        "validateAnswer": "Valider ma réponse"
+    },
     "addWord": {
         "title": "Nouveau mot",
         "frinput": "Français",
@@ -120,5 +126,11 @@
         "easy": "Facile",
         "medium": "Moyen",
         "hard": "Difficile"
+    },
+    "medal": {
+        "bad": "...",
+        "bronze": "Continue ton apprentissage !",
+        "silver": "Bien !",
+        "gold": "Excellent !"
     }
 }

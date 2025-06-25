@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import i18n from "@/i18n";
 
 export default function QuizHeader({ current, total, onClose }: { current: number; total: number; onClose: () => void }) {
     return (
@@ -8,7 +9,7 @@ export default function QuizHeader({ current, total, onClose }: { current: numbe
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
                 <MaterialIcons name="close" size={28} color="black" />
             </TouchableOpacity>
-            <Text style={styles.counterText}>Question {current} / {total}</Text>
+            <Text style={styles.counterText}>{i18n.t("quiz.question")} {current} / {total}</Text>
         </View>
     );
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Feedback from "@/components/quiz/Feedback";
+import i18n from "@/i18n";
 
 export default function QuizFooter({
     showResult,
@@ -31,14 +32,14 @@ export default function QuizFooter({
                     disabled={isDisabled}
                 >
                     <Text style={styles.nextButtonText}>
-                        {showResult ? (isLast ? "Voir les résultats" : "Prochaine question »") : "Valider ma réponse"}
+                        {showResult ? (isLast ? i18n.t("quiz.seeResults") : i18n.t("quiz.nextQuestion")) : i18n.t("quiz.validateAnswer")}
                     </Text>
                 </TouchableOpacity>
             ) : (
                 showResult && (
                     <TouchableOpacity style={styles.nextButton} onPress={onNext}>
                         <Text style={styles.nextButtonText}>
-                            {isLast ? "Voir les résultats" : "Prochaine question »"}
+                            {isLast ? i18n.t("quiz.seeResults") : i18n.t("quiz.nextQuestion")}
                         </Text>
                     </TouchableOpacity>
                 )
