@@ -6,12 +6,14 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
 import i18n from "@/i18n";
 import * as Localization from "expo-localization";
+import { injectPreviewLexicon } from "@/data/injectPreviewLexicon";
 
 const screenWidth = Dimensions.get("window").width;
 
 export default function ChooseLanguageScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const [selectedLanguage, setSelectedLanguage] = useState<"fr" | "en" | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const preloadLanguage = async () => {
@@ -30,11 +32,12 @@ export default function ChooseLanguageScreen() {
         preloadLanguage();
     }, []);
 
-
     const handleConfirm = async () => {
         if (!selectedLanguage) return;
+        setIsLoading(true);
         await SecureStore.setItemAsync("userLang", selectedLanguage);
         i18n.locale = selectedLanguage;
+        await injectPreviewLexicon();
         navigation.reset({
             index: 0,
             routes: [{ name: "Home" }],
@@ -56,9 +59,9 @@ export default function ChooseLanguageScreen() {
 
     const title =
         selectedLanguage === "fr"
-            ? "Choisissez votre langue"
+            ? "Choisissez votre langue native"
             : selectedLanguage === "en"
-                ? "Choose your language"
+                ? "Choose your native language"
                 : "Language selection";
 
     return (
@@ -66,14 +69,20 @@ export default function ChooseLanguageScreen() {
             <Text style={styles.title}>{title}</Text>
 
             <View style={styles.langRow}>
-                <LangOption lang="en" label="English" flag="🇬🇧" />
+                <LangOption lang="en" label="English" flag="🇺🇸" />
                 <LangOption lang="fr" label="Français" flag="🇫🇷" />
             </View>
 
+            <Text style={styles.warning}>
+                {selectedLanguage === "fr"
+                    ? "⚠️ Cette langue ne pourra pas être modifiée plus tard"
+                    : "⚠️ This language cannot be changed later"}
+            </Text>
+
             <TouchableOpacity
-                style={[styles.confirmButton, !selectedLanguage && { opacity: 0.4 }]}
+                style={[styles.confirmButton, (!selectedLanguage || isLoading) && { opacity: 0.4 }]}
                 onPress={handleConfirm}
-                disabled={!selectedLanguage}
+                disabled={!selectedLanguage || isLoading}
             >
                 <Text style={styles.confirmText}>
                     {selectedLanguage === "fr" ? "Confirmer" : selectedLanguage === "en" ? "Confirm" : "OK"}
@@ -101,7 +110,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         gap: 16,
-        marginBottom: 40,
+        marginBottom: 20,
     },
     langBox: {
         backgroundColor: "#e0e0e0",
@@ -122,6 +131,13 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         color: "#333",
+    },
+    warning: {
+        fontSize: 14,
+        fontStyle: "italic",
+        color: "#333",
+        textAlign: "center",
+        marginBottom: 20,
     },
     confirmButton: {
         backgroundColor: "#7f8bff",

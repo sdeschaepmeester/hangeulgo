@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, Image, StyleSheet } from "react-native";
 import { getScores, clearScores, type SavedScore } from "@/services/score";
 import { formatDistanceToNow } from "date-fns";
-import { fr } from "date-fns/locale";
+import { fr } from "date-fns/locale"; 
 import { MaterialIcons } from "@expo/vector-icons";
 import AlertCustom from "@/components/AlertCustom";
 import IconButton from "@/components/IconButton";
@@ -55,7 +55,7 @@ export default function ScoreScreen() {
                     <Text style={styles.info}>{item.score} / {item.total}</Text>
                     <Text style={styles.info}>{getQuizTypeLabel(item.type)}</Text>
                     <Text style={styles.date}>
-                        {formatDistanceToNow(new Date(item.date), { addSuffix: true, locale: fr })}
+                        {formatDistanceToNow(new Date(item.date), { addSuffix: true, locale: fr })} //! TODO LOCALE DEPENDS
                     </Text>
                 </View>
             </View>

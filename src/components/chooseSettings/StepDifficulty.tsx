@@ -3,20 +3,21 @@ import { StyleSheet, Text } from "react-native";
 import IconCardSelectMultiple from "@/components/IconCardSelectMultiple";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { Difficulty } from "@/types/Difficulty";
+import i18n from "@/i18n";
 
 const difficultyOptions = [
     {
-        label: "Facile",
+        label: i18n.t("difficulties.easy"),
         value: "easy" as Difficulty,
         icon: <MaterialCommunityIcons name="emoticon-happy" size={32} color="green" />,
     },
     {
-        label: "Moyen",
+        label: i18n.t("difficulties.medium"),
         value: "medium" as Difficulty,
         icon: <MaterialCommunityIcons name="emoticon-neutral" size={32} color="orange" />,
     },
     {
-        label: "Difficile",
+        label: i18n.t("difficulties.hard"),
         value: "hard" as Difficulty,
         icon: <MaterialCommunityIcons name="emoticon-sad" size={32} color="red" />,
     },
@@ -29,7 +30,7 @@ type Props = {
 };
 
 export default function StepDifficulty({ selected, onChange, disabledDifficultyList = [] }: Props) {
-    // Sélectionne toutes les options actives au premier rendu
+    // Select all available difficulties
     useEffect(() => {
         if (selected.length === 0) {
             const available = difficultyOptions
@@ -41,7 +42,7 @@ export default function StepDifficulty({ selected, onChange, disabledDifficultyL
 
     return (
         <>
-            <Text style={styles.label}>Difficulté des questions</Text>
+            <Text style={styles.label}>{i18n.t("quiz.difficulties")}</Text>
             <IconCardSelectMultiple<Difficulty>
                 options={difficultyOptions}
                 selectedValues={selected}

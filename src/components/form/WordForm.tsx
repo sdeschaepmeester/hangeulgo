@@ -24,7 +24,7 @@ type Props = {
     edit: boolean;
     initialData?: {
         id: number;
-        fr: string;
+        native: string;
         ko: string;
         phonetic?: string | null;
         tags?: string | null;
@@ -34,7 +34,7 @@ type Props = {
 };
 
 export default function WordForm({ edit, initialData, onSuccess }: Props) {
-    const [fr, setFr] = useState(initialData?.fr || "");
+    const [native, setFr] = useState(initialData?.native || "");
     const [ko, setKo] = useState(initialData?.ko || "");
     const [koSuggested, setKoSuggested] = useState<string | null>(null);
     const [phonetic, setPhonetic] = useState(initialData?.phonetic || "");
@@ -53,7 +53,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
     const phoneticRef = useRef<TextInput>(null);
 
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-    const isValid = fr.trim() && ko.trim();
+    const isValid = native.trim() && ko.trim();
 
     const cooldownActive =
         lastSuggestionTime !== null && Date.now() - lastSuggestionTime < MIN_DELAY;
@@ -76,20 +76,20 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
     }, [cooldownActive, lastSuggestionTime]);
 
     useEffect(() => {
-        if (edit && initialData?.fr.includes("(") && phonetic.trim()) {
-            const baseFr = initialData.fr.split("(")[0].trim();
+        if (edit && initialData?.native.includes("(") && phonetic.trim()) {
+            const baseFr = initialData.native.split("(")[0].trim();
             setFr(`${baseFr} (${phonetic.trim()})`);
         }
     }, [phonetic]);
 
     const handleKoreanSuggestion = async () => {
-        if (!fr.trim() || !isConnected || cooldownActive) return;
+        if (!native.trim() || !isConnected || cooldownActive) return;
 
         setLastSuggestionTime(Date.now());
         setLoadingSuggestion(true);
         setNoSuggestionFound(false);
 
-        const suggestion = await suggestKoreanTranslation(fr.trim());
+        const suggestion = await suggestKoreanTranslation(native.trim());
         setLoadingSuggestion(false);
 
         if (suggestion) {
@@ -123,7 +123,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         const cleanTags = tags.split(",").map((t) => t.trim()).filter(Boolean);
 
         await saveWord({
-            fr: fr.trim(),
+            native: native.trim(),
             ko: ko.trim(),
             phonetic: phonetic.trim(),
             difficulty,
@@ -154,7 +154,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 <Text style={styles.label}>🇫🇷 {i18n.t("addWord.frinput")}</Text>
                 <TextInput
                     ref={frRef}
-                    value={fr}
+                    value={native}
                     onChangeText={(text) => {
                         if (text.length <= 50) {
                             setFr(text);
@@ -170,7 +170,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
             </View>
 
             {/* ----------------- Azure korean translation suggestion ----------------- */}
-            {isConnected && fr.trim().length > 0 && !edit && (
+            {isConnected && native.trim().length > 0 && !edit && (
                 <>
                     {!koSuggested && !noSuggestionFound && (
                         <TouchableOpacity

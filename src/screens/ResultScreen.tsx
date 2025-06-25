@@ -5,6 +5,7 @@ import type { RootStackParamList } from "@/App";
 import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withTiming, interpolateColor, } from "react-native-reanimated";
 import { saveScore } from "@/services/score";
 import { getMedalInfo } from "@/services/getMedalInfo";
+import i18n from "@/i18n";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Result">;
 
@@ -75,13 +76,13 @@ export default function ResultScreen({ route, navigation }: Props) {
           style={[styles.button, styles.retry]}
           onPress={() => navigation.goBack()}
         >
-          <Text style={styles.buttonText}>Rejouer</Text>
+          <Text style={styles.buttonText}>{i18n.t("actions.replay")}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.quit]}
           onPress={() => navigation.navigate("Home")}
         >
-          <Text style={styles.buttonText}>Quitter</Text>
+          <Text style={styles.buttonText}>{i18n.t("actions.quit")}</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>

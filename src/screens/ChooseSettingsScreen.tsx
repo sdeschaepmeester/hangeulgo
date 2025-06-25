@@ -15,6 +15,7 @@ import StepSaveQuiz from "@/components/chooseSettings/StepSaveQuiz";
 import { saveCustomQuiz } from "@/services/quiz";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SavedQuizEntry } from "@/types/SavedQuizEntry";
+import i18n from "@/i18n";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -24,12 +25,12 @@ type Props = NativeStackScreenProps<RootStackParamList, "ChooseSettings">;
 
 const fixedConfigByType: Record<"arrangement" | "ecriture", { subType: GameSubType; inputMode: InputMode }> = {
   arrangement: { subType: "order", inputMode: "order" },
-  ecriture: { subType: "frToKo", inputMode: "input" },
+  ecriture: { subType: "nativeToKo", inputMode: "input" },
 };
 
 const multipleSubTypes: Record<"comprehension" | "ecoute", GameSubType[]> = {
-  comprehension: ["frToKo", "koToFr"],
-  ecoute: ["koToKo", "koToFr"],
+  comprehension: ["nativeToKo", "koToNative"],
+  ecoute: ["koToKo", "koToNative"],
 };
 
 export default function ChooseSettingsScreen({ route, navigation }: Props) {
@@ -131,11 +132,11 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
 
   const getQuizTypeLabel = (type: SavedQuizEntry["type"]) => {
     switch (type) {
-      case "comprehension": return "Quiz de compréhension";
-      case "ecoute": return "Quiz d'écoute";
-      case "arrangement": return "Quiz puzzle";
-      case "ecriture": return "Quiz d'écriture";
-      default: return "Quiz";
+      case "comprehension": return i18n.t("quizTypes.quizComprehension");
+      case "ecoute": return i18n.t("quizTypes.quizListening");
+      case "arrangement": return i18n.t("quizTypes.quizPuzzle");
+      case "ecriture": return i18n.t("quizTypes.quizWriting");
+      default: return i18n.t("quizTypes.quiz");
     }
   };
 
@@ -157,7 +158,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
               >
                 <Text style={styles.text}>
                   <MaterialCommunityIcons name="chevron-left" size={18} color="white" style={{ marginRight: 4 }} />
-                  {step === 0 && "Quitter"}
+                  {step === 0 && i18n.t("actions.quit")}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -166,7 +167,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
                 style={[styles.button, styles.rightButton, isDisabled && styles.disabled]}
               >
                 <MaterialCommunityIcons name="chevron-right" size={18} color="white" style={{ marginRight: 4 }} />
-                <Text style={styles.text}>Suivant</Text>
+                <Text style={styles.text}>{i18n.t("actions.next")}</Text>
               </TouchableOpacity>
             </View>
           ) : (
@@ -180,7 +181,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
                 style={[styles.button, styles.rightButton, (isDisabled || !subType) && styles.disabled]}
               >
                 <MaterialCommunityIcons name="gamepad-variant" size={18} color="white" style={{ marginRight: 4 }} />
-                <Text style={styles.text}>Commencer</Text>
+                <Text style={styles.text}>{i18n.t("actions.start")}</Text>
               </TouchableOpacity>
             </View>
           )}

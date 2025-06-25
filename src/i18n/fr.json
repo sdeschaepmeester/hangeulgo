@@ -10,7 +10,14 @@
         "question": "Question",
         "seeResults": "Voir les résultats",
         "nextQuestion": "Prochaine question »",
-        "validateAnswer": "Valider ma réponse"
+        "validateAnswer": "Valider ma réponse",
+        "whichOrder": "Dans quel sens ?",
+        "putInOrder": "Remettre en ordre",
+        "themes": "Thèmes",
+        "difficulties": "Difficulté des questions",
+        "duration": "Durée de jeu",
+        "saveQuiz": "Sauvegarder ce quiz",
+        "saveName": "Nom de la sauvegarde"
     },
     "addWord": {
         "title": "Nouveau mot",
@@ -103,7 +110,11 @@
         "confirm": "Confirmer",
         "play": "Jouer",
         "seeSavedQuiz": "Voir mes quiz sauvegardés",
-        "added": "Ajouté !"
+        "added": "Ajouté !",
+        "next": "Suivant",
+        "quit": "Quitter",
+        "start": "Commencer",
+        "replay": "Rejouer"
     },
     "managePlural": {
         "quizCount": {
@@ -120,7 +131,8 @@
     "limits": {
         "limitOf": "La limite de",
         "themeIsReached": "thèmes a été atteinte.",
-        "limitWordsReached": "La limite de mots du lexique est atteinte, supprimez-en pour en ajouter d'autres."
+        "limitWordsReached": "La limite de mots du lexique est atteinte, supprimez-en pour en ajouter d'autres.",
+        "limitSavedQuiz": "La limite de quiz sauvegardés est atteinte, supprimez-en pour en ajouter d'autres."
     },
     "difficulties": {
         "easy": "Facile",
@@ -132,5 +144,7 @@
         "bronze": "Continue ton apprentissage !",
         "silver": "Bien !",
         "gold": "Excellent !"
-    }
+    },
+    "flag": "🇫🇷",
+    "unnamed": "Sans nom"
 }

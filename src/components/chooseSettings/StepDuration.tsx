@@ -1,6 +1,7 @@
 import React from "react";
 import { Text, StyleSheet } from "react-native";
 import SelectPill from "@/components/SelectPill";
+import i18n from "@/i18n";
 
 type Props = {
     selected: number;
@@ -8,15 +9,15 @@ type Props = {
 };
 
 const options = [
-    { label: "Court", value: 10, color: "#4caf50" },
-    { label: "Normal", value: 20, color: "#ff9800" },
-    { label: "Long", value: 30, color: "#f44336" },
+    { label: i18n.t("duration.short"), value: 10, color: "#4caf50" },
+    { label: i18n.t("duration.medium"), value: 20, color: "#ff9800" },
+    { label: i18n.t("duration.long"), value: 30, color: "#f44336" },
 ];
 
 export default function StepDuration({ selected, onSelect }: Props) {
     return (
         <>
-            <Text style={styles.label}>Durée de jeu</Text>
+            <Text style={styles.label}>{i18n.t("quiz.duration")}</Text>
             <SelectPill
                 options={options}
                 selectedValue={selected}

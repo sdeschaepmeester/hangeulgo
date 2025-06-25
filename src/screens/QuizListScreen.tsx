@@ -14,7 +14,7 @@ export default function QuizListScreen() {
 
     return (
         <MainLayout scrollable>
-            {/* --- Section 1 : Quiz classiques --- */}
+            {/* --- Section Quizzes --- */}
             <SectionCardGame title={i18n.t("quizTypes.classic")}>
                 <SquareButton
                     icon={<MaterialCommunityIcons name="eye" style={styles.icon} />}
@@ -30,7 +30,7 @@ export default function QuizListScreen() {
                 />
             </SectionCardGame>
 
-            {/* --- Section 2 : Autres jeux --- */}
+            {/* --- Section Other --- */}
             <SectionCardGame title={i18n.t("quizTypes.other")}>
                 <SquareButton
                     icon={<MaterialCommunityIcons name="puzzle" style={styles.icon} />}

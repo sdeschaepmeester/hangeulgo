@@ -8,7 +8,7 @@ import i18n from "@/i18n";
 
 type Props = {
     id: number;
-    fr: string;
+    native: string;
     ko: string;
     phonetic?: string | null;
     tags?: string | null;
@@ -18,7 +18,7 @@ type Props = {
     onDelete: () => void;
     onUpdate: (id: number) => void;
 };
-export default React.memo(function LexiconCard({ id, fr, ko, phonetic, tags, difficulty, active, onToggle, onDelete, onUpdate, }: Props) {
+export default React.memo(function LexiconCard({ id, native, ko, phonetic, tags, difficulty, active, onToggle, onDelete, onUpdate, }: Props) {
     const [showEdit, setShowEdit] = useState(false);
     const [isSpeaking, setIsSpeaking] = React.useState(false);
 
@@ -40,8 +40,8 @@ export default React.memo(function LexiconCard({ id, fr, ko, phonetic, tags, dif
             <View style={styles.cardContent}>
                 {/* ----------------- Left content texts ----------------- */}
                 <View style={styles.texts}>
-                    <Text style={[styles.fr, { color: difficultyColor(difficulty) }]}>
-                        🇫🇷 {fr}
+                    <Text style={[styles.native, { color: difficultyColor(difficulty) }]}>
+                        {i18n.t("flag")} {native}
                     </Text>
                     <Text style={styles.ko}>
                         🇰🇷 {ko}
@@ -123,7 +123,7 @@ export default React.memo(function LexiconCard({ id, fr, ko, phonetic, tags, dif
                             edit
                             initialData={{
                                 id,
-                                fr,
+                                native,
                                 ko,
                                 phonetic: phonetic ?? "",
                                 tags: tags ?? "",
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
         flex: 1,
         gap: 4,
     },
-    fr: {
+    native: {
         fontSize: 16,
         fontWeight: "bold",
     },

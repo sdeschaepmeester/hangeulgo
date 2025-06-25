@@ -19,6 +19,7 @@ export async function generateQuestions(settings: GameSettings): Promise<Questio
     let rows: (LexiconEntry & { tags: string | null })[] = [];
 
     if (settings.tags && settings.tags.length > 0) {
+        console.log('settings tags ' + settings.tags)
         const diffPlaceholders = settings.difficulties.map(() => "?").join(",");
         const tagPlaceholders = settings.tags.map(() => "?").join(",");
 
@@ -26,7 +27,7 @@ export async function generateQuestions(settings: GameSettings): Promise<Questio
             `
       SELECT filtered.*, GROUP_CONCAT(t_all.tag) AS tags
       FROM (
-          SELECT l.id as id, l.fr, l.ko, l.phonetic, l.difficulty, l.active
+          SELECT l.id as id, l.native, l.ko, l.phonetic, l.difficulty, l.active
           FROM lexicon l
           JOIN lexicon_tags t_filter ON l.id = t_filter.lexicon_id
           WHERE l.difficulty IN (${diffPlaceholders})
@@ -40,6 +41,8 @@ export async function generateQuestions(settings: GameSettings): Promise<Questio
             ...settings.difficulties,
             ...settings.tags
         );
+        console.log('rows')
+        console.log(rows)
     } else {
         const placeholders = settings.difficulties.map(() => "?").join(",");
         rows = await db.getAllAsync(
@@ -84,15 +87,15 @@ export async function generateQuestions(settings: GameSettings): Promise<Questio
 
         switch (settings.type) {
             case "comprehension":
-                if (settings.subType === "koToFr") {
+                if (settings.subType === "koToNative") {
                     q.prompt = entry.ko;
-                    q.correctAnswer = entry.fr;
+                    q.correctAnswer = entry.native;
                     q.choices = shuffle([
-                        entry.fr,
-                        ...shuffle(rows.map((e) => e.fr).filter((v) => v !== entry.fr)).slice(0, 3),
+                        entry.native,
+                        ...shuffle(rows.map((e) => e.native).filter((v) => v !== entry.native)).slice(0, 3),
                     ]);
                 } else {
-                    q.prompt = entry.fr;
+                    q.prompt = entry.native;
                     q.correctAnswer = entry.ko;
                     q.choices = shuffle([
                         entry.ko,
@@ -102,16 +105,16 @@ export async function generateQuestions(settings: GameSettings): Promise<Questio
                 break;
 
             case "ecriture":
-                q.prompt = entry.fr;
+                q.prompt = entry.native;
                 q.correctAnswer = entry.ko;
                 break;
             case "ecoute":
-                if (settings.subType === "koToFr") {
+                if (settings.subType === "koToNative") {
                     q.prompt = entry.ko;
-                    q.correctAnswer = entry.fr;
+                    q.correctAnswer = entry.native;
                     q.choices = shuffle([
-                        entry.fr,
-                        ...shuffle(rows.map((e) => e.fr).filter((v) => v !== entry.fr)).slice(0, 3),
+                        entry.native,
+                        ...shuffle(rows.map((e) => e.native).filter((v) => v !== entry.native)).slice(0, 3),
                     ]);
                 } else {
                     q.prompt = entry.ko;
@@ -123,7 +126,7 @@ export async function generateQuestions(settings: GameSettings): Promise<Questio
                 }
                 break;
             case "arrangement":
-                q.prompt = entry.fr;
+                q.prompt = entry.native;
                 q.correctAnswer = entry.ko;
                 q.choices = shuffle([
                     entry.ko,

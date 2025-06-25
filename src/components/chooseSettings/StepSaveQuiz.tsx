@@ -6,6 +6,7 @@ import WarningLimit from "../WarningLimit";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
+import i18n from "@/i18n";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -49,14 +50,14 @@ export default function StepSaveQuiz({ saveEnabled, saveName, onToggleSave, onCh
                         isLimitReached && styles.labelDisabled,
                     ]}
                 >
-                    Sauvegarder ce quiz
+                    {i18n.t("quiz.saveQuiz")}
                 </Text>
             </TouchableOpacity>
 
             {/* ----------------- Warning ----------------- */}
             {isLimitReached && (
                 <WarningLimit
-                    label="La limite de quiz sauvegardés est atteinte, supprimez-en pour en ajouter d'autres."
+                    label={i18n.t("limits.limitSavedQuiz")}
                     onClick={() => navigation.navigate("SavedQuiz")}
                 />
             )}
@@ -66,7 +67,7 @@ export default function StepSaveQuiz({ saveEnabled, saveName, onToggleSave, onCh
             {saveEnabled && (
                 <TextInput
                     style={styles.input}
-                    placeholder="Nom de la sauvegarde"
+                    placeholder={i18n.t("quiz.saveName")}
                     value={saveName}
                     onChangeText={(text) => {
                         if (text.length <= 30) {

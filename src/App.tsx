@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { TouchableOpacity, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -15,9 +15,6 @@ import QuizListScreen from "./screens/QuizListScreen";
 import SavedQuizScreen from "./screens/SavedQuizScreen";
 
 import { GameSettings, GameType } from "./types/GameSettings";
-import { injectPreviewLexicon } from "@/data/injectPreviewLexicon";
-import { isFirstLaunch } from "./services/firstLaunch";
-import { initDatabase } from "@/db/database";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import SplashScreen from "./screens/SplashScreen";
 import ChooseLanguageScreen from "./screens/ChooseLanguageScreen";

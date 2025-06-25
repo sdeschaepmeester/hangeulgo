@@ -25,10 +25,20 @@ export default function SavedQuizScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     const fetchQuizzes = async () => {
+        console.log("Fetch saved quizzes")
         const all = await getAllSavedQuizzes();
+        console.log(all)
         const withValidity = await Promise.all(
             all.map(async (quiz) => {
-                const valid = await isQuizValid(quiz);
+                const gameSettings = {
+                    type: quiz.type,
+                    subType: quiz.subType,
+                    inputMode: quiz.inputMode,
+                    difficulties: quiz.difficulties,
+                    length: quiz.length,
+                    tags: quiz.tags
+                }
+                const valid = await isQuizValid(gameSettings);
                 return { ...quiz, disabled: !valid };
             })
         );

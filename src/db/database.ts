@@ -10,7 +10,7 @@ export async function initDatabase() {
 
     CREATE TABLE IF NOT EXISTS lexicon (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      fr TEXT NOT NULL,
+      native TEXT NOT NULL,
       ko TEXT NOT NULL,
       phonetic TEXT,
       difficulty TEXT NOT NULL,

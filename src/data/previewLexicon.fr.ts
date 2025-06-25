@@ -1,0 +1,72 @@
+export const previewLexiconFr: {
+    native: string;
+    ko: string;
+    phonetic: string;
+    difficulty: "easy" | "medium" | "hard";
+    tags: string[];
+}[] = [
+        // Formules
+        { native: "Bonjour", ko: "안녕하세요", phonetic: "annyeonghaseyo", difficulty: "easy", tags: ["Formules", "Courant"] },
+        { native: "Enchanté", ko: "반갑습니다", phonetic: "bangapseumnida", difficulty: "easy", tags: ["Formules", "Soutenu"] },
+        { native: "Merci (gomawo)", ko: "고마워", phonetic: "gomawo", difficulty: "easy", tags: ["Formules", "Familier"] },
+        { native: "Merci (gomapseumnida)", ko: "고맙습니다", phonetic: "gomapseumnida", difficulty: "easy", tags: ["Formules", "Courant"] },
+        { native: "Merci (gamsahamnida)", ko: "감사합니다", phonetic: "gamsahamnida", difficulty: "easy", tags: ["Formules", "Soutenu"] },
+        { native: "De rien", ko: "천만에요", phonetic: "cheonmaneyo", difficulty: "medium", tags: ["Formules", "Soutenu"] },
+        { native: "Désolé", ko: "미안해요", phonetic: "mianhaeyo", difficulty: "easy", tags: ["Formules", "Courant"] },
+        { native: "Pardon (poli)", ko: "죄송합니다", phonetic: "joesonghamnida", difficulty: "medium", tags: ["Formules", "Soutenu"] },
+        { native: "Au revoir", ko: "안녕히 가세요", phonetic: "annyeonghi gaseyo", difficulty: "easy", tags: ["Formules", "Soutenu"] },
+        { native: "Bonne nuit", ko: "안녕히 주무세요", phonetic: "annyeonghi jumuseyo", difficulty: "medium", tags: ["Formules", "Soutenu"] },
+        { native: "Oui", ko: "네", phonetic: "ne", difficulty: "easy", tags: ["Formules"] },
+        { native: "Non", ko: "아니요", phonetic: "aniyo", difficulty: "easy", tags: ["Formules"] },
+        { native: "Je ne sais pas", ko: "모르겠어요", phonetic: "moreugesseoyo", difficulty: "medium", tags: ["Formules", "Courant"] },
+        { native: "C’est bon", ko: "괜찮아요", phonetic: "gwaenchanayo", difficulty: "easy", tags: ["Formules", "Courant"] },
+        { native: "Félicitations", ko: "축하합니다", phonetic: "chukahamnida", difficulty: "medium", tags: ["Formules", "Soutenu"] },
+        // Famille
+        { native: "Maman", ko: "엄마", phonetic: "eomma", difficulty: "easy", tags: ["Famille"] },
+        { native: "Papa", ko: "아빠", phonetic: "appa", difficulty: "easy", tags: ["Famille"] },
+        { native: "Frère aîné (pour garçon)", ko: "형", phonetic: "hyeong", difficulty: "medium", tags: ["Famille"] },
+        { native: "Frère aîné (pour fille)", ko: "오빠", phonetic: "oppa", difficulty: "medium", tags: ["Famille"] },
+        { native: "Sœur aînée (pour garçon)", ko: "누나", phonetic: "nuna", difficulty: "medium", tags: ["Famille"] },
+        { native: "Sœur aînée (pour fille)", ko: "언니", phonetic: "eonni", difficulty: "medium", tags: ["Famille"] },
+        { native: "Parents", ko: "부모님", phonetic: "bumonim", difficulty: "medium", tags: ["Famille"] },
+        { native: "Cousin", ko: "사촌", phonetic: "sachon", difficulty: "medium", tags: ["Famille"] },
+        { native: "Grand-père", ko: "할아버지", phonetic: "harabeoji", difficulty: "medium", tags: ["Famille"] },
+        { native: "Grand-mère", ko: "할머니", phonetic: "halmeoni", difficulty: "medium", tags: ["Famille"] },
+        // Nourriture
+        { native: "Riz", ko: "밥", phonetic: "bap", difficulty: "easy", tags: ["Nourriture"] },
+        { native: "Soupe", ko: "국", phonetic: "guk", difficulty: "easy", tags: ["Nourriture"] },
+        { native: "Kimchi", ko: "김치", phonetic: "kimchi", difficulty: "easy", tags: ["Nourriture"] },
+        { native: "Poulet frit", ko: "치킨", phonetic: "chikin", difficulty: "easy", tags: ["Nourriture"] },
+        { native: "Barbecue coréen", ko: "불고기", phonetic: "bulgogi", difficulty: "medium", tags: ["Nourriture"] },
+        { native: "Piment", ko: "고추", phonetic: "gochu", difficulty: "medium", tags: ["Nourriture"] },
+        // Pays
+        { native: "Corée", ko: "한국", phonetic: "hanguk", difficulty: "easy", tags: ["Pays"] },
+        { native: "France", ko: "프랑스", phonetic: "peurangseu", difficulty: "easy", tags: ["Pays"] },
+        { native: "Japon", ko: "일본", phonetic: "ilbon", difficulty: "easy", tags: ["Pays"] },
+        { native: "Chine", ko: "중국", phonetic: "jungguk", difficulty: "easy", tags: ["Pays"] },
+        { native: "États-Unis", ko: "미국", phonetic: "miguk", difficulty: "easy", tags: ["Pays"] },
+        // Dates
+        { native: "Lundi", ko: "월요일", phonetic: "woryoil", difficulty: "easy", tags: ["Jours", "Date"] },
+        { native: "Mardi", ko: "화요일", phonetic: "hwayoil", difficulty: "easy", tags: ["Jours", "Date"] },
+        { native: "Mercredi", ko: "수요일", phonetic: "suyoil", difficulty: "easy", tags: ["Jours", "Date"] },
+        { native: "Jeudi", ko: "목요일", phonetic: "mogyoil", difficulty: "easy", tags: ["Jours", "Date"] },
+        { native: "Vendredi", ko: "금요일", phonetic: "geumyoil", difficulty: "easy", tags: ["Jours", "Date"] },
+        { native: "Samedi", ko: "토요일", phonetic: "toyoil", difficulty: "easy", tags: ["Jours", "Date"] },
+        { native: "Dimanche", ko: "일요일", phonetic: "iryoil", difficulty: "easy", tags: ["Jours", "Date"] },
+        { native: "Janvier", ko: "1월", phonetic: "irwol", difficulty: "easy", tags: ["Mois", "Date"] },
+        { native: "Février", ko: "2월", phonetic: "iwol", difficulty: "easy", tags: ["Mois", "Date"] },
+        { native: "Mars", ko: "3월", phonetic: "samwol", difficulty: "easy", tags: ["Mois", "Date"] },
+        { native: "Avril", ko: "4월", phonetic: "sawol", difficulty: "easy", tags: ["Mois", "Date"] },
+        { native: "Mai", ko: "5월", phonetic: "owol", difficulty: "easy", tags: ["Mois", "Date"] },
+        { native: "Juin", ko: "6월", phonetic: "yuwol", difficulty: "easy", tags: ["Mois", "Date"] },
+        { native: "Juillet", ko: "7월", phonetic: "chirwol", difficulty: "easy", tags: ["Mois", "Date"] },
+        { native: "Août", ko: "8월", phonetic: "parwol", difficulty: "easy", tags: ["Mois", "Date"] },
+        { native: "Septembre", ko: "9월", phonetic: "guwol", difficulty: "easy", tags: ["Mois", "Date"] },
+        { native: "Octobre", ko: "10월", phonetic: "sibwol", difficulty: "easy", tags: ["Mois", "Date"] },
+        { native: "Novembre", ko: "11월", phonetic: "sibirwol", difficulty: "easy", tags: ["Mois", "Date"] },
+        { native: "Décembre", ko: "12월", phonetic: "sibiwol", difficulty: "easy", tags: ["Mois", "Date"] },
+        { native: "Printemps", ko: "봄", phonetic: "bom", difficulty: "easy", tags: ["Saisons", "Date"] },
+        { native: "Été", ko: "여름", phonetic: "yeoreum", difficulty: "easy", tags: ["Saisons", "Date"] },
+        { native: "Automne", ko: "가을", phonetic: "gaeul", difficulty: "easy", tags: ["Saisons", "Date"] },
+        { native: "Hiver", ko: "겨울", phonetic: "gyeoul", difficulty: "easy", tags: ["Saisons", "Date"] },
+    ];

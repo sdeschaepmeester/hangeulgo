@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Text, StyleSheet } from "react-native";
 import SelectPill from "@/components/SelectPill";
 import type { GameSubType } from "@/types/GameSettings";
+import i18n from "@/i18n";
 
 type Props = {
     available: GameSubType[];
@@ -10,10 +11,10 @@ type Props = {
 };
 
 const labelMap: Record<GameSubType, string> = {
-    frToKo: "🇫🇷\u00A0→\u00A0🇰🇷",
-    koToFr: "🇰🇷\u00A0→\u00A0🇫🇷",
+    nativeToKo: `${i18n.t("flag")}\u00A0→\u00A0🇰🇷`,
+    koToNative: `🇰🇷\u00A0→\u00A0${i18n.t("flag")}`,
     koToKo: "🇰🇷",
-    order: "Remettre en ordre",
+    order: i18n.t("quiz.putInOrder"),
 };
 
 export default function StepType({ available, selected, onChange }: Props) {
@@ -32,7 +33,7 @@ export default function StepType({ available, selected, onChange }: Props) {
 
     return (
         <>
-            <Text style={styles.label}>Dans quel sens ?</Text>
+            <Text style={styles.label}>{i18n.t("quiz.whichOrder")}</Text>
             <SelectPill
                 options={options}
                 selectedValue={selected ?? ""}

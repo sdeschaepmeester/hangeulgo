@@ -2,16 +2,26 @@ import { dbPromise } from "@/db/database";
 import type { GameSettings } from "@/types/GameSettings";
 import type { SavedQuizEntry } from "@/types/SavedQuizEntry";
 import { generateQuestions } from "./quizGenerator";
+import i18n from "@/i18n";
 
 /**
  * Save a custom quiz to the database.
  */
 export async function saveCustomQuiz(name: string, settings: GameSettings) {
     const db = await dbPromise;
+    console.log("name, settings");
+    console.log(name, settings);
+
     const { type, subType, inputMode, difficulties, length, tags } = settings;
+    const finalName = name.trim() === "" ? i18n.t("unnamed") : name.trim();
 
-    const finalName = name.trim() === "" ? "Quiz sans nom" : name.trim();
-
+    console.log("[saveCustomQuiz] Saving quiz with name:", finalName);
+    console.log("[saveCustomQuiz] Type:", type);
+    console.log("[saveCustomQuiz] SubType:", subType);
+    console.log("[saveCustomQuiz] InputMode:", inputMode);
+    console.log("[saveCustomQuiz] Difficulties:", difficulties);
+    console.log("[saveCustomQuiz] Length:", length);
+    console.log("[saveCustomQuiz] Tags:", tags);
     await db.runAsync(
         `INSERT INTO saved_quiz (name, type, subType, inputMode, difficulties, length, tags)
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -80,7 +90,11 @@ export async function getSavedQuizCount(): Promise<number> {
  */
 export async function isQuizValid(settings: GameSettings): Promise<boolean> {
     try {
+        console.log("is quiz valid ? ")
+        console.log(settings)
+
         const questions = await generateQuestions(settings);
+        console.log(questions)
         return questions.length > 0;
     } catch (error) {
         return false;

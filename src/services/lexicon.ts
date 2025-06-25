@@ -45,7 +45,7 @@ export async function getFilteredLexicon(
             : ""
         }
     GROUP BY l.id
-    ORDER BY l.fr COLLATE NOCASE ${sortOrder.toUpperCase()}
+    ORDER BY l.native COLLATE NOCASE ${sortOrder.toUpperCase()}
     `,
         ...[...selectedTags.map((tag) => `%${tag}%`), ...selectedDifficulties]
     );
@@ -101,51 +101,51 @@ export async function resetLexicon(): Promise<void> {
 }
 
 /**
- * Add phonetic to existing duplicate fr entries (if not already formatted)
+ * Add phonetic to existing duplicate native entries (if not already formatted)
  */
-export async function handleFrenchDuplicates(fr: string, phonetic: string): Promise<string> {
+export async function handleFrenchDuplicates(native: string, phonetic: string): Promise<string> {
     const db = await dbPromise;
-    const frBase = fr.trim().split("(")[0].trim().toLowerCase();
-    const rows = await db.getAllAsync<{ id: number; fr: string; phonetic: string | null }>(
-        `SELECT id, fr, phonetic FROM lexicon`
+    const frBase = native.trim().split("(")[0].trim().toLowerCase();
+    const rows = await db.getAllAsync<{ id: number; native: string; phonetic: string | null }>(
+        `SELECT id, native, phonetic FROM lexicon`
     );
 
     for (const row of rows) {
-        const rowBase = row.fr.split("(")[0].trim().toLowerCase();
+        const rowBase = row.native.split("(")[0].trim().toLowerCase();
         if (rowBase === frBase) {
-            const alreadyFormatted = row.fr.includes("(");
+            const alreadyFormatted = row.native.includes("(");
             if (!alreadyFormatted && row.phonetic?.trim()) {
-                const updatedFr = `${row.fr.trim()} (${row.phonetic.trim()})`;
-                await db.runAsync(`UPDATE lexicon SET fr = ? WHERE id = ?`, [updatedFr, row.id]);
+                const updatedFr = `${row.native.trim()} (${row.phonetic.trim()})`;
+                await db.runAsync(`UPDATE lexicon SET native = ? WHERE id = ?`, [updatedFr, row.id]);
             }
-            return `${fr.trim()} (${phonetic.trim()})`;
+            return `${native.trim()} (${phonetic.trim()})`;
         }
     }
-    return fr.trim();
+    return native.trim();
 }
 
 
 /**
- * Ensure consistency for fr entries on edit (in case of phonetic update or fr update)
+ * Ensure consistency for native entries on edit (in case of phonetic update or native update)
  */
 export async function updateFrenchDuplicateFormatting(updatedId: number): Promise<void> {
     const db = await dbPromise;
 
-    const current = await db.getFirstAsync<{ id: number; fr: string; phonetic: string | null }>(
-        `SELECT id, fr, phonetic FROM lexicon WHERE id = ?`,
+    const current = await db.getFirstAsync<{ id: number; native: string; phonetic: string | null }>(
+        `SELECT id, native, phonetic FROM lexicon WHERE id = ?`,
         [updatedId]
     );
     if (!current) return;
 
-    const frBase = current.fr.split("(")[0].trim().toLowerCase();
+    const frBase = current.native.split("(")[0].trim().toLowerCase();
 
-    const rows = await db.getAllAsync<{ id: number; fr: string; phonetic: string | null }>(
-        `SELECT id, fr, phonetic FROM lexicon WHERE id != ?`,
+    const rows = await db.getAllAsync<{ id: number; native: string; phonetic: string | null }>(
+        `SELECT id, native, phonetic FROM lexicon WHERE id != ?`,
         [updatedId]
     );
 
     const duplicateRows = rows.filter((row) => {
-        const rowBase = row.fr.split("(")[0].trim().toLowerCase();
+        const rowBase = row.native.split("(")[0].trim().toLowerCase();
         return rowBase === frBase;
     });
 
@@ -154,23 +154,23 @@ export async function updateFrenchDuplicateFormatting(updatedId: number): Promis
 
     // Else, format all duplicates
     for (const row of duplicateRows) {
-        if (!row.fr.includes("(") && row.phonetic?.trim()) {
-            const updatedFr = `${row.fr.trim()} (${row.phonetic.trim()})`;
-            await db.runAsync(`UPDATE lexicon SET fr = ? WHERE id = ?`, [updatedFr, row.id]);
+        if (!row.native.includes("(") && row.phonetic?.trim()) {
+            const updatedFr = `${row.native.trim()} (${row.phonetic.trim()})`;
+            await db.runAsync(`UPDATE lexicon SET native = ? WHERE id = ?`, [updatedFr, row.id]);
         }
     }
 
-    if (!current.fr.includes("(") && current.phonetic?.trim()) {
-        const updatedFr = `${current.fr.trim()} (${current.phonetic.trim()})`;
-        await db.runAsync(`UPDATE lexicon SET fr = ? WHERE id = ?`, [updatedFr, current.id]);
+    if (!current.native.includes("(") && current.phonetic?.trim()) {
+        const updatedFr = `${current.native.trim()} (${current.phonetic.trim()})`;
+        await db.runAsync(`UPDATE lexicon SET native = ? WHERE id = ?`, [updatedFr, current.id]);
     }
 }
 
 /**
  * Add a new entry to lexicon or update existing one
  */
-export async function saveWord({ fr, ko, phonetic, difficulty, tags, edit, id, }: {
-    fr: string;
+export async function saveWord({ native, ko, phonetic, difficulty, tags, edit, id, }: {
+    native: string;
     ko: string;
     phonetic: string;
     difficulty: Difficulty;
@@ -182,8 +182,8 @@ export async function saveWord({ fr, ko, phonetic, difficulty, tags, edit, id, }
 
     if (edit && id != null) {
         await db.runAsync(
-            `UPDATE lexicon SET fr = ?, ko = ?, phonetic = ?, difficulty = ? WHERE id = ?`,
-            fr,
+            `UPDATE lexicon SET native = ?, ko = ?, phonetic = ?, difficulty = ? WHERE id = ?`,
+            native,
             ko,
             phonetic,
             difficulty,
@@ -199,11 +199,11 @@ export async function saveWord({ fr, ko, phonetic, difficulty, tags, edit, id, }
         await updateFrenchDuplicateFormatting(id);
     } else {
         // Vérifie doublon FR et modifie si besoin
-        fr = await handleFrenchDuplicates(fr, phonetic);
+        native = await handleFrenchDuplicates(native, phonetic);
 
         await db.runAsync(
-            `INSERT INTO lexicon (fr, ko, phonetic, difficulty, active) VALUES (?, ?, ?, ?, 1)`,
-            fr,
+            `INSERT INTO lexicon (native, ko, phonetic, difficulty, active) VALUES (?, ?, ?, ?, 1)`,
+            native,
             ko,
             phonetic,
             difficulty

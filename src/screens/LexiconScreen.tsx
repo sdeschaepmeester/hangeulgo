@@ -33,7 +33,7 @@ export default function LexiconScreen() {
     const rows = await getFilteredLexicon(selectedDifficulties, selectedTags, sortOrder);
     if (searchTerm.trim()) {
       setLexicon(rows.filter((entry) =>
-        entry.fr.toLowerCase().includes(searchTerm.toLowerCase())
+        entry.native.toLowerCase().includes(searchTerm.toLowerCase())
       ));
     } else {
       setLexicon(rows);

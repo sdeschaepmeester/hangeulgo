@@ -2,7 +2,7 @@ import type { Difficulty } from "./Difficulty";
 
 export interface LexiconEntry {
   id: number;
-  fr: string;
+  native: string;
   ko: string;
   phonetic: string;
   difficulty: Difficulty;

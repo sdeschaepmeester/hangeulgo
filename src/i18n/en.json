@@ -10,7 +10,14 @@
         "question": "Question",
         "seeResults": "See the results",
         "nextQuestion": "Next question »",
-        "validateAnswer": "Confirm answer"
+        "validateAnswer": "Confirm answer",
+        "whichOrder": "Which way ?",
+        "putInOrder": "Put the word in order",
+        "themes": "Themes",
+        "difficulties": "Questions difficulties",
+        "duration": "Game duration",
+        "saveQuiz": "Save this quiz",
+        "saveName": "Save's name"
     },
     "addWord": {
         "title": "New word",
@@ -103,7 +110,11 @@
         "confirm": "Confirm",
         "play": "Play",
         "seeSavedQuiz": "See my saved quizzes",
-        "added": "Added !"
+        "added": "Added !",
+        "next": "Next",
+        "quit": "Quit",
+        "start": "Start",
+        "replay": "Play again"
     },
     "managePlural": {
         "quizCount": {
@@ -120,7 +131,8 @@
     "limits": {
         "limitOf": "The limit of",
         "themeIsReached": "themes has been reached.",
-        "limitWordsReached": "The lexicon word limit has been reached. Please remove some to add new ones."
+        "limitWordsReached": "The lexicon word limit has been reached. Please remove some to add new ones.",
+        "limitSavedQuiz": "The number of saved quizzes has been reached, delete some before saving new ones."
     },
     "difficulties": {
         "easy": "Easy",
@@ -132,5 +144,7 @@
         "bronze": "Continue your learning !",
         "silver": "Good !",
         "gold": "Well done !"
-    }
+    },
+    "flag": "🇺🇸",
+    "unnamed": "Unnamed"
 }

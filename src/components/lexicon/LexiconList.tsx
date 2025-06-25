@@ -33,7 +33,7 @@ export default function LexiconList({ data, onToggle, onDelete, onDeleteAll, onU
                 renderItem={({ item }) => (
                     <LexiconCard
                         id={item.id}
-                        fr={item.fr}
+                        native={item.native}
                         ko={item.ko}
                         phonetic={item.phonetic}
                         tags={item.tags}
