@@ -64,20 +64,20 @@ export async function injectPreviewLexicon() {
     {
       name: lang === "fr" ? "Quiz Famille" : "Family Quiz",
       type: "comprehension",
-      subType: "koToNative",
+      subType: "nativeToKo",
       inputMode: "multiple",
-      length: 20,
+      length: 10,
       difficulties: ["easy", "medium"],
-      tags: ["Famille"]
+      tags: [lang === "fr" ? "Famille" : "Family"],
     },
     {
       name: lang === "fr" ? "Quiz Pays" : "Country Quiz",
       type: "comprehension",
       subType: "koToNative",
       inputMode: "multiple",
-      length: 20,
+      length: 10,
       difficulties: ["easy"],
-      tags: ["Pays"]
+      tags: [lang === "fr" ? "Famille" : "Countries"],
     }
   ];
 
@@ -102,10 +102,7 @@ export async function injectPreviewLexicon() {
           JSON.stringify(quiz.difficulties),
           JSON.stringify(quiz.tags)
         ]
-      );  
-            console.log("quiz saved")
-      console.log(quiz)
-
+      );
     } catch (err) {
       console.error(`Error inserting quiz: "${quiz.name}"`, err);
     }

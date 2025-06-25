@@ -25,23 +25,26 @@ export default function SavedQuizScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     const fetchQuizzes = async () => {
-        console.log("Fetch saved quizzes")
         const all = await getAllSavedQuizzes();
-        console.log(all)
-        const withValidity = await Promise.all(
-            all.map(async (quiz) => {
-                const gameSettings = {
-                    type: quiz.type,
-                    subType: quiz.subType,
-                    inputMode: quiz.inputMode,
-                    difficulties: quiz.difficulties,
-                    length: quiz.length,
-                    tags: quiz.tags
-                }
+
+        const withValidity: typeof quizzes = [];
+        for (let i = 0; i < all.length; i++) {
+            const quiz = all[i];
+            const gameSettings = {
+                type: quiz.type,
+                subType: quiz.subType,
+                inputMode: quiz.inputMode,
+                difficulties: quiz.difficulties,
+                length: quiz.length,
+                tags: quiz.tags,
+            };
+            try {
                 const valid = await isQuizValid(gameSettings);
-                return { ...quiz, disabled: !valid };
-            })
-        );
+                valid && withValidity.push({ ...quiz, disabled: !valid });
+            } catch (e) {
+                withValidity.push({ ...quiz, disabled: true });
+            }
+        }
         setQuizzes(withValidity);
     };
 
@@ -65,6 +68,7 @@ export default function SavedQuizScreen() {
         fetchQuizzes();
     };
 
+    // Replay a quiz
     const handleSelect = (quiz: SavedQuizEntry & { disabled?: boolean }) => {
         if (quiz.disabled) return;
         navigation.navigate("Quiz", {
@@ -133,7 +137,8 @@ export default function SavedQuizScreen() {
                     icon={<MaterialCommunityIcons name="delete-alert" size={30} color="#e53935" />}
                     iconColor="#e53935"
                     title={i18n.t("actions.deleteAll")}
-                    description={`Cela va supprimer ${quizzes.length} quiz sauvegardé${quizzes.length > 1 ? "s" : ""}. Continuer ?`} //! TODO
+                    description="todo"
+                    //description={`Cela va supprimer ${quizzes?.length} quiz sauvegardé${quizzes?.length > 1 ? "s" : ""}. Continuer ?`} //! TODO
                     onClose={() => setConfirmDeleteAll(false)}
                     onConfirm={handleConfirmDeleteAll}
                     confirmText={i18n.t("actions.deleteAll")}
