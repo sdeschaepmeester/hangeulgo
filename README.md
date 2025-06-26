@@ -113,6 +113,14 @@ Certaines illustrations utilisées dans **HangeulGo** proviennent de [Freepik](h
 
 Attribution conforme aux conditions d'utilisation Freepik pour les applications mobiles.
 
+### Crédits effets sonores 
+Certains effets sonores utilisés dans **HangeulGo** proviennent de [Pixabay](https://pixabay.com/) et sont utilisées sous licence gratuite avec attribution :
+		
+	- Sound Effect by <a href="https://pixabay.com/users/universfield-28281460/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=132126">Universfield</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=132126">Pixabay</a>
+	- Sound Effect by <a href="https://pixabay.com/users/tuomas_data-40753689/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=199825">Tuomas_Data</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=199825">Pixabay</a>
+	- Sound Effect by <a href="https://pixabay.com/users/freesound_community-46691455/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=47985">freesound_community</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=47985">Pixabay</a>
+	- Sound Effect by <a href="https://pixabay.com/users/u_3bsnvt0dsu-48554563/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=295086">u_3bsnvt0dsu</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=295086">Pixabay</a>
+
 ## Créatrice
 
 Conçu et développé avec passion par [Samantha Deschaepmeester](mailto:deschaepmeester.samantha@gmail.com) 👩‍💻

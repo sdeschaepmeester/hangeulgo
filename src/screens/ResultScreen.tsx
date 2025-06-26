@@ -6,6 +6,7 @@ import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withTiming, int
 import { saveScore } from "@/services/score";
 import { getMedalInfo } from "@/services/getMedalInfo";
 import i18n from "@/i18n";
+import { playSound } from "@/services/soundPlayer";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Result">;
 
@@ -14,6 +15,16 @@ export default function ResultScreen({ route, navigation }: Props) {
   const percent = Math.round((score / total) * 100);
 
   useEffect(() => {
+    const playResultSound = async () => {
+      switch (true) {
+        case score === 0:
+          playSound(require("../../assets/sounds/medal_terrible.mp3"));
+          break;
+        default:
+          playSound(require("../../assets/sounds/medal_good.mp3"));
+          break;
+      }
+    };
     const save = async () => {
       try {
         await saveScore({
@@ -27,7 +38,7 @@ export default function ResultScreen({ route, navigation }: Props) {
         console.error(e);
       }
     };
-
+    playResultSound();
     save();
   }, [score, total, settings]);
 

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { playSound } from "@/services/soundPlayer";
 
 interface FeedbackProps {
     feedback: "correct" | "wrong" | null;
@@ -13,6 +14,15 @@ export default function Feedback({ feedback, correctAnswer }: FeedbackProps) {
 
     const iconName = feedback === "correct" ? "emoji-events" : "block";
     const iconColor = feedback === "correct" ? "gold" : "#ff5e5e";
+
+    // Play correct or wrong sound effect
+    useEffect(() => {
+        if (feedback === "correct") {
+            playSound(require("../../../assets/sounds/correct.mp3"));
+        } else if (feedback === "wrong") {
+            playSound(require("../../../assets/sounds/wrong.mp3"));
+        }
+    }, [feedback]);
 
     return (
         <View style={styles.container}>
@@ -27,7 +37,7 @@ export default function Feedback({ feedback, correctAnswer }: FeedbackProps) {
 const styles = StyleSheet.create({
     container: {
         position: "absolute",
-        bottom: 100, // juste au-dessus du bouton next (qui est à bottom: 20 + hauteur bouton ~60)
+        bottom: 100,
         left: 20,
         right: 20,
         alignItems: "center",
