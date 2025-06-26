@@ -6,6 +6,7 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import i18n from "@/i18n";
+import colors from "@/constants/colors";
 
 export default function NavBar() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -68,7 +69,7 @@ const NavItem = ({ icon, label, route, currentRoute, onPress }: NavItemProps) =>
             <MaterialCommunityIcons
                 name={icon}
                 size={24}
-                color={isActive ? "#003478" : "#888"}
+                color={isActive ? colors.primary.dark : colors.neutral.main}
             />
             <Text style={[styles.label, isActive && styles.activeLabel]}>
                 {label}
@@ -96,12 +97,12 @@ const styles = StyleSheet.create({
     },
     label: {
         fontSize: 12,
-        color: "#888",
+        color: colors.neutral.main,
         marginTop: 2,
         fontWeight: "normal",
     },
     activeLabel: {
-        color: "#003478",
+        color: colors.primary.dark,
         fontWeight: "bold",
     },
 });

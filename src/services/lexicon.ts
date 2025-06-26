@@ -65,7 +65,7 @@ export async function isLexiconLimitReached(): Promise<boolean> {
 }
 
 /**
- * Check if a Korean word already exists in the lexicon (not french input as it is not unique)
+ * Check if a Korean word already exists in the lexicon
  */
 export async function checkIfKoreanWordExists(korean: string): Promise<boolean> {
     const db = await dbPromise;
@@ -103,7 +103,7 @@ export async function resetLexicon(): Promise<void> {
 /**
  * Add phonetic to existing duplicate native entries (if not already formatted)
  */
-export async function handleFrenchDuplicates(native: string, phonetic: string): Promise<string> {
+export async function handleNativeDuplicates(native: string, phonetic: string): Promise<string> {
     const db = await dbPromise;
     const frBase = native.trim().split("(")[0].trim().toLowerCase();
     const rows = await db.getAllAsync<{ id: number; native: string; phonetic: string | null }>(
@@ -198,8 +198,12 @@ export async function saveWord({ native, ko, phonetic, difficulty, tags, edit, i
         }
         await updateFrenchDuplicateFormatting(id);
     } else {
-        // Vérifie doublon FR et modifie si besoin
-        native = await handleFrenchDuplicates(native, phonetic);
+        // Check is a word with same korean input exists. There cannot be a duplicate of korean word.
+        const alreadyExists = await checkIfKoreanWordExists(ko);
+        if (alreadyExists) return;
+
+        // Check if duplicates native term exists. There CAN be several inputs with same native word.
+        native = await handleNativeDuplicates(native, phonetic);
 
         await db.runAsync(
             `INSERT INTO lexicon (native, ko, phonetic, difficulty, active) VALUES (?, ?, ?, ?, 1)`,

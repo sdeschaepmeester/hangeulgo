@@ -1,8 +1,7 @@
 import { MAX_SAVED_SCORES } from "@/data/constants";
 import { dbPromise } from "@/db/database";
-import { GameSubType } from "@/types/GameSettings";
+import { GameSubType, GameType } from "@/types/GameSettings";
 
-export type GameType = "translation" | "comprehension" | "ecoute" | "arrangement" | "ecriture";
 export type InputMode = "input" | "multiple" | "order";
 
 export type SavedScore = {

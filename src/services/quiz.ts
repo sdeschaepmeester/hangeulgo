@@ -12,9 +12,32 @@ export async function saveCustomQuiz(name: string, settings: GameSettings) {
     const { type, subType, inputMode, difficulties, length, tags } = settings;
     const finalName = name.trim() === "" ? i18n.t("unnamed") : name.trim();
 
+    // Verify if a saved quiz with exactly same settings already exists.
+    const existing = await db.getFirstAsync(
+        `SELECT * FROM saved_quiz
+        WHERE type = ?
+        AND subType = ?
+        AND inputMode = ?
+        AND length = ?
+        AND difficulties = ?
+        AND (tags IS ? OR tags = ?)`,
+        type,
+        subType,
+        inputMode,
+        length,
+        JSON.stringify(difficulties),
+        tags ? JSON.stringify(tags) : null,
+        tags ? JSON.stringify(tags) : null
+    );
+
+    if (existing) {
+        return;
+    }
+
+    // Save new quiz
     await db.runAsync(
         `INSERT INTO saved_quiz (name, type, subType, inputMode, difficulties, length, tags)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
         finalName,
         type,
         subType,
@@ -84,5 +107,18 @@ export async function isQuizValid(settings: GameSettings): Promise<boolean> {
         return questions.length > 0;
     } catch (error) {
         return false;
+    }
+}
+
+/**
+ * Check if a quiz is valid by generating questions based on the settings.
+ */
+export async function getQuizTypeLabel(type: SavedQuizEntry["type"]): Promise<string> {
+    switch (type) {
+        case "comprehension": return i18n.t("quizTypes.quizComprehension");
+        case "ecoute": return i18n.t("quizTypes.quizListening");
+        case "arrangement": return i18n.t("quizTypes.quizPuzzle");
+        case "ecriture": return i18n.t("quizTypes.quizWriting");
+        default: return i18n.t("quizTypes.quiz");
     }
 }

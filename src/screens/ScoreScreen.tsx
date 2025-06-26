@@ -8,6 +8,8 @@ import AlertCustom from "@/components/AlertCustom";
 import IconButton from "@/components/IconButton";
 import MainLayout from "@/layouts/MainLayout";
 import i18n from "@/i18n";
+import { getQuizTypeLabel } from "@/services/quiz";
+import colors from "@/constants/colors";
 
 export default function ScoreScreen() {
     const [scores, setScores] = useState<SavedScore[]>([]);
@@ -33,16 +35,6 @@ export default function ScoreScreen() {
         if (percent >= 80) return require("../../assets/gold_medal.png");
         if (percent >= 60) return require("../../assets/silver_medal.png");
         return require("../../assets/bronze_medal.png");
-    };
-
-    const getQuizTypeLabel = (type: string) => {
-        switch (type) {
-            case "comprehension": return i18n.t("quizTypes.quizComprehension");
-            case "ecoute": return i18n.t("quizTypes.quizListening");
-            case "arrangement": return i18n.t("quizTypes.quizPuzzle");
-            case "ecriture": return i18n.t("quizTypes.quizWriting");
-            default: return i18n.t("quizTypes.quiz");
-        }
     };
 
     const getLocale = () => {
@@ -80,7 +72,7 @@ export default function ScoreScreen() {
                         icon="delete"
                         onPress={() => setShowConfirm(true)}
                         backgroundColor="#fcebea"
-                        color="#e53935"
+                        color={colors.error}
                     />
                 )}
             </View>
@@ -107,8 +99,8 @@ export default function ScoreScreen() {
                 confirmText={i18n.t("actions.confirm")}
                 cancelText={i18n.t("actions.cancel")}
                 onConfirm={handleClear}
-                icon={<MaterialIcons name="delete-forever" size={30} color="#e53935" />}
-                iconColor="#e53935"
+                icon={<MaterialIcons name="delete-forever" size={30} color={colors.error} />}
+                iconColor={colors.error}
             />
         </MainLayout>
     );
@@ -142,7 +134,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         borderWidth: 1,
-        borderColor: "#e0e0e0",
+        borderColor: colors.neutral.light,
         overflow: "hidden",
     },
     medal: {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { getDaysSinceInstall } from "@/services/tester";
 import i18n from "@/i18n";
+import colors from "@/constants/colors";
 
 export default function TesterDaysTestBigCard() {
     const [days, setDays] = useState<number | null>(null);
@@ -17,7 +18,7 @@ export default function TesterDaysTestBigCard() {
     if (days === null) return null;
 
     const hasReachedQuota = days >= 14;
-    const textColor = hasReachedQuota ? "#00cc66" : "#FFA500";
+    const textColor = hasReachedQuota ? colors.success : colors.warning;
 
     return (
         <View style={styles.container}>

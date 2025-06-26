@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, Text, View } from "react-native";
+import { TouchableOpacity, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -20,6 +20,7 @@ import SplashScreen from "./screens/SplashScreen";
 import ChooseLanguageScreen from "./screens/ChooseLanguageScreen";
 import TesterDaysNumberCard from "./components/test/TesterDaysNumberCard";
 import ParametersScreen from "./screens/ParametersScreen";
+import i18n from "./i18n";
 
 export type RootStackParamList = {
   Home: undefined;
@@ -69,14 +70,14 @@ export default function App() {
   const screens: {
     name: keyof RootStackParamList;
     component: React.ComponentType<any>;
-    title: string;
+    titleKey: string;
   }[] = [
-      { name: "AddWord", component: AddWordScreen, title: "Ajouter un mot" },
-      { name: "Lexicon", component: LexiconScreen, title: "Réviser" },
-      { name: "ChooseSettings", component: ChooseSettingsScreen, title: "Paramètres du jeu" },
-      { name: "Score", component: ScoreScreen, title: "Mes scores" },
-      { name: "QuizList", component: QuizListScreen, title: "Types de quiz" },
-      { name: "SavedQuiz", component: SavedQuizScreen, title: "Quiz enregistrés" },
+      { name: "AddWord", component: AddWordScreen, titleKey: "screens.addWord" },
+      { name: "Lexicon", component: LexiconScreen, titleKey: "screens.lexicon" },
+      { name: "ChooseSettings", component: ChooseSettingsScreen, titleKey: "screens.chooseSettings" },
+      { name: "Score", component: ScoreScreen, titleKey: "screens.scores" },
+      { name: "QuizList", component: QuizListScreen, titleKey: "screens.quizTypes" },
+      { name: "SavedQuiz", component: SavedQuizScreen, titleKey: "screens.savedQuiz" },
     ];
 
   return (
@@ -98,7 +99,7 @@ export default function App() {
               headerLeft: () => (
                 <TesterDaysNumberCard /> //! To remove once tests are done
               ),
-              title:"",
+              title: "",
               headerRight: () => goSettingsButton(navigation),
             })}
           />
@@ -118,25 +119,25 @@ export default function App() {
           />
           <Stack.Screen name="Quiz" component={QuizScreen} options={{ headerTitle: "", headerLeft: () => null, }} />
           <Stack.Screen name="Result" component={ResultScreen} options={{ headerTitle: "", headerLeft: () => null, }} />
-          {screens.map(({ name, component, title }) => (
+          {screens.map(({ name, component, titleKey }) => (
             <Stack.Screen
               key={name}
               name={name}
               component={component}
               options={({ navigation }) => ({
-                title,
                 headerLeft: () => goHomeButton(navigation),
                 headerRight: () => goSettingsButton(navigation),
                 headerTitle: () => (
                   <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{ marginLeft: 10 }}>
                     <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
-                      {title}
+                      {i18n.t(titleKey)}
                     </Text>
                   </TouchableOpacity>
                 ),
               })}
             />
           ))}
+
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>

@@ -4,6 +4,7 @@ import type { LexiconEntry } from "@/types/LexiconEntry";
 import LexiconCard from "@/components/lexicon/LexiconCard";
 import IconButton from "../IconButton";
 import i18n from "@/i18n";
+import colors from "@/constants/colors";
 
 type Props = {
     data: LexiconEntry[];
@@ -24,7 +25,7 @@ export default function LexiconList({ data, onToggle, onDelete, onDeleteAll, onU
                     icon="delete-empty"
                     onPress={onDeleteAll}
                     backgroundColor="#fcebea"
-                    color="#e53935"
+                    color={colors.error}
                 />
             </View>
             <FlatList
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
     },
     deleteButtonText: {
         marginLeft: 6,
-        color: "#e53935",
+        color: colors.error,
         fontSize: 14,
         fontWeight: "500",
     }

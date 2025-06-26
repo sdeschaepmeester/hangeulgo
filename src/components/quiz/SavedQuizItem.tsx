@@ -3,21 +3,13 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { SavedQuizEntry } from "@/types/SavedQuizEntry";
 import i18n from "@/i18n";
+import { getQuizTypeLabel } from "@/services/quiz";
+import colors from "@/constants/colors";
 
 type Props = {
     quiz: SavedQuizEntry;
     onDelete: (id: number) => void;
     onSelect: (quiz: SavedQuizEntry) => void;
-};
-
-const getQuizTypeLabel = (type: SavedQuizEntry["type"]) => {
-    switch (type) {
-        case "comprehension": return i18n.t("quizTypes.quizComprehension");
-        case "ecoute": return i18n.t("quizTypes.quizListening");
-        case "arrangement": return i18n.t("quizTypes.quizPuzzle");
-        case "ecriture": return i18n.t("quizTypes.quizWriting");
-        default: return i18n.t("quizTypes.quiz");
-    }
 };
 
 const getLengthLabel = (length: number | "unlimited") => {
@@ -73,7 +65,7 @@ export default function SavedQuizItem({ quiz, onDelete, onSelect }: Props) {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => onDelete(quiz.id)} style={styles.icon}>
-                    <MaterialCommunityIcons name="delete" size={24} color="#e53935" />
+                    <MaterialCommunityIcons name="delete" size={24} color={colors.error} />
                 </TouchableOpacity>
             </View>
         </View>
@@ -94,7 +86,7 @@ const styles = StyleSheet.create({
         shadowRadius: 6,
         elevation: 1,
         borderWidth: 1,
-        borderColor: "#e0e0e0",
+        borderColor: colors.neutral.light,
         borderRadius: 12,
         overflow: "hidden",
     },
@@ -128,7 +120,7 @@ const styles = StyleSheet.create({
         gap: 6,
     },
     tag: {
-        backgroundColor: "#e0e0e0",
+        backgroundColor: colors.neutral.light,
         paddingHorizontal: 8,
         paddingVertical: 2,
         borderRadius: 6,
@@ -143,7 +135,7 @@ const styles = StyleSheet.create({
         gap: 6,
     },
     playButton: {
-        backgroundColor: "#003478",
+        backgroundColor: colors.primary.dark,
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 8,

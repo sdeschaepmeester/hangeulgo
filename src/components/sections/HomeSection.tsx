@@ -7,6 +7,7 @@ import SquareButton from "@/components/SquareButton";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
 import i18n from "@/i18n";
+import colors from "@/constants/colors";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -62,6 +63,6 @@ const styles = StyleSheet.create({
     },
     icon: {
         fontSize: screenWidth * 0.18,
-        color: "#595959",
+        color: colors.neutral.dark,
     },
 });

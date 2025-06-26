@@ -7,6 +7,7 @@ import { RootStackParamList } from "@/App";
 import i18n from "@/i18n";
 import * as Localization from "expo-localization";
 import { injectPreviewLexicon } from "@/data/injectPreviewLexicon";
+import colors from "@/constants/colors";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -113,7 +114,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     langBox: {
-        backgroundColor: "#e0e0e0",
+        backgroundColor: colors.neutral.light,
         paddingVertical: 30,
         borderRadius: 16,
         alignItems: "center",

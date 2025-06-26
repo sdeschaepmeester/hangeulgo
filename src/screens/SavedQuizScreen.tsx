@@ -12,6 +12,7 @@ import { getAllSavedQuizzes, deleteSavedQuiz, isQuizValid } from "@/services/qui
 import type { SavedQuizEntry } from "@/types/SavedQuizEntry";
 import { RootStackParamList } from "@/App";
 import i18n from "@/i18n";
+import colors from "@/constants/colors";
 
 if (Platform.OS === "android") {
     UIManager.setLayoutAnimationEnabledExperimental?.(true);
@@ -94,7 +95,7 @@ export default function SavedQuizScreen() {
                         icon="delete-empty"
                         onPress={() => setConfirmDeleteAll(true)}
                         backgroundColor="#fcebea"
-                        color="#e53935"
+                        color={colors.error}
                     />
                 )}
             </View>
@@ -120,8 +121,8 @@ export default function SavedQuizScreen() {
             {confirmDeleteId !== null && (
                 <AlertCustom
                     visible={true}
-                    icon={<MaterialCommunityIcons name="delete" size={30} color="#e53935" />}
-                    iconColor="#e53935"
+                    icon={<MaterialCommunityIcons name="delete" size={30} color={colors.error} />}
+                    iconColor={colors.error}
                     title={i18n.t("actions.delete")}
                     description={i18n.t("modaleDelete.confirmDeletionQuizText")}
                     onClose={() => setConfirmDeleteId(null)}
@@ -134,8 +135,8 @@ export default function SavedQuizScreen() {
             {confirmDeleteAll && (
                 <AlertCustom
                     visible={true}
-                    icon={<MaterialCommunityIcons name="delete-alert" size={30} color="#e53935" />}
-                    iconColor="#e53935"
+                    icon={<MaterialCommunityIcons name="delete-alert" size={30} color={colors.error} />}
+                    iconColor={colors.error}
                     title={i18n.t("actions.deleteAll")}
                     description={i18n.t("modaleDelete.confirmDeletionAllQuizText", {
                         count: quizzes?.length ?? 0,

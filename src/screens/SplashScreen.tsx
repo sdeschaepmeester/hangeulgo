@@ -16,9 +16,12 @@ export default function SplashScreen() {
         const bootstrap = async () => {
             await initDatabase();
             const firstTime = await isFirstLaunch();
-            if (firstTime) {
+            const storedLang = await SecureStore.getItemAsync("userLang");
+            // If first time launching the app or no language chosen, redirect.
+            // Keep firsttime check, for future uses
+            if (firstTime || !storedLang) {
                 await saveDateInstallation(); //! To remove once the tests are done
-                
+
                 navigation.reset({
                     index: 0,
                     routes: [{ name: "ChooseLanguage" }],
@@ -26,10 +29,7 @@ export default function SplashScreen() {
                 return;
             }
 
-            const storedLang = await SecureStore.getItemAsync("userLang");
-            if (storedLang) {
-                i18n.locale = storedLang;
-            }
+            i18n.locale = storedLang;
 
             navigation.reset({
                 index: 0,
@@ -39,6 +39,7 @@ export default function SplashScreen() {
 
         bootstrap();
     }, []);
+
 
     return (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>

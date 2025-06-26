@@ -12,10 +12,11 @@ import StepDuration from "@/components/chooseSettings/StepDuration";
 import StepThemes from "@/components/chooseSettings/StepThemes";
 import StepType from "@/components/chooseSettings/StepType";
 import StepSaveQuiz from "@/components/chooseSettings/StepSaveQuiz";
-import { saveCustomQuiz } from "@/services/quiz";
+import { getQuizTypeLabel, saveCustomQuiz } from "@/services/quiz";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SavedQuizEntry } from "@/types/SavedQuizEntry";
 import i18n from "@/i18n";
+import colors from "@/constants/colors";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -130,16 +131,6 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
 
   const renderStep = () => <StepStructure step={step}>{steps[step]()}</StepStructure>;
 
-  const getQuizTypeLabel = (type: SavedQuizEntry["type"]) => {
-    switch (type) {
-      case "comprehension": return i18n.t("quizTypes.quizComprehension");
-      case "ecoute": return i18n.t("quizTypes.quizListening");
-      case "arrangement": return i18n.t("quizTypes.quizPuzzle");
-      case "ecriture": return i18n.t("quizTypes.quizWriting");
-      default: return i18n.t("quizTypes.quiz");
-    }
-  };
-
   return (
     <View style={styles.container}>
       <ImageBackground source={arcadeBg} style={styles.background} resizeMode="cover">
@@ -217,7 +208,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#fff",
-    backgroundColor: "#003478",
+    backgroundColor: colors.primary.dark,
     paddingHorizontal: 16,
     paddingVertical: 6,
     borderRadius: 10,
@@ -233,12 +224,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   leftButton: {
-    backgroundColor: "#003478",
+    backgroundColor: colors.primary.dark,
     borderTopRightRadius: 0,
     borderBottomRightRadius: 0,
   },
   rightButton: {
-    backgroundColor: "#C60C30",
+    backgroundColor: colors.secondary.dark,
     borderTopLeftRadius: 0,
     borderBottomLeftRadius: 0,
   },

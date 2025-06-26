@@ -156,5 +156,14 @@
     "test": {
         "daysTesting": "Jours de test",
         "thankYou": "Merci de faire partie des testeurs !"
+    },
+    "screens": {
+        "addWord": "Ajouter un mot",
+        "lexicon": "Réviser",
+        "chooseSettings": "Paramètres du jeu",
+        "scores": "Mes scores",
+        "quizTypes": "Types de quiz",
+        "savedQuiz": "Quiz enregistrés",
+        "settings": "Paramètres"
     }
 }

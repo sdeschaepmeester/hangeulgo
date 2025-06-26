@@ -8,6 +8,7 @@ import MainLayout from "@/layouts/MainLayout";
 import SquareButton from "@/components/SquareButton";
 import SectionCardGame from "@/components/sections/SectionCardGame";
 import i18n from "@/i18n";
+import colors from "@/constants/colors";
 
 export default function QuizListScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -58,10 +59,10 @@ export default function QuizListScreen() {
 const styles = StyleSheet.create({
     icon: {
         fontSize: 64,
-        color: "#595959",
+        color: colors.neutral.dark,
     },
     savedButton: {
-        backgroundColor: "#003478",
+        backgroundColor: colors.primary.dark,
         marginTop: 10,
         paddingVertical: 16,
         borderRadius: 8,

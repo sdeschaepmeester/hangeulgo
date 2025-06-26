@@ -7,6 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
 import i18n from "@/i18n";
+import colors from "@/constants/colors";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     boxChecked: {
-        backgroundColor: "#C60C30",
+        backgroundColor: colors.secondary.dark,
     },
     label: {
         fontSize: 18,

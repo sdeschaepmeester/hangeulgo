@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback, } from "react-native";
 import type { ReactNode } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import colors from "@/constants/colors";
 
 interface AlertCustomProps {
     visible: boolean;
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     cancel: {
-        backgroundColor: "#e0e0e0",
+        backgroundColor: colors.error,
     },
     confirm: {
         backgroundColor: "#ff9d9d",

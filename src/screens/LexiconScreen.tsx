@@ -12,6 +12,7 @@ import { getAllUniqueTags } from "@/services/tags";
 import LexiconList from "@/components/lexicon/LexiconList";
 import MainLayout from "@/layouts/MainLayout";
 import i18n from "@/i18n";
+import colors from "@/constants/colors";
 
 if (Platform.OS === "android") {
   UIManager.setLayoutAnimationEnabledExperimental?.(true);
@@ -103,7 +104,7 @@ export default function LexiconScreen() {
           placeholder={i18n.t("lexicon.searchWord")}
           value={searchTerm}
           onChangeText={setSearchTerm}
-          placeholderTextColor="#888"
+          placeholderTextColor={colors.neutral.main}
         />
       </View>
 
@@ -158,8 +159,8 @@ export default function LexiconScreen() {
       {confirmDeleteId !== null && (
         <AlertCustom
           visible={true}
-          icon={<MaterialCommunityIcons name="delete" size={30} color="#e53935" />}
-          iconColor="#e53935"
+          icon={<MaterialCommunityIcons name="delete" size={30} color={colors.error} />}
+          iconColor={colors.error}
           title={i18n.t("modaleDelete.confirmDeletionWordTitle")}
           description={i18n.t("modaleDelete.confirmDeletionWordText")}
           onClose={() => setConfirmDeleteId(null)}
@@ -171,8 +172,8 @@ export default function LexiconScreen() {
       {confirmDeleteSeverals && (
         <AlertCustom
           visible={true}
-          icon={<MaterialCommunityIcons name="delete-alert" size={30} color="#e53935" />}
-          iconColor="#e53935"
+          icon={<MaterialCommunityIcons name="delete-alert" size={30} color={colors.error} />}
+          iconColor={colors.error}
           title={i18n.t("actions.deleteAll")}
           description={i18n.t("modaleDelete.confirmDeletionAllWordText", {
             count: lexicon?.length ?? 0,

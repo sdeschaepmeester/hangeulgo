@@ -156,5 +156,14 @@
     "test": {
         "daysTesting": "Days testing",
         "thankYou": "Thank you for being a tester !"
+    },
+    "screens": {
+        "addWord": "Add word",
+        "lexicon": "Review",
+        "chooseSettings": "Game settings",
+        "scores": "My scores",
+        "quizTypes": "Quiz types",
+        "savedQuiz": "Saved quizzes",
+        "settings": "Settings"
     }
 }

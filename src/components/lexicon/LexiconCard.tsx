@@ -5,6 +5,7 @@ import WordForm from "../form/WordForm";
 import type { Difficulty } from "@/types/Difficulty";
 import * as Speech from "expo-speech";
 import i18n from "@/i18n";
+import colors from "@/constants/colors";
 
 type Props = {
     id: number;
@@ -97,7 +98,7 @@ export default React.memo(function LexiconCard({ id, native, ko, phonetic, tags,
                             <MaterialCommunityIcons
                                 name="trash-can-outline"
                                 size={24}
-                                color="#e53935"
+                                color={colors.error}
                             />
                         </Pressable>
                         <Pressable onPress={() => setShowEdit(true)}>
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
         shadowRadius: 6,
         elevation: 1,
         borderWidth: 1,
-        borderColor: "#e0e0e0",
+        borderColor: colors.neutral.light,
         borderRadius: 12,
         overflow: "hidden",
     },
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
     },
     phoneticInline: {
         fontSize: 13,
-        color: "#888",
+        color: colors.neutral.main,
         fontStyle: "italic",
     },
     tagsContainer: {
