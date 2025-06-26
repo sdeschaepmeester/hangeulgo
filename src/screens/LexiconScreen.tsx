@@ -174,8 +174,13 @@ export default function LexiconScreen() {
           icon={<MaterialCommunityIcons name="delete-alert" size={30} color="#e53935" />}
           iconColor="#e53935"
           title={i18n.t("actions.deleteAll")}
-          description={`Cela va supprimer ${lexicon.length} mot${lexicon.length > 1 ? "s" : ""} du lexique. Continuer ?`} //! TODO
-          onClose={() => setConfirmDeleteSeverals(false)}
+          description={i18n.t("modaleDelete.confirmDeletionAllWordText", {
+            count: lexicon?.length ?? 0,
+            managePlural:
+              (lexicon?.length ?? 0) <= 1
+                ? i18n.t("modaleDelete.singleSavedWord")
+                : i18n.t("modaleDelete.pluralSavedWords"),
+          })} onClose={() => setConfirmDeleteSeverals(false)}
           onConfirm={handleConfirmDeleteSeveral}
           confirmText={i18n.t("actions.deleteAll")}
           cancelText={i18n.t("actions.cancel")}

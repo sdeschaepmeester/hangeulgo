@@ -137,8 +137,13 @@ export default function SavedQuizScreen() {
                     icon={<MaterialCommunityIcons name="delete-alert" size={30} color="#e53935" />}
                     iconColor="#e53935"
                     title={i18n.t("actions.deleteAll")}
-                    description="todo"
-                    //description={`Cela va supprimer ${quizzes?.length} quiz sauvegardé${quizzes?.length > 1 ? "s" : ""}. Continuer ?`} //! TODO
+                    description={i18n.t("modaleDelete.confirmDeletionAllQuizText", {
+                        count: quizzes?.length ?? 0,
+                        managePlural:
+                            (quizzes?.length ?? 0) <= 1
+                                ? i18n.t("modaleDelete.singleSavedQuiz")
+                                : i18n.t("modaleDelete.pluralSavedQuizzes"),
+                    })}
                     onClose={() => setConfirmDeleteAll(false)}
                     onConfirm={handleConfirmDeleteAll}
                     confirmText={i18n.t("actions.deleteAll")}

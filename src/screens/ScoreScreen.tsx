@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, Image, StyleSheet } from "react-native";
 import { getScores, clearScores, type SavedScore } from "@/services/score";
 import { formatDistanceToNow } from "date-fns";
-import { fr } from "date-fns/locale"; 
+import { enUS, fr } from "date-fns/locale";
 import { MaterialIcons } from "@expo/vector-icons";
 import AlertCustom from "@/components/AlertCustom";
 import IconButton from "@/components/IconButton";
@@ -45,6 +45,10 @@ export default function ScoreScreen() {
         }
     };
 
+    const getLocale = () => {
+        return i18n.locale === "fr" ? fr : enUS;
+    };
+
     const renderItem = ({ item }: { item: SavedScore }) => {
         const percent = Math.round((item.score / item.total) * 100);
         return (
@@ -55,7 +59,10 @@ export default function ScoreScreen() {
                     <Text style={styles.info}>{item.score} / {item.total}</Text>
                     <Text style={styles.info}>{getQuizTypeLabel(item.type)}</Text>
                     <Text style={styles.date}>
-                        {formatDistanceToNow(new Date(item.date), { addSuffix: true, locale: fr })} //! TODO LOCALE DEPENDS
+                        {formatDistanceToNow(new Date(item.date), {
+                            addSuffix: true,
+                            locale: getLocale(),
+                        })}
                     </Text>
                 </View>
             </View>
