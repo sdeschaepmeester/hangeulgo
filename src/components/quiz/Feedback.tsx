@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { playSound } from "@/services/soundPlayer";
+import { playSoundIfEnabled } from "@/services/sound";
 
 interface FeedbackProps {
     feedback: "correct" | "wrong" | null;
@@ -18,9 +19,9 @@ export default function Feedback({ feedback, correctAnswer }: FeedbackProps) {
     // Play correct or wrong sound effect
     useEffect(() => {
         if (feedback === "correct") {
-            playSound(require("../../../assets/sounds/correct.mp3"));
+            playSoundIfEnabled(require("../../../assets/sounds/correct.mp3"));
         } else if (feedback === "wrong") {
-            playSound(require("../../../assets/sounds/wrong.mp3"));
+            playSoundIfEnabled(require("../../../assets/sounds/wrong.mp3"));
         }
     }, [feedback]);
 

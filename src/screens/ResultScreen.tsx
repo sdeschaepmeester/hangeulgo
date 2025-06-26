@@ -8,6 +8,7 @@ import { getMedalInfo } from "@/services/getMedalInfo";
 import i18n from "@/i18n";
 import { playSound } from "@/services/soundPlayer";
 import colors from "@/constants/colors";
+import { playSoundIfEnabled } from "@/services/sound";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Result">;
 
@@ -19,10 +20,10 @@ export default function ResultScreen({ route, navigation }: Props) {
     const playResultSound = async () => {
       switch (true) {
         case score === 0:
-          playSound(require("../../assets/sounds/medal_terrible.mp3"));
+          await playSoundIfEnabled(require("../../assets/sounds/medal_terrible.mp3"));
           break;
         default:
-          playSound(require("../../assets/sounds/medal_good.mp3"));
+          await playSoundIfEnabled(require("../../assets/sounds/medal_good.mp3"));
           break;
       }
     };

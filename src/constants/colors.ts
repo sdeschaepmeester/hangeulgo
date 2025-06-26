@@ -3,16 +3,16 @@ const colors = {
     // Blue palette
     primary: {
         dark: "#003478", // Active icons and actions buttons blue
-        main: "#9da7ff", // Pour la navbar
-        light: "#c6cbf6", // Pour les squared boutons
-        lighter: "#e5e8ff" // scores view
+        main: "#9da7ff", // Navbar
+        light: "#c6cbf6", // Square buttons
+        lighter: "#e5e8ff"
     },
     // Red palette
     secondary: {
-        dark: "#C60C30",  // Active icons and actions buttons red
-        main: "#ff9d9d", //! pas la bonne 
-        light: "#f6c6c6", //! pas la bonne 
-        lighter: "#f9d9d9", // not used
+        dark: "#C60C30", // Active icons and actions buttons red
+        main: "#ff9d9d",
+        light: "#f6c6c6",
+        lighter: "#fbecec",
         lightest: "#f9f9f9"
     },
     danger: {
@@ -37,22 +37,22 @@ const colors = {
     },
     neutral: {
         darker: "#333",
-        dark: "#595959", // ok: pour icones importantes (home, quiz)
-        main: "#888", // ok: pour icone et label gris clair
-        light: "#c5c5c5",// OK TODO
-        lighter: "#e0e0e0",// OK TODO
+        dark: "#595959",
+        main: "#888",
+        light: "#c5c5c5",
+        lighter: "#e0e0e0",
         lightest: "#f0f0f0",
         white: "#fff",
         black: "#000"
     },
-    background: "#f2f2f2", // gris très clair à foutre dans neutral
+    background: "#f2f2f2",
     surface: "#fff",
     text: {
         primary: "#333333",
         secondary: "#555555",
         disabled: "#999999",
     },
-    error: "#e53935", // OK for error messages and deletion danger button
+    error: "#e53935",
 };
 
 export default colors;

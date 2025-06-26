@@ -165,5 +165,7 @@
         "quizTypes": "Types de quiz",
         "savedQuiz": "Quiz enregistrés",
         "settings": "Paramètres"
-    }
+    },
+    "soundActivated": "Sons activés",
+    "soundInactivated": "Sons désactivés"
 }

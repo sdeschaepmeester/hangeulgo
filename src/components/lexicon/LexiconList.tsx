@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     deleteButton: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: colors.secondary.lighter,
+        backgroundColor: colors.secondary.lightest,
         paddingHorizontal: 10,
         paddingVertical: 6,
         borderRadius: 20,
