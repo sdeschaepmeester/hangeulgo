@@ -69,7 +69,7 @@ export default function ScoreScreen() {
                 <Text style={styles.title}>{i18n.t("scores.title")}</Text>
                 {scores.length > 0 && (
                     <IconButton
-                        label="Tout effacer"
+                        label={i18n.t("actions.deleteAll")}
                         icon="delete"
                         onPress={() => setShowConfirm(true)}
                         backgroundColor="#fcebea"

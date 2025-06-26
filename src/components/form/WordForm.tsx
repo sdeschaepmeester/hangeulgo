@@ -151,7 +151,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
         <View style={styles.form}>
             {/* ----------------- French input ----------------- */}
             <View style={styles.field}>
-                <Text style={styles.label}>🇫🇷 {i18n.t("addWord.frinput")}</Text>
+                <Text style={styles.label}>{i18n.t("flag")} {i18n.t("nativeLang")}</Text>
                 <TextInput
                     ref={frRef}
                     value={native}
@@ -246,7 +246,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                         if (text.length <= 50) setPhonetic(text);
                     }}
                     style={[styles.input, { backgroundColor: "#fff" }]}
-                    placeholder="Ex : annyeonghaseyo"
+                    placeholder={i18n.t("addWord.phoneticPlaceholder")}
                     placeholderTextColor={"#696969"}
                     returnKeyType="done"
                     onSubmitEditing={Keyboard.dismiss}

@@ -36,7 +36,8 @@
         "egkorean": "Eg: 안녕하세요",
         "wordExists": "⚠️ This word already exists in your lexicon. Edit it if needed.",
         "cannotCreateTheme": "You can't create more theme.",
-        "addorsearch": "Add or search for a theme..."
+        "addorsearch": "Add or search for a theme...",
+        "phoneticPlaceholder": "Eg: annyeonghaseyo"
     },
     "scores": {
         "title": "Score history",
@@ -147,6 +148,7 @@
     },
     "flag": "🇺🇸",
     "unnamed": "Unnamed",
+    "nativeLang": "English",
     "test": {
         "daysTesting": "Days testing",
         "thankYou": "Thank you for being a tester !"

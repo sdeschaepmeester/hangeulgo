@@ -59,7 +59,7 @@ export default function App() {
 
   const goSettingsButton = (navigation: any) => (
     <TouchableOpacity
-      onPress={() => navigation.navigate("ChooseLanguage")}
+      onPress={() => navigation.navigate("Parameters")}
       style={{ marginRight: 10 }}
     >
       <MaterialCommunityIcons name="cog" size={26} color="#fff" />
@@ -95,19 +95,11 @@ export default function App() {
             name="Home"
             component={HomeScreen}
             options={({ navigation }) => ({
-              title: "",
               headerLeft: () => (
                 <TesterDaysNumberCard /> //! To remove once tests are done
               ),
-              headerTitle: () => null,
-              headerRight: () => (
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("Parameters")}
-                  style={{ marginRight: 10 }}
-                >
-                  <MaterialCommunityIcons name="cog" size={26} color="#fff" />
-                </TouchableOpacity>
-              ),
+              title:"",
+              headerRight: () => goSettingsButton(navigation),
             })}
           />
           <Stack.Screen name="ChooseLanguage" component={ChooseLanguageScreen} options={{ headerShown: false }} />

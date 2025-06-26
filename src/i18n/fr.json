@@ -36,7 +36,8 @@
         "egkorean": "Ex : 안녕하세요",
         "wordExists": "⚠️ Ce mot existe déjà dans votre lexique. Modifiez-le si besoin.",
         "cannotCreateTheme": "Vous ne pouvez plus créer de nouveaux thèmes.",
-        "addorsearch": "Ajouter ou rechercher un mot-clé..."
+        "addorsearch": "Ajouter ou rechercher un mot-clé...",
+        "phoneticPlaceholder": "Ex : annyeonghaseyo"
     },
     "scores": {
         "title": "Historique des scores",
@@ -146,6 +147,7 @@
         "gold": "Excellent !"
     },
     "flag": "🇫🇷",
+    "nativeLang": "Français",
     "unnamed": "Sans nom",
     "test": {
         "daysTesting": "Jours de test",
