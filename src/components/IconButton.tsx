@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import colors from "@/constants/colors";
 
 type Props = {
     label: string;
@@ -10,7 +11,7 @@ type Props = {
     color?: string;
 };
 
-export default function IconButton({ label, icon, onPress, backgroundColor = "#f2f2f2", color = "#333", }: Props) {
+export default function IconButton({ label, icon, onPress, backgroundColor = colors.neutral.lightest, color = colors.neutral.darker, }: Props) {
     return (
         <TouchableOpacity
             style={[styles.button, { backgroundColor }]}

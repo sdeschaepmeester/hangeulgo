@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Text, View, StyleSheet, GestureResponderEvent, Dimensions, } from "react-native";
 import type { ReactNode } from "react";
+import colors from "@/constants/colors";
 
 interface Props {
     icon: ReactNode;
@@ -12,7 +13,7 @@ interface Props {
 const screenWidth = Dimensions.get("window").width;
 const isTablet = screenWidth >= 600;
 
-export default function SquareButton({ icon, label, bgColor = "#eee", onClick }: Props) {
+export default function SquareButton({ icon, label, bgColor = colors.neutral.lightest, onClick }: Props) {
     return (
         <TouchableOpacity
             style={[

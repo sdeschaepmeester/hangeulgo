@@ -18,7 +18,7 @@ export default function TesterDaysTestBigCard() {
     if (days === null) return null;
 
     const hasReachedQuota = days >= 14;
-    const textColor = hasReachedQuota ? colors.success : colors.warning;
+    const textColor = hasReachedQuota ? colors.success.main : colors.warning.main;
 
     return (
         <View style={styles.container}>
@@ -47,19 +47,19 @@ const styles = StyleSheet.create({
         fontSize: 22,
         fontWeight: "bold",
         marginBottom: 24,
-        color: "#333",
+        color: colors.neutral.darker,
     },
     thankYou: {
         fontSize: 18,
-        color: "#333",
+        color: colors.neutral.darker,
         marginTop: 32
     },
     card: {
-        backgroundColor: "#fff",
+        backgroundColor: colors.neutral.white,
         padding: 16,
         borderRadius: 12,
         elevation: 4,
-        shadowColor: "#000",
+        shadowColor: colors.neutral.black,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,

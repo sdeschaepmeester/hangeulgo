@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import colors from "@/constants/colors";
 
 type Props = {
     correctAnswer: string;
@@ -49,7 +50,7 @@ export default function OrderInput({ correctAnswer, onChange, questionKey, disab
                 />
                 {userPieces.length > 0 && (
                     <TouchableOpacity style={styles.clearIcon} onPress={() => setUserPieces([])} disabled={disabled}>
-                        <MaterialCommunityIcons name="close-circle" size={22} color="#666" />
+                        <MaterialCommunityIcons name="close-circle" size={22} color={colors.neutral.dark} />
                     </TouchableOpacity>
                 )}
             </View>
@@ -86,12 +87,12 @@ const styles = StyleSheet.create({
     input: {
         width: "100%",
         borderWidth: 1,
-        borderColor: "#7f8bff",
+        borderColor: colors.primary.main,
         borderRadius: 8,
         paddingVertical: 12,
         paddingHorizontal: 16,
         fontSize: 16,
-        backgroundColor: "#fff",
+        backgroundColor: colors.neutral.white,
     },
     clearIcon: {
         position: "absolute",
@@ -107,14 +108,14 @@ const styles = StyleSheet.create({
     },
     choice: {
         borderWidth: 1,
-        borderColor: "#7f8bff",
-        backgroundColor: "#f5f5f5",
+        borderColor: colors.primary.main,
+        backgroundColor: colors.neutral.lightest,
         paddingVertical: 10,
         paddingHorizontal: 14,
         borderRadius: 8,
     },
     choiceText: {
         fontSize: 18,
-        color: "#333",
+        color: colors.neutral.darker,
     },
 });

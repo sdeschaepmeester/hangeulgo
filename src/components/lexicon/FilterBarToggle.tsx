@@ -1,3 +1,4 @@
+import colors from "@/constants/colors";
 import i18n from "@/i18n";
 import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         borderTopWidth: 1,
         borderBottomWidth: 1,
-        borderColor: "#ccc",
+        borderColor: colors.neutral.light,
         marginBottom: 8,
     },
     box: {
@@ -48,20 +49,20 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#fff",
+        backgroundColor: colors.neutral.white,
     },
     boxActive: {
-        backgroundColor: "#9da7ff",
+        backgroundColor: colors.primary.main,
     },
     text: {
         fontWeight: "500",
-        color: "#333",
+        color: colors.neutral.darker,
     },
     textActive: {
-        color: "#fff",
+        color: colors.neutral.white,
     },
     divider: {
         width: 1,
-        backgroundColor: "#ccc",
+        backgroundColor: colors.neutral.light,
     },
 });

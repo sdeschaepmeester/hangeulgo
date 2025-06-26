@@ -16,7 +16,7 @@ interface AlertCustomProps {
     cancelText?: string;
 }
 
-export default function AlertCustom({ visible, icon, iconColor = "#333", title, description, onClose, onConfirm, confirmText = "Confirmer", cancelText = "Annuler", }: AlertCustomProps) {
+export default function AlertCustom({ visible, icon, iconColor = colors.neutral.darker, title, description, onClose, onConfirm, confirmText = "Confirmer", cancelText = "Annuler", }: AlertCustomProps) {
     return (
         <Modal visible={visible} transparent animationType="fade">
             <TouchableWithoutFeedback onPress={onClose}>
@@ -24,7 +24,7 @@ export default function AlertCustom({ visible, icon, iconColor = "#333", title, 
                     <TouchableWithoutFeedback onPress={() => { }}>
                         <View style={styles.container}>
                             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                                <MaterialCommunityIcons name="close" size={22} color="#999" />
+                                <MaterialCommunityIcons name="close" size={22} color={colors.neutral.main} />
                             </TouchableOpacity>
 
                             <View style={[styles.iconCircle, { borderColor: iconColor }]}>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         width: "100%",
         maxWidth: 400,
         borderRadius: 12,
-        backgroundColor: "#fff",
+        backgroundColor: colors.neutral.white,
         padding: 24,
         alignItems: "center",
         position: "relative",
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 30,
-        backgroundColor: "#fff",
+        backgroundColor: colors.neutral.white,
         borderWidth: 1,
         justifyContent: "center",
         alignItems: "center",
@@ -103,13 +103,13 @@ const styles = StyleSheet.create({
     },
     description: {
         fontSize: 14,
-        color: "#555",
+        color: colors.neutral.dark,
         textAlign: "left",
         alignSelf: "stretch",
         marginBottom: 24,
     },
     okButton: {
-        backgroundColor: "#9da7ff",
+        backgroundColor: colors.primary.main,
         borderRadius: 6,
         paddingHorizontal: 20,
         paddingVertical: 10,
@@ -132,10 +132,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     cancel: {
-        backgroundColor: colors.error,
+        backgroundColor: colors.warning.lightest,
     },
     confirm: {
-        backgroundColor: "#ff9d9d",
+        backgroundColor: colors.danger.light,
     },
     buttonText: {
         fontWeight: "bold",

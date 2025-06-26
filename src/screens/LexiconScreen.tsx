@@ -159,8 +159,8 @@ export default function LexiconScreen() {
       {confirmDeleteId !== null && (
         <AlertCustom
           visible={true}
-          icon={<MaterialCommunityIcons name="delete" size={30} color={colors.error} />}
-          iconColor={colors.error}
+          icon={<MaterialCommunityIcons name="delete" size={30} color={colors.danger.dark} />}
+          iconColor={colors.danger.dark}
           title={i18n.t("modaleDelete.confirmDeletionWordTitle")}
           description={i18n.t("modaleDelete.confirmDeletionWordText")}
           onClose={() => setConfirmDeleteId(null)}
@@ -172,8 +172,8 @@ export default function LexiconScreen() {
       {confirmDeleteSeverals && (
         <AlertCustom
           visible={true}
-          icon={<MaterialCommunityIcons name="delete-alert" size={30} color={colors.error} />}
-          iconColor={colors.error}
+          icon={<MaterialCommunityIcons name="delete-alert" size={30} color={colors.danger.light} />}
+          iconColor={colors.danger.lightest}
           title={i18n.t("actions.deleteAll")}
           description={i18n.t("modaleDelete.confirmDeletionAllWordText", {
             count: lexicon?.length ?? 0,
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   searchInput: {
-    backgroundColor: "#f1f1f1",
+    backgroundColor: colors.neutral.lightest,
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 8,

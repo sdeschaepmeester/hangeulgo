@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { View, KeyboardAvoidingView, Platform, StyleSheet, ScrollView, ViewStyle, } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import NavBar from "@/components/NavBar";
+import colors from "@/constants/colors";
 
 type Props = {
     children: ReactNode;
@@ -46,7 +47,7 @@ export default function MainLayout({ children, scrollable = false, style }: Prop
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: "#f9f9f9",
+        backgroundColor: colors.secondary.lightest,
     },
     body: {
         flexGrow: 1,

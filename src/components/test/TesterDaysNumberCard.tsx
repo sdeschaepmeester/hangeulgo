@@ -3,6 +3,7 @@ import { Text, View, StyleSheet } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { getDaysSinceInstall } from "@/services/tester";
 import { getLocales } from "expo-localization";
+import colors from "@/constants/colors";
 
 export default function TesterDaysNumberCard() {
     const [days, setDays] = useState<number | null>(null);
@@ -31,7 +32,7 @@ export default function TesterDaysNumberCard() {
 
 const styles = StyleSheet.create({
     badge: {
-        backgroundColor: "#fff2",
+        backgroundColor: colors.primary.dark,
         paddingHorizontal: 12,
         paddingVertical: 4,
         borderRadius: 12,
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
         maxWidth: 150,
     },
     text: {
-        color: "#fff",
+        color: colors.neutral.white,
         fontSize: 11,
         fontWeight: "600",
         flexShrink: 1,

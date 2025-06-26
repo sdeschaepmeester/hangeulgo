@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-nativ
 import OrderInput from "@/components/quiz/OrderInput";
 import type { Question } from "@/types/Question";
 import type { GameSettings } from "@/types/GameSettings";
+import colors from "@/constants/colors";
 
 export default function QuizContent({
     question,
@@ -26,7 +27,7 @@ export default function QuizContent({
     if (settings.inputMode === "input") {
         return (
             <TextInput
-                style={[styles.input, { backgroundColor: "#ccc" }]}
+                style={[styles.input, { backgroundColor: colors.neutral.light }]}
                 placeholder="Votre réponse en coréen"
                 value={userInput}
                 onChangeText={onChange}
@@ -46,7 +47,7 @@ export default function QuizContent({
                             styles.choice,
                             selected === choice && {
                                 backgroundColor:
-                                    choice === question.correctAnswer ? "#c6f6d5" : "#feb2b2",
+                                    choice === question.correctAnswer ? colors.success.lighter : colors.danger.lighter,
                             },
                         ]}
                         onPress={() => onSelectChoice && !selected && onSelectChoice(choice)}
@@ -77,7 +78,7 @@ export default function QuizContent({
 const styles = StyleSheet.create({
     input: {
         borderWidth: 1,
-        borderColor: "#ccc",
+        borderColor: colors.neutral.light,
         borderRadius: 8,
         padding: 12,
         fontSize: 18,
@@ -93,6 +94,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "transparent",
         borderRadius: 8,
-        backgroundColor: "#f9f9f9",
+        backgroundColor: colors.secondary.lightest,
     },
 });

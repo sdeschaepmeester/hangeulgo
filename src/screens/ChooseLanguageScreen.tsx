@@ -96,7 +96,7 @@ export default function ChooseLanguageScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#C6CBF5",
+        backgroundColor: colors.primary.light,
         justifyContent: "center",
         alignItems: "center",
         padding: 20,
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: "bold",
-        color: "#333",
+        color: colors.neutral.darker,
         marginBottom: 24
     },
     langRow: {
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     selectedBox: {
-        backgroundColor: "#9da7ff",
+        backgroundColor: colors.primary.main,
     },
     flag: {
         fontSize: 40,
@@ -131,17 +131,17 @@ const styles = StyleSheet.create({
     langLabel: {
         fontSize: 18,
         fontWeight: "bold",
-        color: "#333",
+        color: colors.neutral.darker,
     },
     warning: {
         fontSize: 14,
         fontStyle: "italic",
-        color: "#333",
+        color: colors.neutral.darker,
         textAlign: "center",
         marginBottom: 20,
     },
     confirmButton: {
-        backgroundColor: "#7f8bff",
+        backgroundColor: colors.primary.main,
         paddingVertical: 14,
         borderRadius: 10,
         width: "100%",

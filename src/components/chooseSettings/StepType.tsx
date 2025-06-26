@@ -3,6 +3,7 @@ import { Text, StyleSheet } from "react-native";
 import SelectPill from "@/components/SelectPill";
 import type { GameSubType } from "@/types/GameSettings";
 import i18n from "@/i18n";
+import colors from "@/constants/colors";
 
 type Props = {
     available: GameSubType[];
@@ -28,7 +29,7 @@ export default function StepType({ available, selected, onChange }: Props) {
     const options = available.map((value) => ({
         label: labelMap[value],
         value,
-        color: "#9da7ff",
+        color: colors.primary.main,
     }));
 
     return (

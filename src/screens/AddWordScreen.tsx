@@ -10,6 +10,7 @@ import { isLexiconLimitReached } from "@/services/lexicon";
 import WarningLimit from "@/components/WarningLimit";
 import MainLayout from "@/layouts/MainLayout";
 import i18n from "@/i18n";
+import colors from "@/constants/colors";
 
 export default function AddWordScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -30,7 +31,7 @@ export default function AddWordScreen() {
       <View style={styles.headerRow}>
         <Text style={styles.title}>{i18n.t("addWord.title")}</Text>
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-          <MaterialIcons name="close" size={24} color="#999" />
+          <MaterialIcons name="close" size={24} color={colors.neutral.main} />
         </TouchableOpacity>
       </View>
 
@@ -54,8 +55,8 @@ export default function AddWordScreen() {
       {/* ---------- Modale success ---------- */}
       <AlertCustom
         visible={showSuccess}
-        icon={<MaterialCommunityIcons name="check-circle" size={30} color="#4caf50" />}
-        iconColor="#4caf50"
+        icon={<MaterialCommunityIcons name="check-circle" size={30} color={colors.success.dark} />}
+        iconColor={colors.success.dark}
         title={i18n.t("actions.added")}
         description={i18n.t("limits.success")}
         onClose={() => setShowSuccess(false)}
@@ -74,6 +75,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#333",
+    color: colors.text.primary,
   },
 });

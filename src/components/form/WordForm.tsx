@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
 import i18n from "@/i18n";
+import colors from "@/constants/colors";
 
 const difficulties = [
     { label: i18n.t("difficulties.easy"), value: "easy", color: "green" },
@@ -161,9 +162,9 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                             setKoSuggested(null);
                         }
                     }}
-                    style={[styles.input, { backgroundColor: "#fff" }]}
+                    style={[styles.input, { backgroundColor: colors.neutral.white }]}
                     placeholder={i18n.t("addWord.egfrinput")}
-                    placeholderTextColor={"#696969"}
+                    placeholderTextColor={colors.neutral.main}
                     returnKeyType="next"
                     onSubmitEditing={() => koRef.current?.focus()}
                 />
@@ -223,9 +224,9 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                         }
                     }}
                     onBlur={handleKoBlur}
-                    style={[styles.input, { backgroundColor: "#fff" }]}
+                    style={[styles.input, { backgroundColor: colors.neutral.white }]}
                     placeholder={i18n.t("addWord.egkorean")}
-                    placeholderTextColor={"#696969"}
+                    placeholderTextColor={colors.neutral.main}
                     returnKeyType="next"
                     onSubmitEditing={() => phoneticRef.current?.focus()}
                 />
@@ -245,9 +246,9 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                     onChangeText={(text) => {
                         if (text.length <= 50) setPhonetic(text);
                     }}
-                    style={[styles.input, { backgroundColor: "#fff" }]}
+                    style={[styles.input, { backgroundColor: colors.neutral.white }]}
                     placeholder={i18n.t("addWord.phoneticPlaceholder")}
-                    placeholderTextColor={"#696969"}
+                    placeholderTextColor={colors.neutral.main}
                     returnKeyType="done"
                     onSubmitEditing={Keyboard.dismiss}
                 />
@@ -255,7 +256,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
 
             {/* ----------------- Tags -----------------*/}
             {tagLimitReached && (
-                <Text style={{ color: "#f57c00", fontSize: 13, marginBottom: 6 }}>
+                <Text style={{ color: colors.warning.lighter, fontSize: 13, marginBottom: 6 }}>
                     {i18n.t("addWord.cannotCreateTheme")}
                 </Text>
             )}
@@ -303,14 +304,14 @@ const styles = StyleSheet.create({
     label: { fontWeight: "bold", fontSize: 14 },
     input: {
         borderWidth: 1,
-        borderColor: "#ccc",
+        borderColor: colors.neutral.light,
         borderRadius: 8,
         padding: 14,
         fontSize: 16,
     },
     suggestionButton: {
         alignSelf: "flex-start",
-        backgroundColor: "#f5f5f5",
+        backgroundColor: colors.neutral.light,
         paddingHorizontal: 10,
         paddingVertical: 6,
         borderRadius: 6,
@@ -318,18 +319,18 @@ const styles = StyleSheet.create({
         marginBottom: 6,
     },
     suggestionText: {
-        color: "#333",
+        color: colors.neutral.darker,
         fontSize: 14,
     },
     suggestionBox: {
-        backgroundColor: "#e6f7ff",
+        backgroundColor: colors.neutral.lighter,
         padding: 8,
         borderRadius: 6,
         marginBottom: 8,
         fontStyle: "italic",
     },
     warningText: {
-        color: "#cc0000",
+        color: colors.danger.main,
         marginTop: 4,
         fontSize: 13,
         fontStyle: "italic",
@@ -343,18 +344,18 @@ const styles = StyleSheet.create({
     cancelButton: {
         flex: 1,
         paddingVertical: 14,
-        backgroundColor: "#eee",
+        backgroundColor: colors.neutral.lightest,
         borderRadius: 8,
     },
     cancelButtonText: {
         textAlign: "center",
         fontSize: 16,
-        color: "#555",
+        color: colors.neutral.dark,
     },
     confirmButton: {
         flex: 1,
         paddingVertical: 14,
-        backgroundColor: "#9da7ff",
+        backgroundColor: colors.primary.main,
         borderRadius: 8,
     },
     confirmButtonText: {

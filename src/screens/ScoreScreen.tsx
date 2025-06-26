@@ -71,8 +71,8 @@ export default function ScoreScreen() {
                         label={i18n.t("actions.deleteAll")}
                         icon="delete"
                         onPress={() => setShowConfirm(true)}
-                        backgroundColor="#fcebea"
-                        color={colors.error}
+                        backgroundColor={colors.danger.lightest}
+                        color={colors.danger.light}
                     />
                 )}
             </View>
@@ -99,8 +99,8 @@ export default function ScoreScreen() {
                 confirmText={i18n.t("actions.confirm")}
                 cancelText={i18n.t("actions.cancel")}
                 onConfirm={handleClear}
-                icon={<MaterialIcons name="delete-forever" size={30} color={colors.error} />}
-                iconColor={colors.error}
+                icon={<MaterialIcons name="delete-forever" size={30} color={colors.danger.main} />}
+                iconColor={colors.danger.main}
             />
         </MainLayout>
     );
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: "bold",
-        color: "#333",
+        color: colors.neutral.darker,
     },
     listContainer: {
         paddingBottom: 24,
@@ -124,12 +124,12 @@ const styles = StyleSheet.create({
     card: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "#fff",
+        backgroundColor: colors.neutral.white,
         borderRadius: 12,
         padding: 16,
         marginBottom: 12,
         elevation: 2,
-        shadowColor: "#000",
+        shadowColor: colors.neutral.black,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -151,17 +151,17 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     info: {
-        color: "#555",
+        color: colors.neutral.dark,
     },
     date: {
-        color: "#999",
+        color: colors.neutral.main,
         fontSize: 12,
         marginTop: 4,
     },
     empty: {
         marginTop: 60,
         textAlign: "center",
-        color: "#999",
+        color: colors.neutral.main,
         fontSize: 16,
     },
 });

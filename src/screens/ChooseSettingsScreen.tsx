@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   quizType: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#fff",
+    color: colors.neutral.white,
     backgroundColor: colors.primary.dark,
     paddingHorizontal: 16,
     paddingVertical: 6,

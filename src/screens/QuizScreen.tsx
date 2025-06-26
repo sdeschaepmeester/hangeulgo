@@ -10,6 +10,7 @@ import ListenPrompt from "@/components/quiz/ListenPrompt";
 import QuizHeader from "@/components/quiz/game/QuizHeader";
 import QuizContent from "@/components/quiz/game/QuizContent";
 import QuizFooter from "@/components/quiz/game/QuizFooter";
+import colors from "@/constants/colors";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Quiz">;
 
@@ -89,7 +90,7 @@ export default function QuizScreen({ route, navigation }: Props) {
   if (questions.length === 0) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#9da7ff" />
+        <ActivityIndicator size="large" color={colors.primary.main} />
       </View>
     );
   }

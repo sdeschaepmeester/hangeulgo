@@ -6,6 +6,7 @@ import { RootStackParamList } from "@/App";
 import HomeSections from "@/components/sections/HomeSection";
 import MainLayout from "@/layouts/MainLayout";
 import i18n from "@/i18n";
+import colors from "@/constants/colors";
 
 export default function HomeScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
         bottom: -1,
         width: "100%",
         height: 50,
-        backgroundColor: "#e5e8ff",
+        backgroundColor: colors.primary.lighter,
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
         justifyContent: "center",
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
     scoreButton: {
         paddingHorizontal: 16,
         paddingVertical: 6,
-        backgroundColor: "#d0d3ff",
+        backgroundColor: colors.primary.light,
         borderRadius: 12,
         width: "90%",
     },

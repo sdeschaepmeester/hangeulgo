@@ -65,7 +65,7 @@ export default function SavedQuizItem({ quiz, onDelete, onSelect }: Props) {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => onDelete(quiz.id)} style={styles.icon}>
-                    <MaterialCommunityIcons name="delete" size={24} color={colors.error} />
+                    <MaterialCommunityIcons name="delete" size={24} color={colors.danger.main} />
                 </TouchableOpacity>
             </View>
         </View>
@@ -77,10 +77,10 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        backgroundColor: "#fff",
+        backgroundColor: colors.neutral.white,
         padding: 16,
         marginBottom: 12,
-        shadowColor: "#000",
+        shadowColor: colors.neutral.black,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.05,
         shadowRadius: 6,
@@ -101,12 +101,12 @@ const styles = StyleSheet.create({
     },
     subType: {
         fontSize: 14,
-        color: "#444",
+        color: colors.neutral.dark,
         marginBottom: 4,
     },
     type: {
         fontSize: 14,
-        color: "#555",
+        color: colors.neutral.dark,
         marginBottom: 6,
     },
     difficultyRow: {
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     },
     tagText: {
         fontSize: 12,
-        color: "#444",
+        color: colors.neutral.dark,
     },
     actions: {
         flexDirection: "row",

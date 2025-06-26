@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import type { ReactNode } from "react";
+import colors from "@/constants/colors";
 
 interface Option<T> {
     label: string;
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
         marginVertical: 12,
     },
     card: {
-        backgroundColor: "#f0f0f0",
+        backgroundColor: colors.neutral.lightest,
         borderRadius: 12,
         padding: 16,
         alignItems: "center",
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     selectedCard: {
-        backgroundColor: "#d4dbff",
+        backgroundColor: colors.primary.light,
     },
     disabledCard: {
         opacity: 0.4,

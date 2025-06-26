@@ -3,6 +3,7 @@ import { View, StyleSheet } from "react-native";
 import FilterBar from "@/components/FilterBar";
 import TagSelector from "../tags/TagSelector";
 import type { Difficulty } from "@/types/Difficulty";
+import colors from "@/constants/colors";
 
 type Props = {
     selectedDifficulties: Difficulty[];
@@ -44,9 +45,9 @@ export default function LexiconFilters({ selectedDifficulties, onToggleDifficult
 const styles = StyleSheet.create({
     container: {
         padding: 12,
-        backgroundColor: "#f9f9f9",
+        backgroundColor: colors.secondary.lightest,
         borderBottomWidth: 1,
-        borderColor: "#ddd",
+        borderColor: colors.neutral.lighter,
         gap: 12,
     },
 });

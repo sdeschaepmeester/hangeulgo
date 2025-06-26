@@ -8,6 +8,7 @@ import { isFirstLaunch } from "@/services/firstLaunch";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
 import { saveDateInstallation } from "@/services/tester";
+import colors from "@/constants/colors";
 
 export default function SplashScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -43,7 +44,7 @@ export default function SplashScreen() {
 
     return (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <ActivityIndicator size="large" color="#9da7ff" />
+            <ActivityIndicator size="large" color={colors.primary.main} />
         </View>
     );
 }

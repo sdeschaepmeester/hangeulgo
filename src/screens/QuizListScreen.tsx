@@ -20,13 +20,13 @@ export default function QuizListScreen() {
                 <SquareButton
                     icon={<MaterialCommunityIcons name="eye" style={styles.icon} />}
                     label={i18n.t("quizTypes.comprehension")}
-                    bgColor="#f6c6c6"
+                    bgColor={colors.secondary.light}
                     onClick={() => navigation.navigate("ChooseSettings", { type: "comprehension" })}
                 />
                 <SquareButton
                     icon={<MaterialCommunityIcons name="ear-hearing" style={styles.icon} />}
                     label={i18n.t("quizTypes.listening")}
-                    bgColor="#f6c6c6"
+                    bgColor={colors.secondary.light}
                     onClick={() => navigation.navigate("ChooseSettings", { type: "ecoute" })}
                 />
             </SectionCardGame>
@@ -36,13 +36,13 @@ export default function QuizListScreen() {
                 <SquareButton
                     icon={<MaterialCommunityIcons name="puzzle" style={styles.icon} />}
                     label={i18n.t("quizTypes.puzzle")}
-                    bgColor="#c6cbf6"
+                    bgColor={colors.primary.light}
                     onClick={() => navigation.navigate("ChooseSettings", { type: "arrangement" })}
                 />
                 <SquareButton
                     icon={<MaterialCommunityIcons name="pencil" style={styles.icon} />}
                     label={i18n.t("quizTypes.writing")}
-                    bgColor="#c6cbf6"
+                    bgColor={colors.primary.light}
                     onClick={() => navigation.navigate("ChooseSettings", { type: "ecriture" })}
                 />
             </SectionCardGame>
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     savedButtonText: {
-        color: "#fff",
+        color: colors.neutral.white,
         fontWeight: "bold",
         textAlign: "center",
         fontSize: 16,

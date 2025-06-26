@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { View, Text, TouchableOpacity, TextInput, StyleSheet, Keyboard, ScrollView, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import i18n from "@/i18n";
+import colors from "@/constants/colors";
 
 type Props = {
     mode: "edit" | "select";
@@ -92,13 +93,13 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, lab
                                 }}
                                 onSubmitEditing={handleAdd}
                                 placeholder={i18n.t("addWord.addorsearch")}
-                                placeholderTextColor="#999"
-                                style={{ flex: 1, color: "#000", backgroundColor: "#fff" }}
+                                placeholderTextColor={colors.neutral.main}
+                                style={{ flex: 1, color: colors.neutral.black, backgroundColor: colors.neutral.white }}
                                 maxLength={25}
                                 editable={canAddTag}
                             />
                         ) : (
-                            <Text style={{ color: "#333" }}>
+                            <Text style={{ color: colors.neutral.darker }}>
                                 {selectedTags.length > 0
                                     ? selectedTags.join(", ")
                                     : i18n.t("noSelectedTheme")}
@@ -141,7 +142,7 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, lab
                                             disabled={isDisabled}
                                         >
                                             <Text style={{
-                                                color: isSelected ? "#fff" : "#333"
+                                                color: isSelected ? colors.neutral.white : colors.neutral.darker
                                             }}>
                                                 {tag}
                                             </Text>
@@ -157,7 +158,7 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, lab
                                             onPress={handleAdd}
                                             style={styles.newTagButton}
                                         >
-                                            <Text style={{ color: "#333" }}>
+                                            <Text style={{ color: colors.neutral.darker }}>
                                                 ➕ {i18n.t("actions.add")} {input.trim()}"
                                             </Text>
                                         </TouchableOpacity>
@@ -168,7 +169,7 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, lab
 
                     {/* ------------ Selected tags ------------ */}
                     {withLimits && selectedTags.length >= MAX_TAGS_PER_WORD && (
-                        <Text style={{ color: "#f57c00", fontSize: 13, marginTop: 6 }}>
+                        <Text style={{ color: colors.warning.lighter, fontSize: 13, marginTop: 6 }}>
                            {i18n.t("limits.limitOf")} {MAX_TAGS_PER_WORD} {i18n.t("limits.themeIsReached")}
                         </Text>
                     )}
@@ -182,7 +183,7 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, lab
                                         <MaterialCommunityIcons
                                             name="close"
                                             size={16}
-                                            color="#666"
+                                            color={colors.neutral.dark}
                                         />
                                     </TouchableOpacity>
                                 </View>
@@ -204,8 +205,8 @@ const styles = StyleSheet.create({
         padding: 8,
         borderRadius: 6,
         borderWidth: 1,
-        borderColor: "#ccc",
-        backgroundColor: "#fff",
+        borderColor: colors.neutral.light,
+        backgroundColor: colors.neutral.white,
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
@@ -213,18 +214,18 @@ const styles = StyleSheet.create({
     tagItemFlat: {
         paddingVertical: 10,
         paddingHorizontal: 8,
-        backgroundColor: "#fff",
+        backgroundColor: colors.neutral.white,
     },
     tagItemSelected: {
-        backgroundColor: "#9da7ff",
-        borderColor: "#9da7ff",
+        backgroundColor: colors.primary.main,
+        borderColor: colors.primary.main,
     },
     newTagButton: {
         padding: 8,
         borderRadius: 6,
         borderWidth: 1,
-        borderColor: "#aaa",
-        backgroundColor: "#f2f2f2",
+        borderColor: colors.neutral.light,
+        backgroundColor: colors.neutral.lightest,
         marginTop: 6,
         marginHorizontal: 8,
     },
@@ -237,7 +238,7 @@ const styles = StyleSheet.create({
     selectedTag: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "#e0e0ff",
+        backgroundColor: colors.primary.lighter,
         paddingHorizontal: 10,
         paddingVertical: 6,
         borderRadius: 16,
@@ -246,14 +247,14 @@ const styles = StyleSheet.create({
     },
     selectedTagText: {
         fontSize: 13,
-        color: "#333",
+        color: colors.neutral.darker,
         marginRight: 6,
     },
     dropdown: {
         marginTop: 6,
-        backgroundColor: "#fff",
+        backgroundColor: colors.neutral.white,
         borderWidth: 1,
-        borderColor: "#eee",
+        borderColor: colors.neutral.lightest,
         borderRadius: 6,
         zIndex: 1,
         elevation: 3,

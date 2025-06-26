@@ -1,3 +1,4 @@
+import colors from "@/constants/colors";
 import i18n from "@/i18n";
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Pressable } from "react-native";
@@ -58,9 +59,9 @@ export default function SortOptions({ currentOrder, onChange }: Props) {
 const styles = StyleSheet.create({
     container: {
         padding: 12,
-        backgroundColor: "#f9f9f9",
+        backgroundColor: colors.secondary.lightest,
         borderBottomWidth: 1,
-        borderColor: "#ddd",
+        borderColor: colors.neutral.lighter,
         flexDirection: "row",
         alignItems: "center",
         gap: 12,
@@ -68,20 +69,20 @@ const styles = StyleSheet.create({
     label: {
         fontWeight: "bold",
         fontSize: 16,
-        color: "#333",
+        color: colors.neutral.darker,
     },
     dropdown: {
         flex: 1,
         borderWidth: 1,
-        borderColor: "#ccc",
+        borderColor: colors.neutral.light,
         borderRadius: 6,
         paddingHorizontal: 12,
         paddingVertical: 10,
-        backgroundColor: "#fff",
+        backgroundColor: colors.neutral.white,
     },
     dropdownText: {
         fontSize: 16,
-        color: "#333",
+        color: colors.neutral.darker,
     },
     overlay: {
         flex: 1,
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0,0,0,0.2)",
     },
     dropdownMenu: {
-        backgroundColor: "#fff",
+        backgroundColor: colors.neutral.white,
         borderRadius: 6,
         overflow: "hidden",
         elevation: 4,
@@ -98,10 +99,10 @@ const styles = StyleSheet.create({
     dropdownItem: {
         padding: 12,
         borderBottomWidth: 1,
-        borderColor: "#eee",
+        borderColor: colors.neutral.lightest,
     },
     dropdownItemText: {
         fontSize: 16,
-        color: "#333",
+        color: colors.neutral.darker,
     },
 });

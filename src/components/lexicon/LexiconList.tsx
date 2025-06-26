@@ -24,8 +24,8 @@ export default function LexiconList({ data, onToggle, onDelete, onDeleteAll, onU
                     label={i18n.t("actions.deleteAll")}
                     icon="delete-empty"
                     onPress={onDeleteAll}
-                    backgroundColor="#fcebea"
-                    color={colors.error}
+                    backgroundColor={colors.danger.lightest}
+                    color={colors.danger.light}
                 />
             </View>
             <FlatList
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     deleteButton: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "#fcebea",
+        backgroundColor: colors.secondary.lighter,
         paddingHorizontal: 10,
         paddingVertical: 6,
         borderRadius: 20,

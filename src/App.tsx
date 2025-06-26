@@ -21,6 +21,7 @@ import ChooseLanguageScreen from "./screens/ChooseLanguageScreen";
 import TesterDaysNumberCard from "./components/test/TesterDaysNumberCard";
 import ParametersScreen from "./screens/ParametersScreen";
 import i18n from "./i18n";
+import colors from "./constants/colors";
 
 export type RootStackParamList = {
   Home: undefined;
@@ -63,7 +64,7 @@ export default function App() {
       onPress={() => navigation.navigate("Parameters")}
       style={{ marginRight: 10 }}
     >
-      <MaterialCommunityIcons name="cog" size={26} color="#fff" />
+      <MaterialCommunityIcons name="cog" size={26} color={colors.neutral.white} />
     </TouchableOpacity>
   );
 
@@ -86,7 +87,7 @@ export default function App() {
         <Stack.Navigator
           initialRouteName="Splash"
           screenOptions={{
-            headerStyle: { backgroundColor: "#9da7ff" },
+            headerStyle: { backgroundColor: colors.primary.main },
             headerTintColor: "#fff",
             headerTitleStyle: { fontWeight: "bold" },
           }}

@@ -77,11 +77,11 @@ export default React.memo(function LexiconCard({ id, native, ko, phonetic, tags,
                             <MaterialCommunityIcons
                                 name="volume-high"
                                 size={20}
-                                color={isSpeaking ? "#fff" : "#333"}
+                                color={isSpeaking ? colors.neutral.white : colors.neutral.darker}
                             />
                             <Text style={[
                                 styles.listenText,
-                                isSpeaking && { color: "#fff" }
+                                isSpeaking && { color: colors.neutral.white }
                             ]}>
                                 {isSpeaking ? i18n.t("lexicon.isListening") : i18n.t("lexicon.listen")} 
                             </Text>
@@ -98,14 +98,14 @@ export default React.memo(function LexiconCard({ id, native, ko, phonetic, tags,
                             <MaterialCommunityIcons
                                 name="trash-can-outline"
                                 size={24}
-                                color={colors.error}
+                                color={colors.danger.light}
                             />
                         </Pressable>
                         <Pressable onPress={() => setShowEdit(true)}>
                             <MaterialCommunityIcons
                                 name="pencil-outline"
                                 size={24}
-                                color="#666"
+                                color={colors.neutral.dark}
                             />
                         </Pressable>
                     </View>
@@ -157,10 +157,10 @@ function difficultyColor(difficulty: Difficulty) {
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: "#fff",
+        backgroundColor: colors.neutral.white,
         padding: 16,
         marginBottom: 12,
-        shadowColor: "#000",
+        shadowColor: colors.neutral.black,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.05,
         shadowRadius: 6,
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     tagsLabel: {
         fontSize: 13,
         fontWeight: "bold",
-        color: "#444",
+        color: colors.neutral.dark,
         marginBottom: 4,
     },
     tagsRow: {
@@ -206,21 +206,21 @@ const styles = StyleSheet.create({
         gap: 6,
     },
     tag: {
-        backgroundColor: "#e0e0ff",
+        backgroundColor: colors.primary.lighter,
         borderRadius: 6,
         paddingHorizontal: 8,
         paddingVertical: 4,
     },
     tagText: {
         fontSize: 12,
-        color: "#333",
+        color: colors.neutral.darker,
     },
     actions: {
         alignItems: "center",
     },
     listenButton: {
         width: "100%",
-        backgroundColor: "#e0e0ff",
+        backgroundColor: colors.primary.lighter,
         borderRadius: 6,
         paddingVertical: 6,
         paddingHorizontal: 10,
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     listenButtonSpeaking: {
-        backgroundColor: "#9da7ff",
+        backgroundColor: colors.primary.main,
     },
     listenContent: {
         flexDirection: "row",
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     },
     listenText: {
         fontSize: 14,
-        color: "#333",
+        color: colors.neutral.darker,
         fontWeight: "500",
     },
     switchRow: {
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     },
     switchLabel: {
         fontSize: 14,
-        color: "#444",
+        color: colors.neutral.dark,
         fontWeight: "500",
     },
     iconRow: {

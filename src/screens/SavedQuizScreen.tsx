@@ -94,8 +94,8 @@ export default function SavedQuizScreen() {
                         label={i18n.t("actions.deleteAll")}
                         icon="delete-empty"
                         onPress={() => setConfirmDeleteAll(true)}
-                        backgroundColor="#fcebea"
-                        color={colors.error}
+                        backgroundColor={colors.danger.lightest}
+                        color={colors.danger.light}
                     />
                 )}
             </View>
@@ -121,8 +121,8 @@ export default function SavedQuizScreen() {
             {confirmDeleteId !== null && (
                 <AlertCustom
                     visible={true}
-                    icon={<MaterialCommunityIcons name="delete" size={30} color={colors.error} />}
-                    iconColor={colors.error}
+                    icon={<MaterialCommunityIcons name="delete" size={30} color={colors.danger.main} />}
+                    iconColor={colors.danger.main}
                     title={i18n.t("actions.delete")}
                     description={i18n.t("modaleDelete.confirmDeletionQuizText")}
                     onClose={() => setConfirmDeleteId(null)}
@@ -135,8 +135,8 @@ export default function SavedQuizScreen() {
             {confirmDeleteAll && (
                 <AlertCustom
                     visible={true}
-                    icon={<MaterialCommunityIcons name="delete-alert" size={30} color={colors.error} />}
-                    iconColor={colors.error}
+                    icon={<MaterialCommunityIcons name="delete-alert" size={30} color={colors.danger.main} />}
+                    iconColor={colors.danger.main}
                     title={i18n.t("actions.deleteAll")}
                     description={i18n.t("modaleDelete.confirmDeletionAllQuizText", {
                         count: quizzes?.length ?? 0,
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 22,
         fontWeight: "bold",
-        color: "#333",
+        color: colors.neutral.darker,
     },
     scroll: {
         flex: 1,
@@ -180,6 +180,6 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginTop: 40,
         fontSize: 16,
-        color: "#666",
+        color: colors.neutral.dark,
     },
 });

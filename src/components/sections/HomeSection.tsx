@@ -21,13 +21,13 @@ export default function HomeSections() {
                 <SquareButton
                     icon={<MaterialCommunityIcons name="gamepad-variant" style={styles.icon} />}
                     label={i18n.t("home.play")}
-                    bgColor="#f6c6c6"
+                    bgColor={colors.secondary.light}
                     onClick={() => navigation.navigate("QuizList")}
                 />
                 <SquareButton
                     icon={<MaterialCommunityIcons name="content-save-outline" style={styles.icon} />}
                     label={i18n.t("home.myquiz")}
-                    bgColor="#f6c6c6"
+                    bgColor={colors.secondary.light}
                     onClick={() => navigation.navigate("SavedQuiz")}
                 />
             </SectionCardGame>
@@ -38,13 +38,13 @@ export default function HomeSections() {
                     <SquareButton
                         icon={<MaterialCommunityIcons name="book-open-variant" style={styles.icon} />}
                         label={i18n.t("home.lexicon")}
-                        bgColor="#c6cbf6"
+                        bgColor={colors.primary.light}
                         onClick={() => navigation.navigate("Lexicon")}
                     />
                     <SquareButton
                         icon={<MaterialCommunityIcons name="layers-plus" style={styles.icon} />}
                         label={i18n.t("home.addWord")}
-                        bgColor="#c6cbf6"
+                        bgColor={colors.primary.light}
                         onClick={() => navigation.navigate("AddWord")}
                     />
                 </SectionCardGame>

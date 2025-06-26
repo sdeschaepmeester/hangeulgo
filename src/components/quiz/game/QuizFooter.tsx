@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Feedback from "@/components/quiz/Feedback";
 import i18n from "@/i18n";
+import colors from "@/constants/colors";
 
 export default function QuizFooter({
     showResult,
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
     },
     nextButton: {
         marginBottom: 32,
-        backgroundColor: "#7f8bff",
+        backgroundColor: colors.primary.main,
         paddingVertical: 14,
         borderRadius: 8,
     },

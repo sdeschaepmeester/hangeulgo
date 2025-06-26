@@ -7,6 +7,7 @@ import { saveScore } from "@/services/score";
 import { getMedalInfo } from "@/services/getMedalInfo";
 import i18n from "@/i18n";
 import { playSound } from "@/services/soundPlayer";
+import colors from "@/constants/colors";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Result">;
 
@@ -53,7 +54,7 @@ export default function ResultScreen({ route, navigation }: Props) {
     const backgroundColor = interpolateColor(
       glow.value,
       [0, 1],
-      ["#ffffff00", glowColor + "66"]
+      [colors.neutral.white, glowColor + "66"]
     );
     return {
       backgroundColor,
@@ -129,7 +130,7 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   bubble: {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: colors.neutral.lightest,
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 999,
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
   score: {
     fontSize: 22,
     fontWeight: "bold",
-    color: "#333",
+    color: colors.neutral.darker,
   },
   bottomRow: {
     flexDirection: "row",
@@ -154,10 +155,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   retry: {
-    backgroundColor: "#9da7ff",
+    backgroundColor: colors.primary.main,
   },
   quit: {
-    backgroundColor: "#ff9d9d",
+    backgroundColor: colors.secondary.main,
   },
   buttonText: {
     color: "white",

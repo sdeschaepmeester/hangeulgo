@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
+import colors from "@/constants/colors";
 
 type Props = {
     prompt: string;
@@ -35,7 +36,7 @@ export default function ListenPrompt({ prompt, tags = [] }: Props) {
                     <MaterialCommunityIcons
                         name={isSpeaking ? "volume-off" : "volume-high"}
                         size={38}
-                        color={isSpeaking ? "#aaa" : "#333"}
+                        color={isSpeaking ? colors.neutral.light : colors.neutral.darker}
                     />
                     {tags.length > 0 && (
                         <TouchableOpacity
@@ -45,7 +46,7 @@ export default function ListenPrompt({ prompt, tags = [] }: Props) {
                             <MaterialCommunityIcons
                                 name="information-outline"
                                 size={26}
-                                color={showTags ? "#7f8bff" : "#333"}
+                                color={showTags ? colors.primary.main : colors.neutral.darker}
                             />
                         </TouchableOpacity>
                     )}
@@ -94,13 +95,13 @@ const styles = StyleSheet.create({
         marginTop: 8,
     },
     tag: {
-        backgroundColor: "#e0e0ff",
+        backgroundColor: colors.primary.lighter,
         paddingHorizontal: 10,
         paddingVertical: 4,
         borderRadius: 12,
     },
     tagText: {
         fontSize: 12,
-        color: "#333",
+        color: colors.neutral.darker,
     },
 });

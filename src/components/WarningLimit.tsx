@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import colors from "@/constants/colors";
 
 type Props = {
     label: string;
@@ -12,7 +13,7 @@ export default function WarningLimit({ label, onClick }: Props) {
 
     return (
         <Wrapper onPress={onClick} style={styles.container}>
-            <MaterialCommunityIcons name="alert-circle" size={20} color="#fff" style={styles.icon} />
+            <MaterialCommunityIcons name="alert-circle" size={20} color={colors.neutral.white} style={styles.icon} />
             <Text style={styles.text}>{label}</Text>
         </Wrapper>
     );
@@ -20,7 +21,7 @@ export default function WarningLimit({ label, onClick }: Props) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#f57c00",
+        backgroundColor: colors.warning.lighter,
         flexDirection: "row",
         alignItems: "center",
         paddingVertical: 10,
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
         marginRight: 8,
     },
     text: {
-        color: "#fff",
+        color: colors.neutral.white,
         fontSize: 14,
         flexShrink: 1,
         flex: 1,

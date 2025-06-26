@@ -4,6 +4,7 @@ import * as Speech from "expo-speech";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Question } from "@/types/Question";
 import { GameSettings } from "@/types/GameSettings";
+import colors from "@/constants/colors";
 
 interface PromptBoxProps {
     settings: GameSettings;
@@ -43,7 +44,7 @@ export default function PromptBox({ settings, currentQuestion }: PromptBoxProps)
                             <MaterialCommunityIcons
                                 name="information-outline"
                                 size={26}
-                                color={showTags ? "#7f8bff" : "#333"}
+                                color={showTags ? colors.primary.main : colors.neutral.darker}
                             />
                         </TouchableOpacity>
                     )}
@@ -52,7 +53,7 @@ export default function PromptBox({ settings, currentQuestion }: PromptBoxProps)
                             <MaterialCommunityIcons
                                 name="volume-high"
                                 size={28}
-                                color={isSpeaking ? "#7f8bff" : "#333"}
+                                color={isSpeaking ? colors.primary.main : colors.neutral.darker}
                             />
                         </TouchableOpacity>
                     )}
@@ -108,13 +109,13 @@ const styles = StyleSheet.create({
         marginTop: 8,
     },
     tag: {
-        backgroundColor: "#e0e0ff",
+        backgroundColor: colors.primary.lighter,
         paddingHorizontal: 10,
         paddingVertical: 4,
         borderRadius: 12,
     },
     tagText: {
         fontSize: 12,
-        color: "#333",
+        color: colors.neutral.darker,
     },
 });
