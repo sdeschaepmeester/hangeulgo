@@ -7,6 +7,7 @@ import { initDatabase } from "@/db/database";
 import { isFirstLaunch } from "@/services/firstLaunch";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
+import { saveDateInstallation } from "@/services/tester";
 
 export default function SplashScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -16,6 +17,8 @@ export default function SplashScreen() {
             await initDatabase();
             const firstTime = await isFirstLaunch();
             if (firstTime) {
+                await saveDateInstallation(); //! To remove once the tests are done
+                
                 navigation.reset({
                     index: 0,
                     routes: [{ name: "ChooseLanguage" }],

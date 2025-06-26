@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, Text } from "react-native";
+import { TouchableOpacity, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -18,6 +18,8 @@ import { GameSettings, GameType } from "./types/GameSettings";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import SplashScreen from "./screens/SplashScreen";
 import ChooseLanguageScreen from "./screens/ChooseLanguageScreen";
+import TesterDaysNumberCard from "./components/test/TesterDaysNumberCard";
+import ParametersScreen from "./screens/ParametersScreen";
 
 export type RootStackParamList = {
   Home: undefined;
@@ -35,6 +37,7 @@ export type RootStackParamList = {
   Score: undefined;
   QuizList: undefined;
   SavedQuiz: undefined;
+  Parameters: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -93,11 +96,13 @@ export default function App() {
             component={HomeScreen}
             options={({ navigation }) => ({
               title: "",
-              headerLeft: () => null,
+              headerLeft: () => (
+                <TesterDaysNumberCard /> //! To remove once tests are done
+              ),
               headerTitle: () => null,
               headerRight: () => (
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("ChooseLanguage")}
+                  onPress={() => navigation.navigate("Parameters")}
                   style={{ marginRight: 10 }}
                 >
                   <MaterialCommunityIcons name="cog" size={26} color="#fff" />
@@ -105,11 +110,22 @@ export default function App() {
               ),
             })}
           />
-          <Stack.Screen
-            name="ChooseLanguage"
-            component={ChooseLanguageScreen}
-            options={{ headerShown: false }}
+          <Stack.Screen name="ChooseLanguage" component={ChooseLanguageScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Parameters" component={ParametersScreen}
+            options={({ navigation }) => ({
+              headerLeft: () => goHomeButton(navigation),
+              headerRight: () => null,
+              headerTitle: () => (
+                <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{ marginLeft: 10 }}>
+                  <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
+                    Paramètres
+                  </Text>
+                </TouchableOpacity>
+              ),
+            })}
           />
+          <Stack.Screen name="Quiz" component={QuizScreen} options={{ headerTitle: "", headerLeft: () => null, }} />
+          <Stack.Screen name="Result" component={ResultScreen} options={{ headerTitle: "", headerLeft: () => null, }} />
           {screens.map(({ name, component, title }) => (
             <Stack.Screen
               key={name}
@@ -129,22 +145,6 @@ export default function App() {
               })}
             />
           ))}
-          <Stack.Screen
-            name="Quiz"
-            component={QuizScreen}
-            options={{
-              headerTitle: "",
-              headerLeft: () => null,
-            }}
-          />
-          <Stack.Screen
-            name="Result"
-            component={ResultScreen}
-            options={{
-              headerTitle: "",
-              headerLeft: () => null,
-            }}
-          />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>

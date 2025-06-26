@@ -146,5 +146,9 @@
         "gold": "Well done !"
     },
     "flag": "🇺🇸",
-    "unnamed": "Unnamed"
+    "unnamed": "Unnamed",
+    "test": {
+        "daysTesting": "Days testing",
+        "thankYou": "Thank you for being a tester !"
+    }
 }

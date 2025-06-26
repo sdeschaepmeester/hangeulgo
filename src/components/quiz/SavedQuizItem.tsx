@@ -27,15 +27,23 @@ const getLengthLabel = (length: number | "unlimited") => {
     return i18n.t("duration.long");
 };
 
+const getDirectionFlags = (subType: SavedQuizEntry["subType"]) => {
+    switch (subType) {
+        case "nativeToKo": return `${i18n.t("flag")} → 🇰🇷`;
+        case "koToNative": return `🇰🇷 → ${i18n.t("flag")}`;
+        case "koToKo": return "🇰🇷";
+        default: return "";
+    }
+};
+
 export default function SavedQuizItem({ quiz, onDelete, onSelect }: Props) {
     return (
         <View style={styles.card}>
             <View style={styles.info}>
-                <Text style={styles.name}>{quiz.name}</Text>
+                <Text style={styles.name}>{quiz.name} ({getDirectionFlags(quiz.subType)})</Text>
                 <Text style={styles.type}>
                     {getQuizTypeLabel(quiz.type)} ({getLengthLabel(quiz.length)})
                 </Text>
-
                 <View style={styles.difficultyRow}>
                     {quiz.difficulties.includes("easy") && (
                         <MaterialCommunityIcons name="circle" size={14} color="green" />
@@ -98,6 +106,11 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 16,
         marginBottom: 2,
+    },
+    subType: {
+        fontSize: 14,
+        color: "#444",
+        marginBottom: 4,
     },
     type: {
         fontSize: 14,

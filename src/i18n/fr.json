@@ -146,5 +146,9 @@
         "gold": "Excellent !"
     },
     "flag": "🇫🇷",
-    "unnamed": "Sans nom"
+    "unnamed": "Sans nom",
+    "test": {
+        "daysTesting": "Jours de test",
+        "thankYou": "Merci de faire partie des testeurs !"
+    }
 }
