@@ -1,142 +1,140 @@
 # 🇰🇷 HangeulGo
 
-<img src="screenshots/hangeulgo_presentation.png" alt="Accueil" width="800"/>
+<img src="screenshots/hangeulgo_presentation.png" alt="Home" width="800"/>
 
-**HangeulGo** est une application mobile éducative pour apprendre le vocabulaire coréen de façon ludique et interactive.
+🇫🇷 [Consulter la version française](./README.fr.md)
 
-Constituez votre propre lexique, en ajoutant les mots que vous souhaitez apprendre. 🇰🇷
+**HangeulGo** is a fun and interactive mobile app to learn Korean vocabulary.
 
-Une liste de vocabulaire de base est disponible pour bien démarrer (salutations, nombres, expressions courantes), mais chacun est libre de personnaliser totalement son expérience.
-Vous pourrez ensuite jouez à des quizs personnalisés depuis ce lexique, avec deux types d'exercices :
+Build your own custom lexicon by adding the words you want to learn. 🇰🇷
 
-- Traduction (français → coréen), en QCM ou en saisie libre
-- Compréhension (coréen → français)
+A basic vocabulary list is available to get you started (greetings, numbers, common expressions), but you’re free to fully customize your experience.  
+You can then play personalized quizzes from your lexicon with two types of exercises:
 
-Vous pouvez personnalisez vos quiz en associant des mots clés à vos mots.
+- Translation (French → Korean), in multiple choice or free input mode  
+- Comprehension (Korean → French)
 
-## Sommaire
+You can personalize your quizzes by assigning keywords (themes) to your words.
 
-- [Aperçu](#aperçu)
-- [Fonctionnalités](#fonctionnalités)
-- [Stack technique](#stack-technique)
-- [Lancer l'application localement](#lancer-lapplication-localement)
-- [Crédits images](#crédits-images)
-- [Créatrice](#créatrice)
-- [Licence](#licence)
+## Table of Contents
 
+- [Preview](#preview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Run the app locally](#run-the-app-locally)
+- [Image credits](#image-credits)
+- [Creator](#creator)
+- [License](#license)
 
-## Aperçu
+## Preview
 
-<img src="screenshots/intro.png" alt="Introduction" width="900"/>
+<img src="screenshots/intro.png" alt="Intro" width="900"/>
+<img src="screenshots/gametypes.png" alt="Games" width="900"/>
+<img src="screenshots/end.png" alt="Results" width="900"/>
 
-<img src="screenshots/gametypes.png" alt="Jeux" width="900"/>
+## Features
 
-<img src="screenshots/end.png" alt="Ending" width="900"/>
+- **Customizable lexicon**
+  - Add words with translation, phonetic, difficulty level and tags
+  - Sort and filter
+  - Enable/disable words
+  - Edit and delete entries
 
-## Fonctionnalités
-
-- **Lexique personnalisable**
-  - Ajout de mots avec traduction, phonétique, niveau de difficulté et thèmes
-  - Tri et filtres
-  - Activation/désactivation des mots
-  - Édition et suppression de mots
-
-- **Quiz interactifs**
-  - Compréhension (FR → KO ou KO → FR)
-  - Écoute (FR → KO ou KO → FR)
-  - Traduction (FR → KO)
+- **Interactive quizzes**
+  - Comprehension (FR → KO or KO → FR)
+  - Listening (FR → KO or KO → FR)
+  - Translation (FR → KO)
   - Puzzle
-  - Durées de jeu personnalisables : court, normal, long
-  - Filtres par difficulté et thèmes
-  - Génération aléatoire des questions
+  - Customizable durations: short, normal, long
+  - Filter by difficulty and tags
+  - Random question generation
 
-- **Sauvegarde de quiz**
-  - Sauvegarder les paramètres d'un quiz pour y rejouer facilement
+- **Quiz saving**
+  - Save quiz settings to replay them easily
 
-- **Résultats et progression**
-  - Score final avec médaille (or, argent, bronze)
-  - Historique des scores
+- **Results and progression**
+  - Final score with medal (gold, silver, bronze)
+  - Score history
 
-- **Paramètres persistants**
-  - Sauvegarde des derniers réglages
+- **Persistent settings**
+  - Saves your last-used settings
 
-- **Mode hors-ligne complet**
-  - L’app fonctionne sans connexion
-  - Toutes les données sont locales 
+- **Fully offline**
+  - Works without internet
+  - All data is stored locally
 
-## Stack technique
+## Tech Stack
 
-- **Framework** : React Native + Expo
-- **Langage** : TypeScript
-- **Base de données locale** : `expo-sqlite`
-- **Persistance légère** : `expo-sqlite/kv-store`
-- **Build / Déploiement** : `EAS Build` (Expo Application Services)
-- **Traduction automatique (optionnelle)** : Azure Translator API via Cloudflare Worker sécurisé
+- **Framework**: React Native + Expo  
+- **Language**: TypeScript  
+- **Local database**: `expo-sqlite`  
+- **Lightweight storage**: `expo-sqlite/kv-store`  
+- **Build / Deployment**: `EAS Build` (Expo Application Services)  
+- **Optional translation**: Azure Translator API via secured Cloudflare Worker
 
-## Lancer l'application localement
+## Run the app locally
 
-### Développement
+### Development
 
-1. Installation des dépendances
+1. Install dependencies  
 ``npm i``
 
-2. Lancement en local
+2. Start the local server  
 ``npm start``
 
-3. Lancement sur un émulateur android
+3. Run on Android emulator  
 ``npm run android``
 
-### Déploiement
+### Deployment
 
-1. Connexion au compte Expo
+1. Log in to Expo account  
 ``npx expo login``
 
-2. Lancement du build APK
+2. Build an APK  
 ``npx eas build -p android --profile preview``
 
-2. Lancement du build AAB pour le Play Store
+3. Build an AAB for Play Store  
 ``npx eas build -p android --profile production``
 
-3. Mise à jour sans **rebuild complet**
+4. Push an update without full rebuild  
 ``npx eas update --branch preview``
 
-## Crédits images
+## Image credits
 
-Certaines illustrations utilisées dans **HangeulGo** proviennent de [Freepik](https://www.freepik.com) et sont utilisées sous licence gratuite avec attribution :
+Some illustrations used in **HangeulGo** come from [Freepik](https://www.freepik.com) and are used under the free license with attribution:
 
-- Illustrations par [pikisuperstar](https://www.freepik.com/author/pikisuperstar)
-- Illustrations par [kstudio](https://www.freepik.com/author/kstudio)
-- Illustrations par [wirestock](https://www.freepik.com/author/wirestock)
-- Illustrations par [tawatchai07](https://www.freepik.com/author/tawatchai07)
-- Illustrations par [Freepik](https://www.freepik.com)
-- Certaines illustrations proviennent également de [Canva](https://www.canva.com) et sont utilisées conformément à leurs conditions d’utilisation.
+- Illustrations by [pikisuperstar](https://www.freepik.com/author/pikisuperstar)
+- Illustrations by [kstudio](https://www.freepik.com/author/kstudio)
+- Illustrations by [wirestock](https://www.freepik.com/author/wirestock)
+- Illustrations by [tawatchai07](https://www.freepik.com/author/tawatchai07)
+- Illustrations by [Freepik](https://www.freepik.com)
+- Some illustrations also come from [Canva](https://www.canva.com) and are used in accordance with their terms of service.
 
-Attribution conforme aux conditions d'utilisation Freepik pour les applications mobiles.
+Attribution complies with Freepik’s mobile app usage conditions.
 
-### Crédits effets sonores 
-Certains effets sonores utilisés dans **HangeulGo** proviennent de [Pixabay](https://pixabay.com/) et sont utilisées sous licence gratuite avec attribution :
-		
-	- Sound Effect by <a href="https://pixabay.com/users/universfield-28281460/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=132126">Universfield</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=132126">Pixabay</a>
-	- Sound Effect by <a href="https://pixabay.com/users/tuomas_data-40753689/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=199825">Tuomas_Data</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=199825">Pixabay</a>
-	- Sound Effect by <a href="https://pixabay.com/users/freesound_community-46691455/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=47985">freesound_community</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=47985">Pixabay</a>
-	- Sound Effect by <a href="https://pixabay.com/users/u_3bsnvt0dsu-48554563/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=295086">u_3bsnvt0dsu</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=295086">Pixabay</a>
+### Sound effects credits
+Some sound effects in **HangeulGo** are from [Pixabay](https://pixabay.com/) and used under free license with attribution:
 
-## Créatrice
+- Sound Effect by <a href="https://pixabay.com/users/universfield-28281460/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=132126">Universfield</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=132126">Pixabay</a>
+- Sound Effect by <a href="https://pixabay.com/users/tuomas_data-40753689/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=199825">Tuomas_Data</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=199825">Pixabay</a>
+- Sound Effect by <a href="https://pixabay.com/users/freesound_community-46691455/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=47985">freesound_community</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=47985">Pixabay</a>
+- Sound Effect by <a href="https://pixabay.com/users/u_3bsnvt0dsu-48554563/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=295086">u_3bsnvt0dsu</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=295086">Pixabay</a>
 
-Conçu et développé avec passion par [Samantha Deschaepmeester](mailto:deschaepmeester.samantha@gmail.com) 👩‍💻
+## Creator
 
-## Licence
+Designed and developed with love by [Samantha Deschaepmeester](mailto:deschaepmeester.samantha@gmail.com) 👩‍💻
 
-Le code source de **HangeulGo** est publié sous licence [MIT](LICENSE).
+## License
 
-⚠️ Les illustrations, images, polices et contenus graphiques présents dans ce dépôt sont **protégés** et **ne peuvent pas être réutilisés ou redistribués** sans autorisation.
+The source code of **HangeulGo** is released under the [MIT](LICENSE) license.
 
-Les fichiers provenant de [Freepik](https://www.freepik.com), [Canva](https://www.canva.com) ou toute autre ressource sous licence restent soumis à leurs conditions d'utilisation respectives.
+⚠️ All illustrations, images, fonts, and graphic content in this repository are **protected** and **may not be reused or redistributed** without permission.
 
+Assets from [Freepik](https://www.freepik.com), [Canva](https://www.canva.com), or any other licensed source remain subject to their respective terms.
 
-## Politique de confidentialité
+## Privacy Policy
 
-Vous pouvez consulter la politique de confidentialité de l'application HangeulGo à cette adresse :  
+You can view the HangeulGo app's privacy policy here:  
 [https://sdeschaepmeester.github.io/hangeulgo-privacy/](https://sdeschaepmeester.github.io/hangeulgo-privacy/)
 
-Aucune donnée personnelle n’est transmise à un serveur ou à un tiers.
+No personal data is shared with a server or any third party.
