@@ -88,10 +88,13 @@ Vous pouvez personnalisez vos quiz en associant des mots clés à vos mots.
 3. Lancement sur un émulateur android
 ``npm run android``
 
-4. Vérifier la santé de l'app 
+4. Prebuild
+``npx expo prebuild``
+
+5. Vérifier la santé de l'app 
 ``npx expo-doctor``
 
-5. Vérifier les versions des dépendances
+6. Vérifier les versions des dépendances
 ``npx expo install --check``
 
 ### Déploiement

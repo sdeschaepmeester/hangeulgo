@@ -85,10 +85,13 @@ You can personalize your quizzes by assigning keywords (themes) to your words.
 3. Run on Android emulator  
 ``npm run android``
 
-4. Check app health 
+4. Prebuild
+``npx expo prebuild``
+
+5. Check app health 
 ``npx expo-doctor``
 
-5. Check dependencies 
+6. Check dependencies 
 ``npx expo install --check``
 
 ### Deployment
