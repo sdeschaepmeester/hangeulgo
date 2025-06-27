@@ -14,10 +14,6 @@ import MainLayout from "@/layouts/MainLayout";
 import i18n from "@/i18n";
 import colors from "@/constants/colors";
 
-if (Platform.OS === "android") {
-  UIManager.setLayoutAnimationEnabledExperimental?.(true);
-}
-
 export default function LexiconScreen() {
   const [lexicon, setLexicon] = useState<LexiconEntry[]>([]);
   const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);

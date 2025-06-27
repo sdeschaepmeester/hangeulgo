@@ -14,10 +14,6 @@ import { RootStackParamList } from "@/App";
 import i18n from "@/i18n";
 import colors from "@/constants/colors";
 
-if (Platform.OS === "android") {
-    UIManager.setLayoutAnimationEnabledExperimental?.(true);
-}
-
 export default function SavedQuizScreen() {
     const [quizzes, setQuizzes] = useState<(SavedQuizEntry & { disabled?: boolean })[]>([]);
     const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);

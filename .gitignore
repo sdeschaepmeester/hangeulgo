@@ -3,6 +3,10 @@
 # dependencies
 node_modules/
 
+# bare workflow
+/android
+/ios
+
 # Expo
 .expo/
 dist/

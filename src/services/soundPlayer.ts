@@ -1,11 +1,6 @@
-import { Audio } from "expo-av";
+import { useAudioPlayer } from "expo-audio";
 
-export const playSound = async (file: any) => {
-    const { sound } = await Audio.Sound.createAsync(file);
-    await sound.playAsync();
-    sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded && status.didJustFinish) {
-            sound.unloadAsync();
-        }
-    });
-};
+export function playSound(file: any) {
+    const player = useAudioPlayer(file);
+    player.play();
+}

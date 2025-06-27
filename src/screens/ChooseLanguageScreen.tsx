@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     langBox: {
-        backgroundColor: colors.neutral.light,
+        backgroundColor: colors.neutral.white,
         paddingVertical: 30,
         borderRadius: 16,
         alignItems: "center",

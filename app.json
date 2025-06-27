@@ -48,15 +48,14 @@
         }
       ],
       "expo-secure-store",
-      "expo-localization"
+      "expo-localization",
+      "expo-audio"
     ],
     "extra": {
       "eas": {
         "projectId": "042d9545-3de8-47e6-aa2f-1f6f7f9ae37d"
       }
     },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    }
+    "runtimeVersion": "1.0.0"
   }
 }
