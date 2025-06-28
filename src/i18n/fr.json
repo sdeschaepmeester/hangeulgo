@@ -18,7 +18,8 @@
         "duration": "Durée de jeu",
         "saveQuiz": "Sauvegarder ce quiz",
         "saveName": "Nom de la sauvegarde",
-        "correctAnswer": "Bonne réponse :"
+        "correctAnswer": "Bonne réponse :",
+        "answerKorean": "Votre réponse en coréen"
     },
     "addWord": {
         "title": "Nouveau mot",

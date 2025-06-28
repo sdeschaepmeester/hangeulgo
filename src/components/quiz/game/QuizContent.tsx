@@ -4,6 +4,7 @@ import OrderInput from "@/components/quiz/OrderInput";
 import type { Question } from "@/types/Question";
 import type { GameSettings } from "@/types/GameSettings";
 import colors from "@/constants/colors";
+import i18n from "@/i18n";
 
 export default function QuizContent({
     question,
@@ -28,7 +29,7 @@ export default function QuizContent({
         return (
             <TextInput
                 style={[styles.input, { backgroundColor: colors.neutral.light }]}
-                placeholder="Votre réponse en coréen"
+                placeholder={i18n.t('quiz.answerKorean')}
                 value={userInput}
                 onChangeText={onChange}
                 editable={!disabled}

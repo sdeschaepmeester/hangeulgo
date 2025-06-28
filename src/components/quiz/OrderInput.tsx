@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "@/constants/colors";
+import i18n from "@/i18n";
 
 type Props = {
     correctAnswer: string;
@@ -45,7 +46,7 @@ export default function OrderInput({ correctAnswer, onChange, questionKey, disab
                 <TextInput
                     style={styles.input}
                     value={assembledAnswer}
-                    placeholder="Remettez la réponse dans l'ordre"
+                    placeholder={i18n.t('quiz.putInOrder')}
                     editable={false}
                 />
                 {userPieces.length > 0 && (

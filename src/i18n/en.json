@@ -18,7 +18,8 @@
         "duration": "Game duration",
         "saveQuiz": "Save this quiz",
         "saveName": "Save's name",
-        "correctAnswer": "Correct answer:"
+        "correctAnswer": "Correct answer:",
+        "answerKorean": "Your answer in korean"
     },
     "addWord": {
         "title": "New word",

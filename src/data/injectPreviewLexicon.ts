@@ -77,7 +77,7 @@ export async function injectPreviewLexicon() {
       inputMode: "multiple",
       length: 10,
       difficulties: ["easy"],
-      tags: [lang === "fr" ? "Famille" : "Countries"],
+      tags: [lang === "fr" ? "Pays" : "Countries"],
     }
   ];
 
