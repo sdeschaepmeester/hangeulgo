@@ -17,7 +17,7 @@ export default function TesterDaysTestBigCard() {
 
     if (days === null) return null;
 
-    const hasReachedQuota = days >= 14;
+    const hasReachedQuota = days >= 21;
     const textColor = hasReachedQuota ? colors.success.main : colors.warning.main;
 
     return (
@@ -27,7 +27,7 @@ export default function TesterDaysTestBigCard() {
             </Text>
             <View style={styles.card}>
                 <Text style={[styles.daysText, { color: textColor }]}>
-                    {days} / 14
+                    {days} / 21
                 </Text>
             </View>
             <Text style={styles.thankYou}>

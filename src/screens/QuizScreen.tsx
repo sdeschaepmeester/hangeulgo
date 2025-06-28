@@ -11,6 +11,7 @@ import QuizHeader from "@/components/quiz/game/QuizHeader";
 import QuizContent from "@/components/quiz/game/QuizContent";
 import QuizFooter from "@/components/quiz/game/QuizFooter";
 import colors from "@/constants/colors";
+import { playFeedbackIfEnabled } from "@/services/sound";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Quiz">;
 
@@ -65,7 +66,7 @@ export default function QuizScreen({ route, navigation }: Props) {
     onMoveShouldSetPanResponder: (_, gestureState) => gestureState.dx < -50,
     onPanResponderRelease: () => {
       if (showResult) {
-        Vibration.vibrate([0, 60, 40, 60]);
+        playFeedbackIfEnabled("correct"); // Vibration
         setTimeout(next, 100);
       }
     },
