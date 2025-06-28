@@ -21,9 +21,9 @@ const getLengthLabel = (length: number | "unlimited") => {
 
 const getDirectionFlags = (subType: SavedQuizEntry["subType"]) => {
     switch (subType) {
-        case "nativeToKo": return `${i18n.t("flag")} → 🇰🇷`;
-        case "koToNative": return `🇰🇷 → ${i18n.t("flag")}`;
-        case "koToKo": return "🇰🇷";
+        case "nativeToKo": return `(${i18n.t("flag")} → 🇰🇷)`;
+        case "koToNative": return `(🇰🇷 → ${i18n.t("flag")})`;
+        case "koToKo": return "(🇰🇷)";
         default: return "";
     }
 };
@@ -32,7 +32,7 @@ export default function SavedQuizItem({ quiz, onDelete, onSelect }: Props) {
     return (
         <View style={styles.card}>
             <View style={styles.info}>
-                <Text style={styles.name}>{quiz.name} ({getDirectionFlags(quiz.subType)})</Text>
+                <Text style={styles.name}>{quiz.name} {getDirectionFlags(quiz.subType)}</Text>
                 <Text style={styles.type}>
                     {getQuizTypeLabel(quiz.type)} ({getLengthLabel(quiz.length)})
                 </Text>

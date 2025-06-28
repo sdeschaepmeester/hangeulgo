@@ -11,14 +11,15 @@ type Props = {
     onChange: (subType: GameSubType) => void;
 };
 
-const labelMap: Record<GameSubType, string> = {
-    nativeToKo: `${i18n.t("flag")}\u00A0→\u00A0🇰🇷`,
-    koToNative: `🇰🇷\u00A0→\u00A0${i18n.t("flag")}`,
-    koToKo: "🇰🇷",
-    order: i18n.t("quiz.putInOrder"),
-};
-
 export default function StepType({ available, selected, onChange }: Props) {
+    
+    const labelMap: Record<GameSubType, string> = {
+        nativeToKo: `${i18n.t("flag")}\u00A0→\u00A0🇰🇷`,
+        koToNative: `🇰🇷\u00A0→\u00A0${i18n.t("flag")}`,
+        koToKo: "🇰🇷",
+        order: i18n.t("quiz.putInOrder"),
+    };
+
     // Preselect the first available option if none is selected
     useEffect(() => {
         if (!selected && available.length > 0) {

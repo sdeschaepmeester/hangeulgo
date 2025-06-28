@@ -9,13 +9,13 @@ type Props = {
     onSelect: (val: number) => void;
 };
 
-const options = [
-    { label: i18n.t("duration.short"), value: 10, color: colors.success.dark },
-    { label: i18n.t("duration.medium"), value: 20, color: colors.warning.main },
-    { label: i18n.t("duration.long"), value: 30, color: colors.danger.main },
-];
-
 export default function StepDuration({ selected, onSelect }: Props) {
+    const options = [
+        { label: i18n.t("duration.short"), value: 10, color: colors.success.dark },
+        { label: i18n.t("duration.medium"), value: 20, color: colors.warning.main },
+        { label: i18n.t("duration.long"), value: 30, color: colors.danger.main },
+    ];
+
     return (
         <>
             <Text style={styles.label}>{i18n.t("quiz.duration")}</Text>
