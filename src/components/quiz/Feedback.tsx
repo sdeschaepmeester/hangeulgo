@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { playSound } from "@/services/soundPlayer";
-import { playSoundIfEnabled } from "@/services/sound";
+import { playFeedbackIfEnabled } from "@/services/sound";
+import i18n from "@/i18n";
 
 interface FeedbackProps {
     feedback: "correct" | "wrong" | null;
@@ -16,12 +16,12 @@ export default function Feedback({ feedback, correctAnswer }: FeedbackProps) {
     const iconName = feedback === "correct" ? "emoji-events" : "block";
     const iconColor = feedback === "correct" ? "gold" : "#ff5e5e";
 
-    // Play correct or wrong sound effect
+    // Vibrate depending on correct or wrong
     useEffect(() => {
         if (feedback === "correct") {
-            playSoundIfEnabled(require("../../../assets/sounds/correct.mp3"));
+            playFeedbackIfEnabled("correct");
         } else if (feedback === "wrong") {
-            playSoundIfEnabled(require("../../../assets/sounds/wrong.mp3"));
+            playFeedbackIfEnabled("wrong");
         }
     }, [feedback]);
 
@@ -29,7 +29,7 @@ export default function Feedback({ feedback, correctAnswer }: FeedbackProps) {
         <View style={styles.container}>
             <MaterialIcons name={iconName} size={iconSize} color={iconColor} />
             {feedback === "wrong" && correctAnswer && (
-                <Text style={styles.text}>Bonne réponse : {correctAnswer}</Text>
+                <Text style={styles.text}>{i18n.t('quiz.correctAnswer')} {correctAnswer}</Text>
             )}
         </View>
     );

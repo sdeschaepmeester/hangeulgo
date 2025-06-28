@@ -58,7 +58,7 @@ export default function AddWordScreen() {
         icon={<MaterialCommunityIcons name="check-circle" size={30} color={colors.success.dark} />}
         iconColor={colors.success.dark}
         title={i18n.t("actions.added")}
-        description={i18n.t("limits.success")}
+        description={i18n.t("addWord.success")}
         onClose={() => setShowSuccess(false)}
       />
     </MainLayout>

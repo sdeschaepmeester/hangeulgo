@@ -48,8 +48,7 @@
         }
       ],
       "expo-secure-store",
-      "expo-localization",
-      "expo-audio"
+      "expo-localization"
     ],
     "extra": {
       "eas": {

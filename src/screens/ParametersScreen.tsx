@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, ScrollView, Text, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import MainLayout from "@/layouts/MainLayout";
 import TesterDaysTestBigCard from "@/components/test/TesterDaysTestBigCard";
 import colors from "@/constants/colors";
-import { isSoundEnabled, setSoundEnabled } from "@/services/sound";
-import { playSoundIfEnabled } from "@/services/sound";
+import { isSoundEnabled, setSoundEnabled, playFeedbackIfEnabled } from "@/services/sound";
 import i18n from "@/i18n";
 
 export default function ParametersScreen() {
@@ -22,7 +21,7 @@ export default function ParametersScreen() {
         setSound(newValue);
         await setSoundEnabled(newValue);
         if (newValue) {
-            await playSoundIfEnabled(require("../../assets/sounds/correct.mp3"));
+            await playFeedbackIfEnabled("correct");
         }
         setLoading(false);
     };
@@ -66,7 +65,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 3,
-        width: "80%"
+        width: "80%",
     },
     soundText: {
         fontSize: 16,

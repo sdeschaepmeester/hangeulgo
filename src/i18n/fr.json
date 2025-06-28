@@ -17,7 +17,8 @@
         "difficulties": "Difficulté des questions",
         "duration": "Durée de jeu",
         "saveQuiz": "Sauvegarder ce quiz",
-        "saveName": "Nom de la sauvegarde"
+        "saveName": "Nom de la sauvegarde",
+        "correctAnswer": "Bonne réponse :"
     },
     "addWord": {
         "title": "Nouveau mot",
