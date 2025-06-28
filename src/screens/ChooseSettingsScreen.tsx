@@ -14,7 +14,6 @@ import StepType from "@/components/chooseSettings/StepType";
 import StepSaveQuiz from "@/components/chooseSettings/StepSaveQuiz";
 import { getQuizTypeLabel, saveCustomQuiz } from "@/services/quiz";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { SavedQuizEntry } from "@/types/SavedQuizEntry";
 import i18n from "@/i18n";
 import colors from "@/constants/colors";
 
@@ -87,19 +86,50 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
 
   const steps = [
     ...(shouldAskSubType
-      ? [() => <StepType available={multipleSubTypes[type]} selected={subType} onChange={setSubType} />]
+      ? [
+        {
+          title: i18n.t("quiz.whichOrder"),
+          render: () => (
+            <StepType
+              available={multipleSubTypes[type]}
+              selected={subType}
+              onChange={setSubType}
+            />
+          ),
+        },
+      ]
       : []),
-    () => <StepThemes selectedTags={selectedTags} onChange={setSelectedTags} allTags={allTags} />,
-    () => <StepDifficulty selected={selectedDifficulties} onChange={setSelectedDifficulties} disabledDifficultyList={disabledDifficulties} />,
-    () => <StepDuration selected={length} onSelect={setLength} />,
-    () => (
-      <StepSaveQuiz
-        saveEnabled={shouldSave}
-        saveName={saveName}
-        onToggleSave={() => setShouldSave((prev) => !prev)}
-        onChangeName={setSaveName}
-      />
-    ),
+    {
+      title: i18n.t("quiz.themes"),
+      render: () => (
+        <StepThemes selectedTags={selectedTags} onChange={setSelectedTags} allTags={allTags} />
+      ),
+    },
+    {
+      title: i18n.t("quiz.difficulties"),
+      render: () => (
+        <StepDifficulty
+          selected={selectedDifficulties}
+          onChange={setSelectedDifficulties}
+          disabledDifficultyList={disabledDifficulties}
+        />
+      ),
+    },
+    {
+      title: i18n.t("quiz.duration"),
+      render: () => <StepDuration selected={length} onSelect={setLength} />,
+    },
+    {
+      title: i18n.t("quiz.saveQuiz"),
+      render: () => (
+        <StepSaveQuiz
+          saveEnabled={shouldSave}
+          saveName={saveName}
+          onToggleSave={() => setShouldSave((prev) => !prev)}
+          onChangeName={setSaveName}
+        />
+      ),
+    },
   ];
 
   const maxStep = steps.length - 1;
@@ -129,7 +159,11 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
   const next = () => setStep((s) => s + 1);
   const back = () => setStep((s) => Math.max(0, s - 1));
 
-  const renderStep = () => <StepStructure step={step}>{steps[step]()}</StepStructure>;
+  const renderStep = () => (
+    <StepStructure step={step} title={steps[step].title}>
+      {steps[step].render()}
+    </StepStructure>
+  );
 
   return (
     <View style={styles.container}>
@@ -191,12 +225,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   middle: {
-    height: windowHeight * 0.60,
+    height: windowHeight * 0.65,
     paddingHorizontal: 24,
     justifyContent: "center",
   },
   bottom: {
-    height: windowHeight * 0.25,
+    height: windowHeight * 0.20,
     alignItems: "center",
   },
   stepButtonsRow: {

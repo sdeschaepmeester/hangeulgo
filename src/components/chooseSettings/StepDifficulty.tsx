@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { StyleSheet, Text } from "react-native";
 import IconCardSelectMultiple from "@/components/IconCardSelectMultiple";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { Difficulty } from "@/types/Difficulty";
@@ -42,7 +41,6 @@ export default function StepDifficulty({ selected, onChange, disabledDifficultyL
 
     return (
         <>
-            <Text style={styles.label}>{i18n.t("quiz.difficulties")}</Text>
             <IconCardSelectMultiple<Difficulty>
                 options={difficultyOptions}
                 selectedValues={selected}
@@ -58,11 +56,3 @@ export default function StepDifficulty({ selected, onChange, disabledDifficultyL
         </>
     );
 }
-
-const styles = StyleSheet.create({
-    label: {
-        fontWeight: "bold",
-        color: "grey",
-        fontSize: 24,
-    },
-});

@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
-import { Text, StyleSheet } from "react-native";
 import TagSelector from "@/components/tags/TagSelector";
-import i18n from "@/i18n";
 
 type Props = {
     allTags: string[];
@@ -20,7 +18,6 @@ export default function StepThemes({ allTags, selectedTags, onChange, preselecte
 
     return (
         <TextWrapper>
-            <Text style={styles.label}>{i18n.t("quiz.themes")}</Text>
             <TagSelector
                 mode="select"
                 allTags={allTags}
@@ -34,11 +31,3 @@ export default function StepThemes({ allTags, selectedTags, onChange, preselecte
 const TextWrapper = ({ children }: { children: React.ReactNode }) => (
     <>{children}</>
 );
-
-const styles = StyleSheet.create({
-    label: {
-        fontWeight: "bold",
-        color: "grey",
-        fontSize: 24,
-    },
-});

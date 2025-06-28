@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { Text, StyleSheet } from "react-native";
 import SelectPill from "@/components/SelectPill";
 import type { GameSubType } from "@/types/GameSettings";
 import i18n from "@/i18n";
@@ -12,7 +11,7 @@ type Props = {
 };
 
 export default function StepType({ available, selected, onChange }: Props) {
-    
+
     const labelMap: Record<GameSubType, string> = {
         nativeToKo: `${i18n.t("flag")}\u00A0→\u00A0🇰🇷`,
         koToNative: `🇰🇷\u00A0→\u00A0${i18n.t("flag")}`,
@@ -35,7 +34,6 @@ export default function StepType({ available, selected, onChange }: Props) {
 
     return (
         <>
-            <Text style={styles.label}>{i18n.t("quiz.whichOrder")}</Text>
             <SelectPill
                 options={options}
                 selectedValue={selected ?? ""}
@@ -44,12 +42,3 @@ export default function StepType({ available, selected, onChange }: Props) {
         </>
     );
 }
-
-const styles = StyleSheet.create({
-    label: {
-        fontWeight: "bold",
-        color: "grey",
-        fontSize: 24,
-        marginBottom: 12,
-    },
-});

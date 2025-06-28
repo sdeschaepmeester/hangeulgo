@@ -1,5 +1,4 @@
 import React from "react";
-import { Text, StyleSheet } from "react-native";
 import SelectPill from "@/components/SelectPill";
 import i18n from "@/i18n";
 import colors from "@/constants/colors";
@@ -18,7 +17,6 @@ export default function StepDuration({ selected, onSelect }: Props) {
 
     return (
         <>
-            <Text style={styles.label}>{i18n.t("quiz.duration")}</Text>
             <SelectPill
                 options={options}
                 selectedValue={selected}
@@ -27,11 +25,3 @@ export default function StepDuration({ selected, onSelect }: Props) {
         </>
     );
 }
-
-const styles = StyleSheet.create({
-    label: {
-        fontWeight: "bold",
-        color: "grey",
-        fontSize: 24
-    },
-});
