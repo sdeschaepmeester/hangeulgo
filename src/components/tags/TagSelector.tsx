@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { View, Text, TouchableOpacity, TextInput, StyleSheet, Keyboard, ScrollView, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import i18n from "@/i18n";
@@ -11,14 +11,19 @@ type Props = {
     onChange: (tags: string[]) => void;
     label?: string;
     withLimits?: boolean;
+    focusOnTagsOnly?: (value: boolean) => void;
 };
 
 const MAX_TAGS_PER_WORD = 4;
 
-export default function TagSelector({ mode, allTags, selectedTags, onChange, label = i18n.t("lexicon.themes"), withLimits = true, }: Props) {
+export default function TagSelector({ mode, allTags, selectedTags, onChange, focusOnTagsOnly, label = i18n.t("lexicon.themes"), withLimits = true, }: Props) {
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState("");
     const [isTouchingList, setIsTouchingList] = useState(false);
+
+    useEffect(() => {
+        open && focusOnTagsOnly?.(open);
+    }, [open]);
 
     const filteredTags = useMemo(() => {
         const lower = input.toLowerCase();
@@ -170,7 +175,7 @@ export default function TagSelector({ mode, allTags, selectedTags, onChange, lab
                     {/* ------------ Selected tags ------------ */}
                     {withLimits && selectedTags.length >= MAX_TAGS_PER_WORD && (
                         <Text style={{ color: colors.warning.lighter, fontSize: 13, marginTop: 6 }}>
-                           {i18n.t("limits.limitOf")} {MAX_TAGS_PER_WORD} {i18n.t("limits.themeIsReached")}
+                            {i18n.t("limits.limitOf")} {MAX_TAGS_PER_WORD} {i18n.t("limits.themeIsReached")}
                         </Text>
                     )}
 

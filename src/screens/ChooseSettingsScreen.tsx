@@ -213,6 +213,7 @@ const styles = StyleSheet.create({
   },
   middle: {
     height: windowHeight * 0.65,
+    maxHeight: windowHeight * 0.65,
     paddingHorizontal: 24,
     justifyContent: "center",
   },

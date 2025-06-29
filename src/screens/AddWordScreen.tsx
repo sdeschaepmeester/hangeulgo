@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
@@ -44,13 +44,19 @@ export default function AddWordScreen() {
       )}
 
       {/* ---------- Form add word ---------- */}
-      <WordForm
-        edit={false}
-        onSuccess={() => {
-          setShowSuccess(true);
-          checkLimit();
-        }}
-      />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <WordForm
+          edit={false}
+          onSuccess={() => {
+            setShowSuccess(true);
+            checkLimit();
+          }}
+        />
+      </KeyboardAvoidingView>
+
 
       {/* ---------- Modale success ---------- */}
       <AlertCustom

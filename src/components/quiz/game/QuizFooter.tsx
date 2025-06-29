@@ -25,7 +25,7 @@ export default function QuizFooter({
     return (
         <View style={styles.footer}>
             {/* -------------- Background color with opacity -------------- */}
-            <View style={styles.backgroundLayer} />
+            {((inputMode === "multiple" && feedback) || inputMode !== "multiple") && <View style={styles.backgroundLayer} />}
             <View style={styles.buttonContainer}>
                 {/* -------------- Block with correct answer -------------- */}
                 {showResult && feedback === "wrong" && (

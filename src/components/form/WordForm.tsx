@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, Text, TextInput, TouchableOpacity, Keyboard, StyleSheet } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import SelectPill from "@/components/SelectPill";
@@ -44,6 +45,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
     const [allTags, setAllTags] = useState<string[]>([]);
     const [isConnected, setIsConnected] = useState(false);
     const [koreanExists, setKoreanExists] = useState(false);
+    const [showOnlyTags, setShowOnlyTags] = useState(false);
     const [loadingSuggestion, setLoadingSuggestion] = useState(false);
     const [noSuggestionFound, setNoSuggestionFound] = useState(false);
     const [tagLimitReached, setTagLimitReached] = useState(false);
@@ -150,109 +152,127 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
 
     return (
         <View style={styles.form}>
-            {/* ----------------- French input ----------------- */}
-            <View style={styles.field}>
-                <Text style={styles.label}>{i18n.t("flag")} {i18n.t("nativeLang")}</Text>
-                <TextInput
-                    ref={frRef}
-                    value={native}
-                    onChangeText={(text) => {
-                        if (text.length <= 50) {
-                            setFr(text);
-                            setKoSuggested(null);
-                        }
-                    }}
-                    style={[styles.input, { backgroundColor: colors.neutral.white }]}
-                    placeholder={i18n.t("addWord.egfrinput")}
-                    placeholderTextColor={colors.neutral.main}
-                    returnKeyType="next"
-                    onSubmitEditing={() => koRef.current?.focus()}
-                />
-            </View>
-
-            {/* ----------------- Azure korean translation suggestion ----------------- */}
-            {isConnected && native.trim().length > 0 && !edit && (
+            {!showOnlyTags && (
                 <>
-                    {!koSuggested && !noSuggestionFound && (
-                        <TouchableOpacity
-                            style={[
-                                styles.suggestionButton,
-                                (loadingSuggestion || cooldownActive) && { opacity: 0.5 },
-                            ]}
-                            onPress={handleKoreanSuggestion}
-                            disabled={loadingSuggestion || cooldownActive}
-                        >
-                            <Text style={styles.suggestionText}>
-                                {loadingSuggestion
-                                    ? i18n.t("addWord.searching")
-                                    : cooldownActive
-                                        ? i18n.t("addWord.waitBeforeAction")
-                                        : i18n.t("addWord.suggestion")}
-                            </Text>
-                        </TouchableOpacity>
-                    )}
-                    {noSuggestionFound && !loadingSuggestion && (
-                        <Text style={styles.warningText}>❌ {i18n.t("addWord.noSuggestionFound")}</Text>
-                    )}
-                    {koSuggested && !loadingSuggestion && (
-                        <TouchableOpacity
-                            onPress={async () => {
-                                setKo(koSuggested);
-                                setKoSuggested(null);
-                                const exists = await checkIfKoreanWordExists(koSuggested);
-                                setKoreanExists(exists);
+                    {/* ----------------- French input ----------------- */}
+                    <View style={styles.field}>
+                        <Text style={styles.label}>{i18n.t("flag")} {i18n.t("nativeLang")}</Text>
+                        <TextInput
+                            ref={frRef}
+                            value={native}
+                            onChangeText={(text) => {
+                                if (text.length <= 50) {
+                                    setFr(text);
+                                    setKoSuggested(null);
+                                }
                             }}
-                        >
-                            <Text style={styles.suggestionBox}>
-                                👉 {i18n.t("addWord.tapToFill")} {koSuggested}
-                            </Text>
-                        </TouchableOpacity>
+                            style={[styles.input, { backgroundColor: colors.neutral.white }]}
+                            placeholder={i18n.t("addWord.egfrinput")}
+                            placeholderTextColor={colors.neutral.main}
+                            returnKeyType="next"
+                            onSubmitEditing={() => koRef.current?.focus()}
+                        />
+                    </View>
+
+                    {/* ----------------- Azure korean translation suggestion ----------------- */}
+                    {isConnected && native.trim().length > 0 && !edit && (
+                        <>
+                            {!koSuggested && !noSuggestionFound && (
+                                <TouchableOpacity
+                                    style={[
+                                        styles.suggestionButton,
+                                        (loadingSuggestion || cooldownActive) && { opacity: 0.5 },
+                                    ]}
+                                    onPress={handleKoreanSuggestion}
+                                    disabled={loadingSuggestion || cooldownActive}
+                                >
+                                    <Text style={styles.suggestionText}>
+                                        {loadingSuggestion
+                                            ? i18n.t("addWord.searching")
+                                            : cooldownActive
+                                                ? i18n.t("addWord.waitBeforeAction")
+                                                : i18n.t("addWord.suggestion")}
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
+                            {noSuggestionFound && !loadingSuggestion && (
+                                <Text style={styles.warningText}>❌ {i18n.t("addWord.noSuggestionFound")}</Text>
+                            )}
+                            {koSuggested && !loadingSuggestion && (
+                                <TouchableOpacity
+                                    onPress={async () => {
+                                        setKo(koSuggested);
+                                        setKoSuggested(null);
+                                        const exists = await checkIfKoreanWordExists(koSuggested);
+                                        setKoreanExists(exists);
+                                    }}
+                                >
+                                    <Text style={styles.suggestionBox}>
+                                        👉 {i18n.t("addWord.tapToFill")} {koSuggested}
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
+                        </>
                     )}
+
+                    {/* ----------------- Korean input ----------------- */}
+                    <View style={styles.field}>
+                        <Text style={styles.label}>🇰🇷 {i18n.t("addWord.koinput")}</Text>
+                        <TextInput
+                            ref={koRef}
+                            value={ko}
+                            onChangeText={(text) => {
+                                if (text.length <= 50) {
+                                    setKo(text);
+                                    setKoreanExists(false);
+                                }
+                            }}
+                            onBlur={handleKoBlur}
+                            style={[styles.input, { backgroundColor: colors.neutral.white }]}
+                            placeholder={i18n.t("addWord.egkorean")}
+                            placeholderTextColor={colors.neutral.main}
+                            returnKeyType="next"
+                            onSubmitEditing={() => phoneticRef.current?.focus()}
+                        />
+                        {koreanExists && (
+                            <Text style={styles.warningText}>
+                                {i18n.t("addWord.wordExists")}
+                            </Text>
+                        )}
+                    </View>
+
+                    {/* ----------------- Phonetic input ----------------- */}
+                    <View style={styles.field}>
+                        <Text style={styles.label}>{i18n.t("addWord.phonetic")}</Text>
+                        <TextInput
+                            ref={phoneticRef}
+                            value={phonetic}
+                            onChangeText={(text) => {
+                                if (text.length <= 50) setPhonetic(text);
+                            }}
+                            style={[styles.input, { backgroundColor: colors.neutral.white }]}
+                            placeholder={i18n.t("addWord.phoneticPlaceholder")}
+                            placeholderTextColor={colors.neutral.main}
+                            returnKeyType="done"
+                            onSubmitEditing={Keyboard.dismiss}
+                        />
+                    </View>
                 </>
             )}
 
-            {/* ----------------- Korean input ----------------- */}
-            <View style={styles.field}>
-                <Text style={styles.label}>🇰🇷 {i18n.t("addWord.koinput")}</Text>
-                <TextInput
-                    ref={koRef}
-                    value={ko}
-                    onChangeText={(text) => {
-                        if (text.length <= 50) {
-                            setKo(text);
-                            setKoreanExists(false);
-                        }
-                    }}
-                    onBlur={handleKoBlur}
-                    style={[styles.input, { backgroundColor: colors.neutral.white }]}
-                    placeholder={i18n.t("addWord.egkorean")}
-                    placeholderTextColor={colors.neutral.main}
-                    returnKeyType="next"
-                    onSubmitEditing={() => phoneticRef.current?.focus()}
-                />
-                {koreanExists && (
-                    <Text style={styles.warningText}>
-                        {i18n.t("addWord.wordExists")}
-                    </Text>
-                )}
-            </View>
+            {showOnlyTags && (
+                <TouchableOpacity
+                    onPress={() => setShowOnlyTags(false)}
+                    style={styles.toggleFullForm}
+                >
+                    <MaterialCommunityIcons
+                        name="chevron-down"
+                        size={24}
+                        color={colors.primary.main}
+                    />
+                </TouchableOpacity>
+            )}
 
-            {/* ----------------- Phonetic input ----------------- */}
-            <View style={styles.field}>
-                <Text style={styles.label}>{i18n.t("addWord.phonetic")}</Text>
-                <TextInput
-                    ref={phoneticRef}
-                    value={phonetic}
-                    onChangeText={(text) => {
-                        if (text.length <= 50) setPhonetic(text);
-                    }}
-                    style={[styles.input, { backgroundColor: colors.neutral.white }]}
-                    placeholder={i18n.t("addWord.phoneticPlaceholder")}
-                    placeholderTextColor={colors.neutral.main}
-                    returnKeyType="done"
-                    onSubmitEditing={Keyboard.dismiss}
-                />
-            </View>
 
             {/* ----------------- Tags -----------------*/}
             {tagLimitReached && (
@@ -265,6 +285,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 allTags={allTags}
                 selectedTags={tags.split(",").map((t) => t.trim()).filter(Boolean)}
                 onChange={(newTags) => setTags(newTags.join(", "))}
+                focusOnTagsOnly={(value) => setShowOnlyTags(value)}
             />
 
             {/* ----------------- Difficulty of word ----------------- */}
@@ -367,4 +388,20 @@ const styles = StyleSheet.create({
     disabled: {
         opacity: 0.4,
     },
+    toggleFullForm: {
+        marginTop: 8,
+        alignSelf: "flex-start",
+        paddingVertical: 6,
+        paddingHorizontal: 10,
+        backgroundColor: colors.neutral.lightest,
+        borderRadius: 6,
+        width: '100%'
+    },
+
+    toggleFullFormText: {
+        color: colors.primary.main,
+        fontSize: 14,
+        fontWeight: "bold",
+    },
+
 });
