@@ -86,8 +86,8 @@
     "navbar": {
         "play": "Play",
         "home": "Home",
-        "lexicon": "Review",
-        "addWord": "Add"
+        "lexicon": "Lexicon",
+        "addWord": "Add word"
     },
     "topbar": {
         "lexicon": "Review",
