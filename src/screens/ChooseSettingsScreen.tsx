@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ImageBackground, Dimensions, } from "react-native";
+import { View, Text, StyleSheet, ImageBackground } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
 import type { Difficulty } from "@/types/Difficulty";
@@ -17,7 +17,6 @@ import { getQuizTypeLabel, saveCustomQuiz } from "@/services/quiz";
 import i18n from "@/i18n";
 import colors from "@/constants/colors";
 
-const windowHeight = Dimensions.get("window").height;
 const arcadeBg = require("../../assets/arcade.png");
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChooseSettings">;
@@ -37,7 +36,6 @@ const multipleSubTypes: Record<"comprehension" | "ecoute", GameSubType[]> = {
 
 export default function ChooseSettingsScreen({ route, navigation }: Props) {
   const { type } = route.params;
-
   const [subType, setSubType] = useState<GameSubType | null>(null);
   const [inputMode, setInputMode] = useState<InputMode>("multiple");
   const [step, setStep] = useState(0);
@@ -46,7 +44,6 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
   const [allTags, setAllTags] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [disabledDifficulties, setDisabledDifficulties] = useState<Difficulty[]>([]);
-
   const [shouldSave, setShouldSave] = useState(false);
   const [saveName, setSaveName] = useState("");
 
@@ -175,50 +172,64 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={{ flex: 1 }}>
       <ImageBackground
         source={arcadeBg}
         style={styles.background}
         resizeMode="cover"
       >
-        <View style={styles.top}>
-          <Text style={styles.quizType}>{getQuizTypeLabel(type)}</Text>
-        </View>
-
-        <View style={styles.middle}>{renderStep()}</View>
-
-        <View style={styles.bottom}>
-          <StepNavButtons
-            isFirstStep={step === 0}
-            isLastStep={isLastStep}
-            isDisabled={isDisabled}
-            onNext={next}
-            onBack={back}
-            onQuit={() => navigation.navigate("QuizList")}
-            onStart={startGame}
-          />
+        <View style={styles.container}>
+          {/* --------- Header with question number ---------*/}
+          <View style={styles.top}>
+            <Text style={styles.quizType}>{getQuizTypeLabel(type)}</Text>
+          </View>
+          {/* -------------- Question prompt and options --------------*/}
+          <View style={styles.middle}>{renderStep()}</View>
+          {/* -------------- Footer -------------- */}
+          <View style={styles.bottom}>
+            <StepNavButtons
+              isFirstStep={step === 0}
+              isLastStep={isLastStep}
+              isDisabled={isDisabled}
+              onNext={next}
+              onBack={back}
+              onQuit={() => navigation.navigate("QuizList")}
+              onStart={startGame}
+            />
+          </View>
         </View>
       </ImageBackground>
-    </View>
+    </View >
   );
 }
 
 const styles = StyleSheet.create({
   background: { flex: 1 },
-  container: { width: "100%", height: "100%" },
+  container: { flex: 1 },
   top: {
-    height: windowHeight * 0.15,
-    alignItems: "center",
+    flex: 0.15,
     justifyContent: "center",
+    alignItems: "center"
   },
   middle: {
-    height: windowHeight * 0.65,
-    maxHeight: windowHeight * 0.65,
-    paddingHorizontal: 24,
-    justifyContent: "center",
+    flex: 0.6
+  },
+  middleContent: {
+    flexGrow: 1,
+    paddingHorizontal: 30,
+    paddingBottom: 40
   },
   bottom: {
-    height: windowHeight * 0.2,
+    flex: 0.25,
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    width: "100%",
+  },
+
+  center: {
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
   },
   quizType: {
@@ -231,5 +242,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: "hidden",
     marginTop: 12,
-  },
+  }
 });

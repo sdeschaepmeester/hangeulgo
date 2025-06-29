@@ -86,7 +86,7 @@
     "navbar": {
         "play": "Jouer",
         "home": "Accueil",
-        "lexicon": "Réviser",
+        "lexicon": "Lexique",
         "addWord": "Ajouter"
     },
     "topbar": {
@@ -149,7 +149,7 @@
         "hard": "Difficile"
     },
     "medal": {
-        "bad": "...",
+        "bad": "Ça arrive même aux meilleurs !",
         "bronze": "Continue ton apprentissage !",
         "silver": "Bien !",
         "gold": "Excellent !"
@@ -169,6 +169,12 @@
         "quizTypes": "Types de quiz",
         "savedQuiz": "Quiz enregistrés",
         "settings": "Paramètres"
+    },
+    "prompt": {
+        "comprehension": "Sélectionne la traduction :",
+        "writing": "Écris le mot en coréen :",
+        "listening": "Écoute et sélectionne le mot entendu :",
+        "puzzle": "Remet le mot dans le bon ordre :"
     },
     "soundActivated": "Sons activés",
     "soundInactivated": "Sons désactivés"

@@ -2,6 +2,8 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import i18n from "@/i18n";
 import colors from "@/constants/colors";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { moderateScale } from "@/services/scaling";
 
 export default function QuizFooter({
     showResult,
@@ -11,7 +13,7 @@ export default function QuizFooter({
     isLast,
     inputMode,
     correctAnswer,
-    feedback
+    feedback,
 }: {
     showResult: boolean;
     isDisabled: boolean;
@@ -22,20 +24,27 @@ export default function QuizFooter({
     correctAnswer: string;
     feedback: "correct" | "wrong" | null;
 }) {
+    const insets = useSafeAreaInsets();
+    const backgroundColor =
+        (inputMode === "multiple" && feedback) || inputMode !== "multiple"
+            ? colors.primary.main
+            : "transparent";
+
     return (
-        <View style={styles.footer}>
-            {/* -------------- Background color with opacity -------------- */}
-            {((inputMode === "multiple" && feedback) || inputMode !== "multiple") && <View style={styles.backgroundLayer} />}
+        <View style={[styles.footer, { paddingBottom: insets.bottom }]}>
+            {/* --------- Dynamic background color --------- */}
+            <View style={[styles.backgroundLayer, { backgroundColor }]} />
+
             <View style={styles.buttonContainer}>
-                {/* -------------- Block with correct answer -------------- */}
+                {/* --------- Show correct answer --------- */}
                 {showResult && feedback === "wrong" && (
                     <View style={styles.answerCard}>
                         <Text style={styles.answerLabel}>{i18n.t("quiz.correctAnswer")}</Text>
                         <Text style={styles.answerText}>{correctAnswer}</Text>
                     </View>
                 )}
-                {/* -------------- Button action: Next, see results or validate answer -------------- */}
 
+                {/* --------- Actions buttons --------- */}
                 {(inputMode === "input" || inputMode === "order") ? (
                     <TouchableOpacity
                         style={[styles.nextButton, isDisabled && { opacity: 0.4 }]}
@@ -67,49 +76,51 @@ export default function QuizFooter({
 const styles = StyleSheet.create({
     footer: {
         flex: 1,
-        justifyContent: "space-between",
-        paddingHorizontal: 20,
+        flexDirection: "column",
+        justifyContent: "flex-end",
+        paddingHorizontal: moderateScale(20), // ✅ commun pour card + bouton
         position: "relative",
         overflow: "hidden",
     },
     backgroundLayer: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: colors.primary.main,
         opacity: 0.8,
     },
     buttonContainer: {
         width: "100%",
-        marginBottom: 20,
-    },
-    nextButton: {
-        backgroundColor: colors.primary.dark,
-        paddingVertical: 16,
-        borderRadius: 8,
-        marginTop: 10,
-    },
-    nextButtonText: {
-        color: "white",
-        fontWeight: "bold",
-        textAlign: "center",
-        fontSize: 16,
+        alignItems: "stretch",
     },
     answerCard: {
-        marginTop: 12,
         backgroundColor: "rgba(0,0,0,0.7)",
-        padding: 16,
-        borderRadius: 10,
+        marginBottom: moderateScale(12),
+        paddingVertical: moderateScale(14),
+        borderRadius: moderateScale(8),
+        width: "100%", // ✅ prend toute la largeur dispo
     },
     answerLabel: {
         color: "white",
-        fontSize: 16,
+        fontSize: moderateScale(16),
         fontWeight: "bold",
         marginBottom: 4,
         textAlign: "center",
     },
     answerText: {
         color: "gold",
-        fontSize: 24,
+        fontSize: moderateScale(24),
         fontWeight: "bold",
         textAlign: "center",
+    },
+    nextButton: {
+        width: "100%",
+        backgroundColor: colors.primary.dark,
+        paddingVertical: moderateScale(14),
+        borderRadius: moderateScale(8),
+        marginTop: moderateScale(10),
+    },
+    nextButtonText: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center",
+        fontSize: moderateScale(16),
     },
 });

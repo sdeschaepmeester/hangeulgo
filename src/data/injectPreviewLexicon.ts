@@ -1,8 +1,6 @@
 import { dbPromise, initDatabase } from "@/db/database";
 import * as SecureStore from "expo-secure-store";
 import { getLocales } from "expo-localization";
-
-// Importes les deux versions
 import { previewLexiconFr } from "./previewLexicon.fr";
 import { previewLexiconEn } from "./previewLexicon.en";
 

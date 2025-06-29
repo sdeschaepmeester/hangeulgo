@@ -2,17 +2,19 @@ import React, { useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground, } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
-import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withTiming, interpolateColor, } from "react-native-reanimated";
+import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withTiming, interpolateColor } from "react-native-reanimated";
 import { saveScore } from "@/services/score";
 import { getMedalInfo } from "@/services/getMedalInfo";
 import i18n from "@/i18n";
 import colors from "@/constants/colors";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Result">;
 
 export default function ResultScreen({ route, navigation }: Props) {
   const { score, total, settings } = route.params;
   const percent = Math.round((score / total) * 100);
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     const save = async () => {
@@ -30,8 +32,6 @@ export default function ResultScreen({ route, navigation }: Props) {
     };
     save();
   }, [score, total, settings]);
-
-
 
   const { medal, message, glowColor } = getMedalInfo(percent);
 
@@ -71,7 +71,7 @@ export default function ResultScreen({ route, navigation }: Props) {
       </View>
 
       {/* ----------- Actions buttons ----------- */}
-      <View style={styles.bottomRow}>
+      <View style={[styles.bottomRow, { paddingBottom: insets.bottom }]}>
         <TouchableOpacity
           style={[styles.button, styles.retry]}
           onPress={() => navigation.goBack()}
@@ -96,9 +96,9 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   medalWrapper: {
-    marginTop: 40,
-    width: 300,
-    height: 300,
+    marginTop: "10%",
+    width: "80%",
+    aspectRatio: 1,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -107,8 +107,9 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   medal: {
-    width: 250,
-    height: 250,
+    width: "80%",
+    height: undefined,
+    aspectRatio: 1,
     zIndex: 1,
   },
   message: {

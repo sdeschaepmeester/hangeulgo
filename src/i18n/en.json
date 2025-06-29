@@ -86,8 +86,8 @@
     "navbar": {
         "play": "Play",
         "home": "Home",
-        "lexicon": "Review",
-        "addWord": "Add"
+        "lexicon": "Lexicon",
+        "addWord": "Add word"
     },
     "topbar": {
         "lexicon": "Review",
@@ -149,7 +149,7 @@
         "hard": "Hard"
     },
     "medal": {
-        "bad": "...",
+        "bad": "It happens to the best of us!",
         "bronze": "Continue your learning !",
         "silver": "Good !",
         "gold": "Well done !"
@@ -169,6 +169,12 @@
         "quizTypes": "Quiz types",
         "savedQuiz": "Saved quizzes",
         "settings": "Settings"
+    },
+    "prompt": {
+        "comprehension": "Select the translation:",
+        "writing": "Write the word in Korean:",
+        "listening": "Listen and select the word you heard:",
+        "puzzle": "Put the word back in order:"
     },
     "soundActivated": "Sounds enabled",
     "soundInactivated": "Sounds disabled"

@@ -36,18 +36,18 @@ export default function NavBar() {
                 onPress={() => navigation.navigate("Lexicon")}
             />
             <NavItem
-                route="AddWord"
-                icon="plus-circle"
-                label={i18n.t("navbar.addWord")}
-                currentRoute={currentRoute}
-                onPress={() => navigation.navigate("AddWord")}
-            />
-            <NavItem
                 route="QuizList"
                 icon="gamepad-variant"
                 label={i18n.t("navbar.play")}
                 currentRoute={currentRoute}
                 onPress={() => navigation.navigate("QuizList")}
+            />
+            <NavItem
+                route="AddWord"
+                icon="plus-circle"
+                label={i18n.t("navbar.addWord")}
+                currentRoute={currentRoute}
+                onPress={() => navigation.navigate("AddWord")}
             />
         </View>
     );

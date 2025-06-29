@@ -30,9 +30,6 @@ export default function AddWordScreen() {
       {/* ---------- Header ---------- */}
       <View style={styles.headerRow}>
         <Text style={styles.title}>{i18n.t("addWord.title")}</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-          <MaterialIcons name="close" size={24} color={colors.neutral.main} />
-        </TouchableOpacity>
       </View>
 
       {/* ---------- Alerte number max lexicon entry ---------- */}
@@ -77,6 +74,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 12,
+    paddingHorizontal: 18
   },
   title: {
     fontSize: 20,
