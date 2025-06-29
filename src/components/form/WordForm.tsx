@@ -50,6 +50,7 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
     const [noSuggestionFound, setNoSuggestionFound] = useState(false);
     const [tagLimitReached, setTagLimitReached] = useState(false);
     const [lastSuggestionTime, setLastSuggestionTime] = useState<number | null>(null);
+    const [showWarningWrongKorean, setShowWarningWrongKorean] = useState(false);
 
     const frRef = useRef<TextInput>(null);
     const koRef = useRef<TextInput>(null);
@@ -118,6 +119,10 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
 
         const exists = await checkIfKoreanWordExists(trimmed);
         setKoreanExists(exists);
+
+        // Check if korean input contains at least one korean character. Else, show warning
+        const hasHangul = /[가-힣]/.test(trimmed);
+        setShowWarningWrongKorean(!hasHangul);
     };
 
 
@@ -295,7 +300,12 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 selectedValue={difficulty}
                 onSelect={(val) => setDifficulty(val as Difficulty)}
             />
-
+            {/* ----------------- Warning input korean with no korean character ----------------- */}
+            {showWarningWrongKorean && (
+                <Text style={styles.warningText}>
+                    {i18n.t("addWord.mustContainKorean")}
+                </Text>
+            )}
             {/* ----------------- Actions buttons ----------------- */}
             <View style={styles.buttonsRow}>
                 <TouchableOpacity
@@ -306,9 +316,9 @@ export default function WordForm({ edit, initialData, onSuccess }: Props) {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    style={[styles.confirmButton, (!isValid || koreanExists) && styles.disabled]}
+                    style={[styles.confirmButton, (!isValid || koreanExists || showWarningWrongKorean) && styles.disabled]}
                     onPress={handleSubmit}
-                    disabled={!isValid || koreanExists}
+                    disabled={!isValid || koreanExists || showWarningWrongKorean}
                 >
                     <Text style={styles.confirmButtonText}>
                         {edit ? i18n.t("actions.confirm") : i18n.t("actions.add")}

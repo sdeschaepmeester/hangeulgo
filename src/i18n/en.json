@@ -39,7 +39,8 @@
         "wordExists": "⚠️ This word already exists in your lexicon. Edit it if needed.",
         "cannotCreateTheme": "You can't create more theme.",
         "addorsearch": "Add or search for a theme...",
-        "phoneticPlaceholder": "Eg: annyeonghaseyo"
+        "phoneticPlaceholder": "Eg: annyeonghaseyo",
+        "mustContainKorean": "⚠️ The korean input must contain at least one korean character"
     },
     "scores": {
         "title": "Score history",

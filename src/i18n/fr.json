@@ -39,7 +39,8 @@
         "wordExists": "⚠️ Ce mot existe déjà dans votre lexique. Modifiez-le si besoin.",
         "cannotCreateTheme": "Vous ne pouvez plus créer de nouveaux thèmes.",
         "addorsearch": "Ajouter ou rechercher un mot-clé...",
-        "phoneticPlaceholder": "Ex : annyeonghaseyo"
+        "phoneticPlaceholder": "Ex : annyeonghaseyo",
+        "mustContainKorean": "⚠️ Le champ coréen doit être composé au moins d'un caractère coréen."
     },
     "scores": {
         "title": "Historique des scores",
