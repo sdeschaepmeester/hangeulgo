@@ -170,6 +170,12 @@
         "savedQuiz": "Saved quizzes",
         "settings": "Settings"
     },
+    "prompt": {
+        "comprehension": "Select the translation:",
+        "writing": "Write the word in Korean:",
+        "listening": "Listen and select the word you heard:",
+        "puzzle": "Put the word back in order:"
+    },
     "soundActivated": "Sounds enabled",
     "soundInactivated": "Sounds disabled"
 }

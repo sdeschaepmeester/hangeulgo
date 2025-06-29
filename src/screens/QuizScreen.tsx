@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, ActivityIndicator, ImageBackground, PanResponder, StyleSheet, ScrollView, } from "react-native";
+import { View, ActivityIndicator, ImageBackground, PanResponder, StyleSheet, ScrollView } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
 import { generateQuestions } from "@/services/quizGenerator";
@@ -154,7 +154,6 @@ export default function QuizScreen({ route, navigation }: Props) {
                   settings={settings}
                 />
               )}
-
               <QuizContent
                 question={currentQuestion}
                 settings={settings}
@@ -220,5 +219,13 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     top: "40%",
     zIndex: 99,
+  },
+  subText: {
+    marginTop: 8,
+    marginBottom: 16,
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "center",
+    fontWeight: "600",
   },
 });

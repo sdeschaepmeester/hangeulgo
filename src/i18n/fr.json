@@ -170,6 +170,12 @@
         "savedQuiz": "Quiz enregistrés",
         "settings": "Paramètres"
     },
+    "prompt": {
+        "comprehension": "Sélectionne la traduction :",
+        "writing": "Écris le mot en coréen :",
+        "listening": "Écoute et sélectionne le mot entendu :",
+        "puzzle": "Remet le mot dans le bon ordre :"
+    },
     "soundActivated": "Sons activés",
     "soundInactivated": "Sons désactivés"
 }
