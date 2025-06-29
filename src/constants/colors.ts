@@ -13,7 +13,8 @@ const colors = {
         main: "#ff9d9d",
         light: "#f6c6c6",
         lighter: "#fbecec",
-        lightest: "#f9f9f9"
+        lightest: "#f9f9f9",
+        disabled: "#c9556b"
     },
     danger: {
         dark: "#a10221",

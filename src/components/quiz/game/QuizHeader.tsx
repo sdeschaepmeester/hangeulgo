@@ -16,13 +16,14 @@ export default function QuizHeader({ current, total, onClose }: { current: numbe
 
 const styles = StyleSheet.create({
     header: {
-        paddingHorizontal: 20,
+        paddingHorizontal: 30,
         paddingTop: 10,
         paddingBottom: 10,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
         backgroundColor: "rgba(255,255,255,0.4)",
+        width: "100%"
     },
     closeButton: { padding: 8 },
     counterText: { fontSize: 16, fontWeight: "600" },

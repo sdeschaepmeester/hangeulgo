@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, ActivityIndicator, ImageBackground, PanResponder, Vibration, StyleSheet, ScrollView } from "react-native";
+import { View, ActivityIndicator, ImageBackground, PanResponder, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
@@ -12,8 +12,11 @@ import QuizContent from "@/components/quiz/game/QuizContent";
 import QuizFooter from "@/components/quiz/game/QuizFooter";
 import colors from "@/constants/colors";
 import { playFeedbackIfEnabled } from "@/services/sound";
+import { Dimensions } from "react-native";
+import Feedback from "@/components/quiz/Feedback";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Quiz">;
+const windowHeight = Dimensions.get("window").height;
 
 export default function QuizScreen({ route, navigation }: Props) {
   const { settings } = route.params;
@@ -112,61 +115,94 @@ export default function QuizScreen({ route, navigation }: Props) {
   return (
     <ImageBackground source={bgImage} style={styles.background} imageStyle={{ opacity: 0.8 }}>
       <SafeAreaView style={styles.safeContainer} edges={["bottom"]}>
-        <QuizHeader
-          current={currentIndex + 1}
-          total={questions.length}
-          onClose={() => navigation.replace("Home")}
-        />
-
-        <ScrollView
-          contentContainerStyle={styles.middle}
-          keyboardShouldPersistTaps="handled"
-          {...panResponder.panHandlers}
-        >
-          {settings.type === "ecoute" ? (
-            <ListenPrompt prompt={currentQuestion.prompt} tags={currentQuestion.tags} />
-          ) : (
-            <PromptBox currentQuestion={currentQuestion} settings={settings} />
-          )}
-
-          <QuizContent
-            question={currentQuestion}
-            settings={settings}
-            userInput={userInput}
-            onChange={setUserInput}
-            onSelectChoice={checkAnswer}
-            selected={selected}
-            disabled={showResult}
-            currentIndex={currentIndex}
+        {/* -------------- Quiz header -------------- */}
+        <View style={styles.top}>
+          <QuizHeader
+            current={currentIndex + 1}
+            total={questions.length}
+            onClose={() => navigation.replace("Home")}
           />
-        </ScrollView>
+        </View>
+        {/* -------------- Feedback with icon and vibration -------------- */}
+        <View style={styles.feedbackContainer}>
+          {showResult && (
+            <Feedback feedback={feedback} />
+          )}
+        </View>
+        {/* -------------- Middle container with prompt and questions -------------- */}
+        <View style={styles.middle}>
+          <ScrollView
+            contentContainerStyle={styles.middleContent}
+            keyboardShouldPersistTaps="handled"
+            {...panResponder.panHandlers}
+          >
+            {settings.type === "ecoute" ? (
+              <ListenPrompt prompt={currentQuestion.prompt} tags={currentQuestion.tags} />
+            ) : (
+              <PromptBox currentQuestion={currentQuestion} settings={settings} />
+            )}
 
-        <QuizFooter
-          showResult={showResult}
-          isDisabled={isDisabled}
-          onValidate={() => checkAnswer(userInput)}
-          onNext={next}
-          isLast={currentIndex + 1 >= questions.length}
-          inputMode={settings.inputMode}
-          feedback={feedback}
-          correctAnswer={currentQuestion.correctAnswer}
-        />
+            <QuizContent
+              question={currentQuestion}
+              settings={settings}
+              userInput={userInput}
+              onChange={setUserInput}
+              onSelectChoice={checkAnswer}
+              selected={selected}
+              disabled={showResult}
+              currentIndex={currentIndex}
+            />
+          </ScrollView>
+        </View>
+        {/* -------------- Quiz footer -------------- */}
+        <View style={styles.bottom}>
+          <QuizFooter
+            showResult={showResult}
+            isDisabled={isDisabled}
+            onValidate={() => checkAnswer(userInput)}
+            onNext={next}
+            isLast={currentIndex + 1 >= questions.length}
+            inputMode={settings.inputMode}
+            correctAnswer={currentQuestion.correctAnswer}
+            feedback={feedback}
+          />
+        </View>
       </SafeAreaView>
     </ImageBackground>
+
   );
+
 }
 
 const styles = StyleSheet.create({
   background: { flex: 1 },
   safeContainer: { flex: 1 },
+  top: {
+    height: windowHeight * 0.10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   middle: {
+    height: windowHeight * 0.65
+  },
+  middleContent: {
     flexGrow: 1,
-    padding: 20,
-    paddingBottom: 40,
+    paddingHorizontal: 30,
+    paddingBottom: 40
+  },
+  bottom: {
+    height: windowHeight * 0.25,
+    justifyContent: "center",
   },
   center: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  feedbackContainer: {
+    alignSelf: "center",
+    marginTop: windowHeight * 0.6,
+    position: 'absolute',
+    zIndex: 99
   },
 });

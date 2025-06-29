@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Dimensions } from "react-native";
+import { View, Text, StyleSheet, ImageBackground, Dimensions, } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
 import type { Difficulty } from "@/types/Difficulty";
@@ -12,18 +12,20 @@ import StepDuration from "@/components/chooseSettings/StepDuration";
 import StepThemes from "@/components/chooseSettings/StepThemes";
 import StepType from "@/components/chooseSettings/StepType";
 import StepSaveQuiz from "@/components/chooseSettings/StepSaveQuiz";
+import StepNavButtons from "@/components/chooseSettings/StepNavButtons";
 import { getQuizTypeLabel, saveCustomQuiz } from "@/services/quiz";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import i18n from "@/i18n";
 import colors from "@/constants/colors";
 
 const windowHeight = Dimensions.get("window").height;
-const windowWidth = Dimensions.get("window").width;
 const arcadeBg = require("../../assets/arcade.png");
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChooseSettings">;
 
-const fixedConfigByType: Record<"arrangement" | "ecriture", { subType: GameSubType; inputMode: InputMode }> = {
+const fixedConfigByType: Record<
+  "arrangement" | "ecriture",
+  { subType: GameSubType; inputMode: InputMode }
+> = {
   arrangement: { subType: "order", inputMode: "order" },
   ecriture: { subType: "nativeToKo", inputMode: "input" },
 };
@@ -51,7 +53,7 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
   const shouldAskSubType = type === "comprehension" || type === "ecoute";
 
   useEffect(() => {
-    if (type === "comprehension" || type === "ecoute") {
+    if (shouldAskSubType) {
       setInputMode("multiple");
     } else {
       const config = fixedConfigByType[type];
@@ -72,7 +74,6 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
     };
     loadTags();
   }, []);
-
 
   useEffect(() => {
     const updateAvailableDifficulties = async () => {
@@ -102,7 +103,11 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
     {
       title: i18n.t("quiz.themes"),
       render: () => (
-        <StepThemes selectedTags={selectedTags} onChange={setSelectedTags} allTags={allTags} />
+        <StepThemes
+          selectedTags={selectedTags}
+          onChange={setSelectedTags}
+          allTags={allTags}
+        />
       ),
     },
     {
@@ -135,14 +140,18 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
   const maxStep = steps.length - 1;
   const isLastStep = step === maxStep;
   const stepIsDifficulty = step === (shouldAskSubType ? 2 : 1);
-  const isDisabled = stepIsDifficulty && selectedDifficulties.length === 0;
+
+  const isDisabled =
+    (stepIsDifficulty && selectedDifficulties.length === 0) ||
+    (isLastStep && stepIsDifficulty && selectedDifficulties.length === 0) ||
+    (isLastStep && shouldAskSubType && !subType);
 
   const startGame = async () => {
-    if (!subType) return;
+    if (!subType && shouldAskSubType) return;
 
     const settings: GameSettings = {
       type,
-      subType,
+      subType: subType as GameSubType,
       inputMode,
       difficulties: selectedDifficulties,
       length,
@@ -167,7 +176,11 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={arcadeBg} style={styles.background} resizeMode="cover">
+      <ImageBackground
+        source={arcadeBg}
+        style={styles.background}
+        resizeMode="cover"
+      >
         <View style={styles.top}>
           <Text style={styles.quizType}>{getQuizTypeLabel(type)}</Text>
         </View>
@@ -175,41 +188,15 @@ export default function ChooseSettingsScreen({ route, navigation }: Props) {
         <View style={styles.middle}>{renderStep()}</View>
 
         <View style={styles.bottom}>
-          {!isLastStep ? (
-            <View style={styles.stepButtonsRow}>
-              <TouchableOpacity
-                onPress={step === 0 ? () => navigation.navigate("QuizList") : back}
-                style={[styles.button, styles.leftButton]}
-              >
-                <Text style={styles.text}>
-                  <MaterialCommunityIcons name="chevron-left" size={18} color="white" style={{ marginRight: 4 }} />
-                  {step === 0 && i18n.t("actions.quit")}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={next}
-                disabled={isDisabled}
-                style={[styles.button, styles.rightButton, isDisabled && styles.disabled]}
-              >
-                <MaterialCommunityIcons name="chevron-right" size={18} color="white" style={{ marginRight: 4 }} />
-                <Text style={styles.text}>{i18n.t("actions.next")}</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View style={styles.stepButtonsRow}>
-              <TouchableOpacity onPress={back} style={[styles.button, styles.leftButton]}>
-                <Text style={styles.text}>←</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={startGame}
-                disabled={isDisabled || !subType}
-                style={[styles.button, styles.rightButton, (isDisabled || !subType) && styles.disabled]}
-              >
-                <MaterialCommunityIcons name="gamepad-variant" size={18} color="white" style={{ marginRight: 4 }} />
-                <Text style={styles.text}>{i18n.t("actions.start")}</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+          <StepNavButtons
+            isFirstStep={step === 0}
+            isLastStep={isLastStep}
+            isDisabled={isDisabled}
+            onNext={next}
+            onBack={back}
+            onQuit={() => navigation.navigate("QuizList")}
+            onStart={startGame}
+          />
         </View>
       </ImageBackground>
     </View>
@@ -230,13 +217,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   bottom: {
-    height: windowHeight * 0.20,
+    height: windowHeight * 0.2,
     alignItems: "center",
-  },
-  stepButtonsRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: "15%",
   },
   quizType: {
     fontSize: 18,
@@ -248,31 +230,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: "hidden",
     marginTop: 12,
-  },
-  button: {
-    width: windowWidth / 2.2,
-    paddingVertical: 24,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 8,
-    flexDirection: "row",
-  },
-  leftButton: {
-    backgroundColor: colors.primary.dark,
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
-  },
-  rightButton: {
-    backgroundColor: colors.secondary.dark,
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
-  },
-  text: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  disabled: {
-    opacity: 0.5,
   },
 });

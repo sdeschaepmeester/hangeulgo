@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     scoreButton: {
         paddingHorizontal: 16,
         paddingVertical: 6,
-        backgroundColor: colors.primary.light,
+        backgroundColor: colors.primary.main,
         borderRadius: 12,
         width: "90%",
     },

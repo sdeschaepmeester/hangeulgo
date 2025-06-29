@@ -60,9 +60,9 @@ export default function ChooseLanguageScreen() {
 
     const title =
         selectedLanguage === "fr"
-            ? "Choisissez votre langue native"
+            ? "Choisissez votre langue"
             : selectedLanguage === "en"
-                ? "Choose your native language"
+                ? "Choose your language"
                 : "Language selection";
 
     return (

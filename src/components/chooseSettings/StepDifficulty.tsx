@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import IconCardSelectMultiple from "@/components/IconCardSelectMultiple";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { Difficulty } from "@/types/Difficulty";
@@ -8,17 +8,35 @@ const difficultyOptions = [
     {
         label: i18n.t("difficulties.easy"),
         value: "easy" as Difficulty,
-        icon: <MaterialCommunityIcons name="emoticon-happy" size={32} color="green" />,
+        icon: (
+            <MaterialCommunityIcons
+                name="emoticon-happy"
+                size={32}
+                color="green"
+            />
+        ),
     },
     {
         label: i18n.t("difficulties.medium"),
         value: "medium" as Difficulty,
-        icon: <MaterialCommunityIcons name="emoticon-neutral" size={32} color="orange" />,
+        icon: (
+            <MaterialCommunityIcons
+                name="emoticon-neutral"
+                size={32}
+                color="orange"
+            />
+        ),
     },
     {
         label: i18n.t("difficulties.hard"),
         value: "hard" as Difficulty,
-        icon: <MaterialCommunityIcons name="emoticon-sad" size={32} color="red" />,
+        icon: (
+            <MaterialCommunityIcons
+                name="emoticon-sad"
+                size={32}
+                color="red"
+            />
+        ),
     },
 ];
 
@@ -28,31 +46,35 @@ type Props = {
     disabledDifficultyList?: Difficulty[];
 };
 
-export default function StepDifficulty({ selected, onChange, disabledDifficultyList = [] }: Props) {
-    // Select all available difficulties
+export default function StepDifficulty({
+    selected,
+    onChange,
+    disabledDifficultyList = [],
+}: Props) {
+    const didInit = useRef(false);
+
     useEffect(() => {
-        if (selected.length === 0) {
+        if (!didInit.current && selected.length === 0) {
             const available = difficultyOptions
                 .map((opt) => opt.value)
                 .filter((d) => !disabledDifficultyList.includes(d));
             onChange(available);
+            didInit.current = true;
         }
-    }, [selected, disabledDifficultyList]);
+    }, []);
 
     return (
-        <>
-            <IconCardSelectMultiple<Difficulty>
-                options={difficultyOptions}
-                selectedValues={selected}
-                onToggle={(val) =>
-                    onChange(
-                        selected.includes(val)
-                            ? selected.filter((d) => d !== val)
-                            : [...selected, val]
-                    )
-                }
-                disabledValues={disabledDifficultyList}
-            />
-        </>
+        <IconCardSelectMultiple<Difficulty>
+            options={difficultyOptions}
+            selectedValues={selected}
+            onToggle={(val) =>
+                onChange(
+                    selected.includes(val)
+                        ? selected.filter((d) => d !== val)
+                        : [...selected, val]
+                )
+            }
+            disabledValues={disabledDifficultyList}
+        />
     );
 }
