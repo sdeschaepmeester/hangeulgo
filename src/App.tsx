@@ -22,6 +22,7 @@ import TesterDaysNumberCard from "./components/test/TesterDaysNumberCard";
 import ParametersScreen from "./screens/ParametersScreen";
 import i18n from "./i18n";
 import colors from "./constants/colors";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export type RootStackParamList = {
   Home: undefined;
@@ -83,64 +84,66 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="Splash"
-          screenOptions={{
-            headerStyle: { backgroundColor: colors.primary.main },
-            headerTintColor: "#fff",
-            headerTitleStyle: { fontWeight: "bold" },
-          }}
-        >
-          <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={({ navigation }) => ({
-              headerLeft: () => (
-                <TesterDaysNumberCard /> //! To remove once tests are done
-              ),
-              title: "",
-              headerRight: () => goSettingsButton(navigation),
-            })}
-          />
-          <Stack.Screen name="ChooseLanguage" component={ChooseLanguageScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="Parameters" component={ParametersScreen}
-            options={({ navigation }) => ({
-              headerLeft: () => goHomeButton(navigation),
-              headerRight: () => null,
-              headerTitle: () => (
-                <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{ marginLeft: 10 }}>
-                  <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
-                    Paramètres
-                  </Text>
-                </TouchableOpacity>
-              ),
-            })}
-          />
-          <Stack.Screen name="Quiz" component={QuizScreen} options={{ headerTitle: "", headerLeft: () => null, }} />
-          <Stack.Screen name="Result" component={ResultScreen} options={{ headerTitle: "", headerLeft: () => null, }} />
-          {screens.map(({ name, component, titleKey }) => (
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName="Splash"
+            screenOptions={{
+              headerStyle: { backgroundColor: colors.primary.main },
+              headerTintColor: "#fff",
+              headerTitleStyle: { fontWeight: "bold" },
+            }}
+          >
+            <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
             <Stack.Screen
-              key={name}
-              name={name}
-              component={component}
+              name="Home"
+              component={HomeScreen}
+              options={({ navigation }) => ({
+                headerLeft: () => (
+                  <TesterDaysNumberCard /> //! To remove once tests are done
+                ),
+                title: "",
+                headerRight: () => goSettingsButton(navigation),
+              })}
+            />
+            <Stack.Screen name="ChooseLanguage" component={ChooseLanguageScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Parameters" component={ParametersScreen}
               options={({ navigation }) => ({
                 headerLeft: () => goHomeButton(navigation),
-                headerRight: () => goSettingsButton(navigation),
+                headerRight: () => null,
                 headerTitle: () => (
                   <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{ marginLeft: 10 }}>
                     <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
-                      {i18n.t(titleKey)}
+                      Paramètres
                     </Text>
                   </TouchableOpacity>
                 ),
               })}
             />
-          ))}
+            <Stack.Screen name="Quiz" component={QuizScreen} options={{ headerTitle: "", headerLeft: () => null, }} />
+            <Stack.Screen name="Result" component={ResultScreen} options={{ headerTitle: "", headerLeft: () => null, }} />
+            {screens.map(({ name, component, titleKey }) => (
+              <Stack.Screen
+                key={name}
+                name={name}
+                component={component}
+                options={({ navigation }) => ({
+                  headerLeft: () => goHomeButton(navigation),
+                  headerRight: () => goSettingsButton(navigation),
+                  headerTitle: () => (
+                    <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{ marginLeft: 10 }}>
+                      <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
+                        {i18n.t(titleKey)}
+                      </Text>
+                    </TouchableOpacity>
+                  ),
+                })}
+              />
+            ))}
 
-        </Stack.Navigator>
-      </NavigationContainer>
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }
