@@ -1,10 +1,8 @@
 import React from "react";
-import { View, TouchableOpacity, Text, StyleSheet, Dimensions } from "react-native";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import i18n from "@/i18n";
 import colors from "@/constants/colors";
-
-const windowWidth = Dimensions.get("window").width;
 
 type Props = {
     isLastStep: boolean;
@@ -16,17 +14,10 @@ type Props = {
     isFirstStep: boolean;
 };
 
-export default function StepNavButtons({
-    isLastStep,
-    isDisabled,
-    onNext,
-    onBack,
-    onQuit,
-    onStart,
-    isFirstStep,
-}: Props) {
+export default function StepNavButtons({ isLastStep, isDisabled, onNext, onBack, onQuit, onStart, isFirstStep, }: Props) {
     return (
         <View style={styles.stepButtonsRow}>
+            {/* ------------ Action button previous or quit ------------ */}
             <TouchableOpacity
                 onPress={isFirstStep ? onQuit : onBack}
                 style={[styles.button, styles.leftButton]}
@@ -41,7 +32,7 @@ export default function StepNavButtons({
                     {isFirstStep ? i18n.t("actions.quit") : i18n.t("actions.previous")}
                 </Text>
             </TouchableOpacity>
-
+            {/* ------------ Action button next or start ------------ */}
             <TouchableOpacity
                 onPress={isLastStep ? onStart : onNext}
                 disabled={isDisabled}
@@ -67,13 +58,16 @@ export default function StepNavButtons({
 
 const styles = StyleSheet.create({
     stepButtonsRow: {
+        flex: 1,
         flexDirection: "row",
-        justifyContent: "space-between",
-        marginBottom: "15%",
+        justifyContent: "flex-end", 
+        paddingHorizontal: 20,
+        position: "relative",
+        overflow: "hidden",
     },
     button: {
-        width: windowWidth / 2.2,
-        paddingVertical: 24,
+        width: "50%",
+        height: "35%",
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 8,
