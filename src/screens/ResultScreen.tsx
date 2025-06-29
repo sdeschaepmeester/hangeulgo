@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground, } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
-import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withTiming, interpolateColor, } from "react-native-reanimated";
+import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withTiming, interpolateColor } from "react-native-reanimated";
 import { saveScore } from "@/services/score";
 import { getMedalInfo } from "@/services/getMedalInfo";
 import i18n from "@/i18n";
@@ -30,8 +30,6 @@ export default function ResultScreen({ route, navigation }: Props) {
     };
     save();
   }, [score, total, settings]);
-
-
 
   const { medal, message, glowColor } = getMedalInfo(percent);
 
