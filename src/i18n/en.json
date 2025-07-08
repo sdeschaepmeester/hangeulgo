@@ -171,7 +171,8 @@
         "quizTypes": "Quiz types",
         "savedQuiz": "Saved quizzes",
         "settings": "Settings",
-        "lessons": "Lessons"
+        "lessons": "Lessons",
+        "lessonDetails": "Lesson"
     },
     "prompt": {
         "comprehension": "Select the translation:",

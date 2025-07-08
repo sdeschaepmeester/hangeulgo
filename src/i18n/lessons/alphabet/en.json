@@ -1,0 +1,21 @@
+{
+    "lessons": {
+        "alphabet": {
+            "title": "Alphabet",
+            "chapters": [
+                {
+                    "title": "Consonnes",
+                    "content": "Il existe X consonnes"
+                },
+                {
+                    "title": "Voyelles",
+                    "content": "Le coréen possède 10 voyelles..."
+                },
+                {
+                    "title": "Doubles consonnes",
+                    "content": "Il existe 5 consonnes doubles..."
+                }
+            ]
+        }
+    }
+}

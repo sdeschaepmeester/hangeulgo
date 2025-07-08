@@ -24,6 +24,8 @@ import i18n from "./i18n";
 import colors from "./constants/colors";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import LessonsScreen from "./screens/LessonsScreen";
+import LessonDetailsScreen from "./screens/LessonDetailsScreen";
+import ChapterDetailScreen from "./screens/ChapterDetailScreen";
 
 export type RootStackParamList = {
   Home: undefined;
@@ -45,7 +47,10 @@ export type RootStackParamList = {
   Lessons: undefined;
   LessonDetail: {
     lessonId: string;
-    chapterId?: string;
+  };
+  ChapterDetail: {
+    lessonId: string;
+    chapterId: string;
   };
 };
 
@@ -87,7 +92,8 @@ export default function App() {
       { name: "QuizList", component: QuizListScreen, titleKey: "screens.quizTypes" },
       { name: "SavedQuiz", component: SavedQuizScreen, titleKey: "screens.savedQuiz" },
       { name: "Lessons", component: LessonsScreen, titleKey: "screens.lessons" },
-      { name: "LessonDetail", component: LessonsScreen, titleKey: "screens.lessonDetail" }
+      { name: "LessonDetail", component: LessonDetailsScreen, titleKey: "screens.lessonDetails" },
+      { name: "ChapterDetail", component: ChapterDetailScreen, titleKey: "screens.chapterDetail" }
     ];
 
   return (

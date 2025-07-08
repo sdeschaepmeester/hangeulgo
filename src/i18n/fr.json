@@ -171,7 +171,8 @@
         "quizTypes": "Types de quiz",
         "savedQuiz": "Quiz enregistrés",
         "settings": "Paramètres",
-        "lessons": "Leçons"
+        "lessons": "Leçons",
+        "lessonDetails": "Leçon"
     },
     "prompt": {
         "comprehension": "Sélectionne la traduction :",
