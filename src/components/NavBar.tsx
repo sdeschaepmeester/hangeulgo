@@ -22,37 +22,37 @@ export default function NavBar() {
     return (
         <View style={[styles.navbar, { height, paddingBottom: insets.bottom }]}>
             <NavItem
-                route="Home"
                 icon="home"
                 label={i18n.t("navbar.home")}
+                activeRoutes={["Home"]}
                 currentRoute={currentRoute}
                 onPress={() => navigation.navigate("Home")}
             />
             <NavItem
-                route="Lexicon"
                 icon="pen"
                 label={i18n.t("navbar.lexicon")}
+                activeRoutes={["Lexicon"]}
                 currentRoute={currentRoute}
                 onPress={() => navigation.navigate("Lexicon")}
             />
             <NavItem
-                route="Lessons"
                 icon="book-open-page-variant"
                 label={i18n.t("navbar.lessons")}
+                activeRoutes={["Lessons", "LessonDetail", "ChapterDetail"]}
                 currentRoute={currentRoute}
                 onPress={() => navigation.navigate("Lessons")}
             />
             <NavItem
-                route="QuizList"
                 icon="gamepad-variant"
                 label={i18n.t("navbar.play")}
+                activeRoutes={["QuizList"]}
                 currentRoute={currentRoute}
                 onPress={() => navigation.navigate("QuizList")}
             />
             <NavItem
-                route="AddWord"
                 icon="plus-circle"
                 label={i18n.t("navbar.addWord")}
+                activeRoutes={["AddWord"]}
                 currentRoute={currentRoute}
                 onPress={() => navigation.navigate("AddWord")}
             />
@@ -63,13 +63,13 @@ export default function NavBar() {
 type NavItemProps = {
     icon: keyof typeof MaterialCommunityIcons.glyphMap;
     label: string;
-    route: string;
+    activeRoutes: string[];
     currentRoute: string;
     onPress: () => void;
 };
 
-const NavItem = ({ icon, label, route, currentRoute, onPress }: NavItemProps) => {
-    const isActive = route === currentRoute;
+const NavItem = ({ icon, label, activeRoutes, currentRoute, onPress }: NavItemProps) => {
+    const isActive = activeRoutes.includes(currentRoute);
 
     return (
         <TouchableOpacity style={styles.navItem} onPress={onPress}>

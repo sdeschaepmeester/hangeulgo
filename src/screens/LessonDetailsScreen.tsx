@@ -8,6 +8,7 @@ import MainLayout from "@/layouts/MainLayout";
 import i18n from "@/i18n";
 import { lessonsMap } from "@/i18n/lessons";
 import type { Lesson } from "@/types/Lesson";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function LessonDetailsScreen() {
     const { params } = useRoute<RouteProp<RootStackParamList, "LessonDetail">>();
@@ -47,17 +48,30 @@ export default function LessonDetailsScreen() {
     };
 
     return (
+        // Lesson's chapter list
         <MainLayout>
             <View style={styles.container}>
                 <Text style={styles.title}>{lesson.title}</Text>
-                {lesson.chapters.map((chapter) => (
-                    <TouchableOpacity
-                        key={chapter.id}
-                        style={styles.chapterButton}
-                        onPress={() => handleOpenChapter(chapter.id)}
-                    >
-                        <Text style={styles.chapterText}>• {chapter.title}</Text>
-                    </TouchableOpacity>
+
+                {lesson.chapters.map((chapter, index) => (
+                    <View key={chapter.id}>
+                        <TouchableOpacity
+                            style={styles.chapterRow}
+                            onPress={() => handleOpenChapter(chapter.id)}
+                            activeOpacity={0.7}
+                        >
+                            <View style={styles.chapterTextContainer}>
+                                <Text style={styles.chapterIndex}>Chapitre {index + 1} :</Text>
+                                <Text style={styles.chapterTitle}>{chapter.title}</Text>
+                            </View>
+
+                            <TouchableOpacity onPress={() => handleOpenChapter(chapter.id)}>
+                                <MaterialCommunityIcons name="chevron-right-circle-outline" size={28} color="#555" />
+                            </TouchableOpacity>
+                        </TouchableOpacity>
+
+                        {index < lesson.chapters.length - 1 && <View style={styles.divider} />}
+                    </View>
                 ))}
             </View>
         </MainLayout>
@@ -76,13 +90,31 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: "bold",
-        marginBottom: 16,
+        marginBottom: 24,
     },
-    chapterButton: {
+    chapterRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
         paddingVertical: 12,
     },
-    chapterText: {
+    chapterTextContainer: {
+        flex: 1,
+        marginRight: 8,
+    },
+    chapterIndex: {
+        fontSize: 16,
+        fontWeight: "600",
+        color: "#888",
+    },
+    chapterTitle: {
         fontSize: 18,
         color: "#333",
+        marginTop: 4,
+    },
+    divider: {
+        height: 1,
+        backgroundColor: "#ddd",
+        marginVertical: 8,
     },
 });

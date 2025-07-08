@@ -1,4 +1,4 @@
-import { ConsonnesComponent } from "@/components/lessons/ConsonnantsComponent";
+import { ConsonnesComponent } from "@/components/lessons/alphabet/ConsonnantsComponent";
 import fr from "@/i18n/lessons/alphabet/fr.json";
 import en from "@/i18n/lessons/alphabet/en.json";
 import type { Lesson } from "@/types/Lesson";
@@ -15,8 +15,9 @@ export function getAlphabetLesson(): Lesson {
 
     return {
         id: "alphabet",
-        icon: "🅰️",
+        icon: "alpha-a-box-outline",
         difficulty: "easy",
+        description: localLesson.description,
         title: localLesson.title,
         chapters: [
             {

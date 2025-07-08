@@ -27,6 +27,7 @@ export default function ChapterDetailScreen() {
     }
 
     return (
+        // Details of a lesson's chapter
         <MainLayout>
             <View style={styles.container}>
                 <Text style={styles.title}>{chapter.title}</Text>

@@ -148,7 +148,8 @@
     "difficulties": {
         "easy": "Facile",
         "medium": "Moyen",
-        "hard": "Difficile"
+        "hard": "Difficile",
+        "difficulty": "Difficulté"
     },
     "medal": {
         "bad": "Ça arrive même aux meilleurs !",
@@ -181,5 +182,6 @@
         "puzzle": "Remet le mot dans le bon ordre :"
     },
     "soundActivated": "Sons activés",
-    "soundInactivated": "Sons désactivés"
+    "soundInactivated": "Sons désactivés",
+    "learn": "Apprendre"
 }

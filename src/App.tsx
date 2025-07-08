@@ -93,7 +93,7 @@ export default function App() {
       { name: "SavedQuiz", component: SavedQuizScreen, titleKey: "screens.savedQuiz" },
       { name: "Lessons", component: LessonsScreen, titleKey: "screens.lessons" },
       { name: "LessonDetail", component: LessonDetailsScreen, titleKey: "screens.lessonDetails" },
-      { name: "ChapterDetail", component: ChapterDetailScreen, titleKey: "screens.chapterDetail" }
+      { name: "ChapterDetail", component: ChapterDetailScreen, titleKey: "screens.lessonDetails" }
     ];
 
   return (

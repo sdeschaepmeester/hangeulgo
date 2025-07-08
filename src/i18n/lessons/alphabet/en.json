@@ -1,18 +1,19 @@
 {
     "lessons": {
         "alphabet": {
-            "title": "Alphabet",
+            "title": "Learn the korean alphabet",
+            "description": "Learn to identify and read the consonnants, vowels and double consonnants.",
             "chapters": [
                 {
-                    "title": "Consonnes",
+                    "title": "Consonnants",
                     "content": "Il existe X consonnes"
                 },
                 {
-                    "title": "Voyelles",
+                    "title": "Vowels",
                     "content": "Le coréen possède 10 voyelles..."
                 },
                 {
-                    "title": "Doubles consonnes",
+                    "title": "Double consonnants",
                     "content": "Il existe 5 consonnes doubles..."
                 }
             ]
