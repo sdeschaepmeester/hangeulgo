@@ -4,7 +4,8 @@
         "myquiz": "My quizzes",
         "lexicon": "Lexicon",
         "addWord": "Add a word",
-        "scores": "Scores"
+        "scores": "Scores",
+        "lessons": "Lessons"
     },
     "quiz": {
         "question": "Question",
@@ -87,7 +88,8 @@
         "play": "Play",
         "home": "Home",
         "lexicon": "Lexicon",
-        "addWord": "Add word"
+        "addWord": "Add word",
+        "lessons": "Lessons"
     },
     "topbar": {
         "lexicon": "Review",
@@ -168,7 +170,8 @@
         "scores": "My scores",
         "quizTypes": "Quiz types",
         "savedQuiz": "Saved quizzes",
-        "settings": "Settings"
+        "settings": "Settings",
+        "lessons": "Lessons"
     },
     "prompt": {
         "comprehension": "Select the translation:",

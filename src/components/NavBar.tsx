@@ -30,10 +30,17 @@ export default function NavBar() {
             />
             <NavItem
                 route="Lexicon"
-                icon="book-open-page-variant"
+                icon="pen"
                 label={i18n.t("navbar.lexicon")}
                 currentRoute={currentRoute}
                 onPress={() => navigation.navigate("Lexicon")}
+            />
+            <NavItem
+                route="Lessons"
+                icon="book-open-page-variant"
+                label={i18n.t("navbar.lessons")}
+                currentRoute={currentRoute}
+                onPress={() => navigation.navigate("Lessons")}
             />
             <NavItem
                 route="QuizList"

@@ -23,6 +23,7 @@ import ParametersScreen from "./screens/ParametersScreen";
 import i18n from "./i18n";
 import colors from "./constants/colors";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import LessonsScreen from "./screens/LessonsScreen";
 
 export type RootStackParamList = {
   Home: undefined;
@@ -41,6 +42,11 @@ export type RootStackParamList = {
   QuizList: undefined;
   SavedQuiz: undefined;
   Parameters: undefined;
+  Lessons: undefined;
+  LessonDetail: {
+    lessonId: string;
+    chapterId?: string;
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -80,6 +86,8 @@ export default function App() {
       { name: "Score", component: ScoreScreen, titleKey: "screens.scores" },
       { name: "QuizList", component: QuizListScreen, titleKey: "screens.quizTypes" },
       { name: "SavedQuiz", component: SavedQuizScreen, titleKey: "screens.savedQuiz" },
+      { name: "Lessons", component: LessonsScreen, titleKey: "screens.lessons" },
+      { name: "LessonDetail", component: LessonsScreen, titleKey: "screens.lessonDetail" }
     ];
 
   return (

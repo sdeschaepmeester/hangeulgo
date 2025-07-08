@@ -4,7 +4,8 @@
         "myquiz": "Mes quiz",
         "lexicon": "Lexique",
         "addWord": "Ajouter un mot",
-        "scores": "Scores"
+        "scores": "Scores",
+        "lessons": "Leçons"
     },
     "quiz": {
         "question": "Question",
@@ -87,7 +88,8 @@
         "play": "Jouer",
         "home": "Accueil",
         "lexicon": "Lexique",
-        "addWord": "Ajouter"
+        "addWord": "Ajouter",
+        "lessons": "Leçons"
     },
     "topbar": {
         "lexicon": "Réviser",
@@ -168,7 +170,8 @@
         "scores": "Mes scores",
         "quizTypes": "Types de quiz",
         "savedQuiz": "Quiz enregistrés",
-        "settings": "Paramètres"
+        "settings": "Paramètres",
+        "lessons": "Leçons"
     },
     "prompt": {
         "comprehension": "Sélectionne la traduction :",
