@@ -183,5 +183,10 @@
     },
     "soundActivated": "Sons activés",
     "soundInactivated": "Sons désactivés",
-    "learn": "Apprendre"
+    "learn": "Apprendre",
+    "chapter": "Chapitre",
+    "noChapter": "Chapitre introuvable.",
+    "return": "Retour",
+    "returnToLessons": "Retour aux leçons",
+    "returnToChapters": "Retour à la liste des chapitres"
 }

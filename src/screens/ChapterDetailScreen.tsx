@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import type { RouteProp } from "@react-navigation/native";
 import type { RootStackParamList } from "@/App";
-import MainLayout from "@/layouts/MainLayout";
+import LessonLayout from "@/layouts/LessonLayout";
 import i18n from "@/i18n";
 import { lessonsMap } from "@/i18n/lessons";
 
@@ -18,17 +18,17 @@ export default function ChapterDetailScreen() {
 
     if (!chapter) {
         return (
-            <MainLayout>
+            <LessonLayout>
                 <View style={styles.container}>
-                    <Text>Chapitre introuvable</Text>
+                    <Text>{i18n.t('noChapter')}</Text>
                 </View>
-            </MainLayout>
+            </LessonLayout>
         );
     }
 
     return (
         // Details of a lesson's chapter
-        <MainLayout>
+        <LessonLayout>
             <View style={styles.container}>
                 <Text style={styles.title}>{chapter.title}</Text>
                 {chapter.content && (
@@ -38,7 +38,7 @@ export default function ChapterDetailScreen() {
                     <chapter.component />
                 )}
             </View>
-        </MainLayout>
+        </LessonLayout>
     );
 }
 

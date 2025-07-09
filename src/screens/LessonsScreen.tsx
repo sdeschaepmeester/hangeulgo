@@ -1,15 +1,15 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import MainLayout from "@/layouts/MainLayout";
 import ListLessons from "@/components/lessons/ListLessons";
+import LessonLayout from "@/layouts/LessonLayout";
 
 export default function LessonsScreen() {
     return (
-        <MainLayout>
+        <LessonLayout>
             <View style={styles.container}>
                 <ListLessons />
             </View>
-        </MainLayout>
+        </LessonLayout>
     );
 }
 

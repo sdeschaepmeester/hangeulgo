@@ -4,11 +4,12 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import type { RouteProp } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/App";
-import MainLayout from "@/layouts/MainLayout";
 import i18n from "@/i18n";
 import { lessonsMap } from "@/i18n/lessons";
 import type { Lesson } from "@/types/Lesson";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import LessonLayout from "@/layouts/LessonLayout";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function LessonDetailsScreen() {
     const { params } = useRoute<RouteProp<RootStackParamList, "LessonDetail">>();
@@ -32,11 +33,11 @@ export default function LessonDetailsScreen() {
 
     if (!lesson) {
         return (
-            <MainLayout>
+            <LessonLayout>
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" />
                 </View>
-            </MainLayout>
+            </LessonLayout>
         );
     }
 
@@ -49,32 +50,35 @@ export default function LessonDetailsScreen() {
 
     return (
         // Lesson's chapter list
-        <MainLayout>
+        <LessonLayout>
             <View style={styles.container}>
                 <Text style={styles.title}>{lesson.title}</Text>
+                <Text style={styles.description}>{lesson.description}</Text>
 
-                {lesson.chapters.map((chapter, index) => (
-                    <View key={chapter.id}>
-                        <TouchableOpacity
-                            style={styles.chapterRow}
-                            onPress={() => handleOpenChapter(chapter.id)}
-                            activeOpacity={0.7}
-                        >
-                            <View style={styles.chapterTextContainer}>
-                                <Text style={styles.chapterIndex}>Chapitre {index + 1} :</Text>
-                                <Text style={styles.chapterTitle}>{chapter.title}</Text>
-                            </View>
+                <ScrollView>
+                    {lesson.chapters.map((chapter, index) => (
+                        <View key={chapter.id + index}>
+                            <TouchableOpacity
+                                style={styles.chapterRow}
+                                onPress={() => handleOpenChapter(chapter.id)}
+                                activeOpacity={0.7}
+                            >
+                                <View style={styles.chapterTextContainer}>
+                                    <Text style={styles.chapterIndex}>{i18n.t('chapter')} {index + 1}{i18n.t('colon')}</Text>
+                                    <Text style={styles.chapterTitle}>{chapter.title}</Text>
+                                </View>
 
-                            <TouchableOpacity onPress={() => handleOpenChapter(chapter.id)}>
-                                <MaterialCommunityIcons name="chevron-right-circle-outline" size={28} color="#555" />
+                                <TouchableOpacity onPress={() => handleOpenChapter(chapter.id)}>
+                                    <MaterialCommunityIcons name="chevron-right-circle-outline" size={28} color="#555" />
+                                </TouchableOpacity>
                             </TouchableOpacity>
-                        </TouchableOpacity>
 
-                        {index < lesson.chapters.length - 1 && <View style={styles.divider} />}
-                    </View>
-                ))}
+                            {index < lesson.chapters.length - 1 && <View style={styles.divider} />}
+                        </View>
+                    ))}
+                </ScrollView>
             </View>
-        </MainLayout>
+        </LessonLayout>
     );
 }
 
@@ -91,6 +95,10 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "bold",
         marginBottom: 24,
+    },
+    description: {
+        fontSize: 16,
+        marginBottom: 24
     },
     chapterRow: {
         flexDirection: "row",
