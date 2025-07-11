@@ -1,0 +1,18 @@
+{
+    "lessons": {
+        "syllable": {
+            "title": "Apprendre la syllabe",
+            "description": "Découvre comment sont construites les syllabes en coréen et comprends le rôle des batchims (consonnes finales) et gyeobatchims (doubles consonnes finales).",
+            "chapters": [
+                {
+                    "title": "Construire une syllabe",
+                    "description": "Ce chapitre explique comment former un bloc syllabique en Hangeul en combinant consonnes et voyelles étape par étape."
+                },
+                {
+                    "title": "Batchims et Gyeobatchims",
+                    "description": "Ce chapitre présente les batchims (consonnes finales) et les gyeobatchims (doubles consonnes finales), avec des règles et conseils de prononciation."
+                }
+            ]
+        }
+    }
+}

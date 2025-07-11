@@ -1,0 +1,18 @@
+{
+    "lessons": {
+        "syllable": {
+            "title": "Learn the syllable",
+            "description": "Discover how Korean syllables are built and understand the role of batchims (final consonants) and gyeobatchims (double final consonants).",
+            "chapters": [
+                {
+                    "title": "Building a syllable",
+                    "description": "This chapter explains how to construct a syllable block in Hangeul, combining consonants and vowels step by step."
+                },
+                {
+                    "title": "Batchims and Gyeobatchims",
+                    "description": "This chapter introduces batchims (final consonants) and gyeobatchims (double final consonants), with rules and pronunciation tips."
+                }
+            ]
+        }
+    }
+}

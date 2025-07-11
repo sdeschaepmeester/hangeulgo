@@ -1,5 +1,6 @@
 import type { Lesson } from "@/types/Lesson";
 import { getAlphabetLesson } from "@/lessons/alphabet";
+import { getSyllableLesson } from "@/lessons/syllable";
 
 type LessonFactory = (locale: "fr" | "en") => Lesson;
 
@@ -9,4 +10,5 @@ export type LessonsMap = {
 
 export const lessonsMap: LessonsMap = {
     alphabet: getAlphabetLesson,
+    syllable: getSyllableLesson
 };

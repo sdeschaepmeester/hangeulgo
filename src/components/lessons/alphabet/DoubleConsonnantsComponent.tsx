@@ -3,8 +3,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import SubTitle from '../SubTitle';
-import { getLessonTranslation } from '@/services/lessons';
 import LetterItem from './LetterItem';
+import { alphabetLesson } from '@/services/lessons';
 
 interface Props { }
 
@@ -23,28 +23,23 @@ const doubleConsonantsData: Consonant[] = [
 ];
 
 export const DoubleConsonnantsComponent: React.FC<Props> = () => {
-    const localLesson = getLessonTranslation("alphabet");
-    if (!localLesson) {
-        throw new Error("No translation found for alphabet lesson.");
-    }
-
     return (
         <View style={styles.container}>
             {/* ------------------------ What you learn ------------------------ */}
             <Text style={{ fontStyle: "italic", marginBottom: 8 }}>
-                {localLesson.chapters[2].description}
+                {alphabetLesson.chapters[2].description}
             </Text>
 
             {/* ------------------------ Info ------------------------ */}
             <Text style={{ marginBottom: 12 }}>
-                {localLesson.chapters[2].doubleConsonnantExplanation ?? ''}
+                {alphabetLesson.chapters[2]?.doubleConsonnantExplanation ?? ''}
             </Text>
 
             {/* ------------------------ Double consonants list ------------------------ */}
             <View style={{ marginTop: 12 }}>
-                <SubTitle label={localLesson.chapters[2].doubleConsonnantTitle ?? 'Consonnes doubles'} />
+                <SubTitle label={alphabetLesson.chapters[2].doubleConsonnantTitle ?? 'Consonnes doubles'} />
                 <Text>
-                    {localLesson.chapters[2].doubleConsonnantIntro ?? 'Voici les 5 principales consonnes doubles :'}
+                    {alphabetLesson.chapters[2].doubleConsonnantIntro ?? 'Voici les 5 principales consonnes doubles :'}
                 </Text>
                 <View style={styles.list}>
                     {doubleConsonantsData.map((c) => (

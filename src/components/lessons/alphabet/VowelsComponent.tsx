@@ -4,8 +4,8 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import VowelGroups from './VowelGroups';
 import SubTitle from '../SubTitle';
-import { getLessonTranslation } from '@/services/lessons';
 import LetterItem from './LetterItem';
+import { alphabetLesson } from '@/services/lessons';
 
 interface Props {}
 
@@ -30,16 +30,11 @@ const vowelsData: Vowel[] = [
 ];
 
 export const VowelsComponent: React.FC<Props> = () => {
-  const localLesson = getLessonTranslation("alphabet");
-  if (!localLesson) {
-    throw new Error("No translation found for alphabet lesson.");
-  }
-
   return (
     <View style={styles.container}>
       {/* ------------------------ What you learn ------------------------ */}
       <Text style={{ fontStyle: "italic", marginBottom: 8 }}>
-        {localLesson.chapters[1].description}
+        {alphabetLesson.chapters[1].description}
       </Text>
 
       {/* ------------------------ Vowels groups ------------------------ */}
@@ -47,9 +42,9 @@ export const VowelsComponent: React.FC<Props> = () => {
 
       {/* ------------------------ Vowels list ------------------------ */}
       <View style={{ marginTop: 12 }}>
-        <SubTitle label={localLesson.chapters[1].vowelTitle ?? ''} />
+        <SubTitle label={alphabetLesson.chapters[1].vowelTitle ?? ''} />
         <Text>
-          {localLesson.chapters[1].vowelIntro}
+          {alphabetLesson.chapters[1].vowelIntro}
         </Text>
         <View style={styles.list}>
           {vowelsData.map((v) => (

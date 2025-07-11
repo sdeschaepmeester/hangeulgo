@@ -1,14 +1,15 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import ListLessons from "@/components/lessons/ListLessons";
 import LessonLayout from "@/layouts/LessonLayout";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function LessonsScreen() {
     return (
         <LessonLayout>
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <ListLessons />
-            </View>
+            </ScrollView>
         </LessonLayout>
     );
 }

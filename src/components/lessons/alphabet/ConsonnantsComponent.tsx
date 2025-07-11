@@ -4,8 +4,8 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import ConsonantGroups from './ConsonnantGroups';
 import SubTitle from '../SubTitle';
-import { getLessonTranslation } from '@/services/lessons';
 import LetterItem from './LetterItem';
+import { alphabetLesson } from '@/services/lessons';
 
 interface Props {
     locale: string;
@@ -35,24 +35,19 @@ const consonantsData: Consonant[] = [
 ];
 
 export const ConsonnantsComponent: React.FC<Props> = () => {
-    const localLesson = getLessonTranslation("alphabet");
-    if (!localLesson) {
-        throw new Error("No translation found for alphabet lesson.");
-    }
-
     return (
         <View style={styles.container}>
             {/* ------------------------ What you learn ------------------------ */}
             <Text style={{ fontStyle: "italic", marginBottom: 8 }}>
-                {localLesson.chapters[0].description}
+                {alphabetLesson.chapters[0].description}
             </Text>
             {/* ------------------------ Consonnants types ------------------------ */}
             <ConsonantGroups />
             {/* ------------------------ Consonnants list ------------------------ */}
             <View style={{ marginTop: 12 }}>
-                <SubTitle label={localLesson.chapters[0].consonnantTitle ?? ''} />
+                <SubTitle label={alphabetLesson.chapters[0].title ?? ''} />
                 <Text>
-                    {localLesson.chapters[0].consonnantIntro}
+                    {alphabetLesson.chapters[0].description}
                 </Text>
                 <View style={styles.list}>
                     {consonantsData.map((c) => (

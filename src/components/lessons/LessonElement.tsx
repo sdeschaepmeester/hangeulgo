@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, View, Text, StyleSheet, GestureResponderEvent, Dimensions, } from "react-native";
+import { TouchableOpacity, View, Text, StyleSheet, GestureResponderEvent, Dimensions } from "react-native";
 import type { ReactNode } from "react";
 import colors from "@/constants/colors";
 import { getDifficultyLabel } from "@/services/difficulty";
@@ -30,14 +30,7 @@ function getDifficultyColor(difficulty: Props["difficulty"]) {
     }
 }
 
-export default function LessonElement({
-    icon,
-    title,
-    description,
-    difficulty,
-    totalItems,
-    onPress,
-}: Props) {
+export default function LessonElement({ icon, title, description, difficulty, totalItems, onPress, }: Props) {
     return (
         <TouchableOpacity
             style={[
@@ -71,10 +64,18 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         backgroundColor: colors.neutral.lightest,
         alignItems: "center",
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
         paddingVertical: 16,
         paddingHorizontal: 12,
         flexGrow: 1,
+    },
+    learnButton: {
+        marginTop: 16,
+        backgroundColor: colors.primary.main,
+        borderRadius: 8,
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        width: "100%"
     },
     mobileCard: {
         flexBasis: "48%",
@@ -111,14 +112,6 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontWeight: "600",
         marginBottom: 12,
-    },
-    learnButton: {
-        marginTop: "auto",
-        backgroundColor: colors.primary.main,
-        borderRadius: 8,
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        width: "100%"
     },
     learnButtonText: {
         color: "#fff",
