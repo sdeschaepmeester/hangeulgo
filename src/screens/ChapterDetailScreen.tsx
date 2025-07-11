@@ -6,6 +6,7 @@ import type { RootStackParamList } from "@/App";
 import LessonLayout from "@/layouts/LessonLayout";
 import i18n from "@/i18n";
 import { lessonsMap } from "@/i18n/lessons";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function ChapterDetailScreen() {
     const { params } = useRoute<RouteProp<RootStackParamList, "ChapterDetail">>();
@@ -30,13 +31,15 @@ export default function ChapterDetailScreen() {
         // Details of a lesson's chapter
         <LessonLayout>
             <View style={styles.container}>
-                <Text style={styles.title}>{chapter.title}</Text>
-                {chapter.content && (
-                    <Text style={styles.content}>{chapter.content}</Text>
-                )}
-                {chapter.component && (
-                    <chapter.component />
-                )}
+                <ScrollView>
+                    <Text style={styles.title}>{chapter.title}</Text>
+                    {chapter.content && (
+                        <Text style={styles.content}>{chapter.content}</Text>
+                    )}
+                    {chapter.component && (
+                        <chapter.component />
+                    )}
+                </ScrollView>
             </View>
         </LessonLayout>
     );

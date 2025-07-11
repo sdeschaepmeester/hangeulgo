@@ -6,15 +6,44 @@
             "chapters": [
                 {
                     "title": "Les consonnes",
-                    "content": "Il existe X consonnes"
+                    "description": "Ce chapitre explique les différentes consonnes existantes dans l'Hangeul (langage coréen).",
+                    "consonnantGroupTitle": "Groupes de consonnes",
+                    "consonnantGroupIntro": "Les consonnes sont réparties en 5 groupes selon la façon dont elles sont prononcées :",
+                    "consonnants": "Consonnes :",
+                    "bilabial": "Bilabiales",
+                    "alveolar": "Alvéolaires",
+                    "palatal": "Palatales",
+                    "glottal": "Glottales",
+                    "velars": "Vélaires",
+                    "bilabialSound": "Son produit par les lèvres.",
+                    "alveolarSound": "Son produit par la langue sur les alvéoles dentaires.",
+                    "palatalSound": "Son produit par le milieu du palais.",
+                    "glottalSound": "Son produit par la gorge.",
+                    "velarsSound": "Son produit par l'arrière du palais.",
+                    "consonnantTitle": "Liste des consonnes et prononciation",
+                    "consonnantIntro": "Il existe 14 consonnes différentes :"
                 },
                 {
                     "title": "Les voyelles",
-                    "content": "Le coréen possède 10 voyelles..."
+                    "description": "Ce chapitre explique les différentes voyelles existantes dans l'Hangeul (langage coréen).",
+                    "vowelGroupTitle": "Groupes de voyelles",
+                    "vowelGroupIntro": "Les voyelles sont regroupées selon leur articulation et leur forme :",
+                    "vowels": "Voyelles :",
+                    "basic": "Simples",
+                    "complex": "Composées",
+                    "double": "Doubles",
+                    "basicSound": "Voyelles de base formées d'un seul trait.",
+                    "complexSound": "Voyelles composées formées par la combinaison de voyelles de base.",
+                    "doubleSound": "Voyelles dites doubles ou diphtongues.",
+                    "vowelTitle": "Liste des voyelles et prononciation",
+                    "vowelIntro": "Il existe 12 voyelles différentes en coréen :"
                 },
                 {
-                    "title": "Les doubles consonnes",
-                    "content": "Il existe 5 consonnes doubles..."
+                    "title": "Les consonnes doubles",
+                    "description": "Ce chapitre explique les consonnes doubles (쌍자음) dans l'Hangeul. Elles sont considérées comme une seule lettre.",
+                    "doubleConsonnantTitle": "Liste des consonnes doubles",
+                    "doubleConsonnantIntro": "Il existe 5 consonnes doubles principales utilisées en coréen :",
+                    "doubleConsonnantExplanation": "Les consonnes doubles (쌍자음) sont des consonnes renforcées. Elles sont considérées comme une seule lettre et modifient la prononciation en la rendant plus forte."
                 }
             ]
         }

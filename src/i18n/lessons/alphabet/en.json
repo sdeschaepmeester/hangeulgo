@@ -5,16 +5,45 @@
             "description": "Learn to identify and read the consonnants, vowels and double consonnants.",
             "chapters": [
                 {
-                    "title": "Consonnants",
-                    "content": "Il existe X consonnes"
+                    "title": "Consonants",
+                    "description": "This chapter explains the different consonants that exist in Hangeul (the Korean alphabet).",
+                    "consonnantGroupTitle": "Groups of consonants",
+                    "consonnantGroupIntro": "The consonants are divided into 5 groups according to how they are pronounced:",
+                    "consonnants": "Consonants:",
+                    "bilabial": "Bilabials",
+                    "alveolar": "Alveolars",
+                    "palatal": "Palatals",
+                    "glottal": "Glottals",
+                    "velars": "Velars",
+                    "bilabialSound": "Sound produced with the lips.",
+                    "alveolarSound": "Sound produced with the tongue against the alveolar ridge.",
+                    "palatalSound": "Sound produced in the middle of the palate.",
+                    "glottalSound": "Sound produced in the throat.",
+                    "velarsSound": "Sound produced at the back of the palate.",
+                    "consonnantTitle": "List of consonants and pronunciation",
+                    "consonnantIntro": "There are 14 different consonants:"
                 },
                 {
                     "title": "Vowels",
-                    "content": "Le coréen possède 10 voyelles..."
+                    "description": "This chapter explains the different vowels that exist in Hangeul (the Korean alphabet).",
+                    "vowelGroupTitle": "Groups of vowels",
+                    "vowelGroupIntro": "Vowels are grouped according to their articulation and shape:",
+                    "vowels": "Vowels:",
+                    "basic": "Basic",
+                    "complex": "Compound",
+                    "double": "Double",
+                    "basicSound": "Basic vowels formed by a single stroke.",
+                    "complexSound": "Compound vowels formed by combining basic vowels.",
+                    "doubleSound": "So-called double vowels or diphthongs.",
+                    "vowelTitle": "List of vowels and pronunciation",
+                    "vowelIntro": "There are 12 different vowels in Korean:"
                 },
                 {
-                    "title": "Double consonnants",
-                    "content": "Il existe 5 consonnes doubles..."
+                    "title": "Double consonants",
+                    "description": "This chapter explains the double consonants (쌍자음) in Hangeul. They are considered as a single letter.",
+                    "doubleConsonnantTitle": "List of double consonants",
+                    "doubleConsonnantIntro": "There are 5 main double consonants used in Korean:",
+                    "doubleConsonnantExplanation": "Double consonants (쌍자음) are reinforced consonants. They are considered as a single letter and strengthen the pronunciation."
                 }
             ]
         }
