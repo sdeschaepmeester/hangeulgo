@@ -36,7 +36,11 @@
                     "complexSound": "Voyelles composées formées par la combinaison de voyelles de base.",
                     "doubleSound": "Voyelles dites doubles ou diphtongues.",
                     "vowelTitle": "Liste des voyelles et prononciation",
-                    "vowelIntro": "Il existe 12 voyelles différentes en coréen :"
+                    "vowelIntro": "Il existe 12 voyelles séparées en 2 groupes différents :",
+                    "horizontalTitle": "Voyelles horizontales",
+                    "horizontalDescription": "Il existe 5 voyelles horizontales. Celles-ci s'écrivent en dessous des consonnes.",
+                    "verticalTitle": "Voyelles verticales",
+                    "verticalDescription": "Il existe 7 voyelles verticales. Celles-ci s'écrivent sur le côté droit des consonnes."
                 },
                 {
                     "title": "Les consonnes doubles",

@@ -13,7 +13,7 @@ export const SyllableIntroductionComponent: React.FC = () => {
                 {syllableLesson.chapters[0].description}
             </Text>
 
-            {/* ------------------------ Rules ------------------------ */}
+            {/* ------------------------ Rules about syllables ------------------------ */}
             <View style={{ marginBottom: 12 }}>
                 <SubTitle label={syllableLesson.chapters[0].rulesTitle ?? ''} />
 
@@ -34,7 +34,7 @@ export const SyllableIntroductionComponent: React.FC = () => {
                 ))}
             </View>
 
-            {/* ------------------------ Construction ------------------------ */}
+            {/* ------------------------ Construction of a syllable ------------------------ */}
             <View style={{ marginBottom: 12 }}>
                 <SubTitle label={syllableLesson.chapters[0].constructionTitle ?? ''} />
                 <Text>

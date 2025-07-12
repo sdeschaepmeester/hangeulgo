@@ -36,7 +36,11 @@
                     "complexSound": "Compound vowels formed by combining basic vowels.",
                     "doubleSound": "So-called double vowels or diphthongs.",
                     "vowelTitle": "List of vowels and pronunciation",
-                    "vowelIntro": "There are 12 different vowels in Korean:"
+                    "vowelIntro": "There are 12 different vowels separated in 2 differents groups in Korean:",
+                    "horizontalTitle": "Horizontal vowels",
+                    "horizontalDescription": "There are 5 horizontal vowels. These are written below the consonants.",
+                    "verticalTitle": "Vertical vowels",
+                    "verticalDescription": "There are 7 vertical vowels. These are written to the right of the consonants."
                 },
                 {
                     "title": "Double consonants",
