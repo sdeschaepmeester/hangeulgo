@@ -1,13 +1,11 @@
-'use client';
-
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import VowelGroups from './VowelGroups';
 import SubTitle from '../SubTitle';
 import LetterItem from './LetterItem';
 import { alphabetLesson } from '@/services/lessons';
 
-interface Props {}
+interface Props { }
 
 interface Vowel {
   symbol: string;
@@ -31,9 +29,9 @@ const vowelsData: Vowel[] = [
 
 export const VowelsComponent: React.FC<Props> = () => {
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       {/* ------------------------ What you learn ------------------------ */}
-      <Text style={{ fontStyle: "italic", marginBottom: 8 }}>
+      <Text style={{ fontStyle: 'italic', marginBottom: 8 }}>
         {alphabetLesson.chapters[1].description}
       </Text>
 
@@ -43,28 +41,21 @@ export const VowelsComponent: React.FC<Props> = () => {
       {/* ------------------------ Vowels list ------------------------ */}
       <View style={{ marginTop: 12 }}>
         <SubTitle label={alphabetLesson.chapters[1].vowelTitle ?? ''} />
-        <Text>
-          {alphabetLesson.chapters[1].vowelIntro}
-        </Text>
+        <Text>{alphabetLesson.chapters[1].vowelIntro}</Text>
         <View style={styles.list}>
           {vowelsData.map((v) => (
-            <LetterItem
-              key={v.symbol}
-              symbol={v.symbol}
-              name={v.name}
-            />
+            <LetterItem key={v.symbol} symbol={v.symbol} name={v.name} />
           ))}
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    gap: 12,
+    flexGrow: 1,
+    flexDirection: 'column',
   },
   list: {
     flexDirection: 'row',

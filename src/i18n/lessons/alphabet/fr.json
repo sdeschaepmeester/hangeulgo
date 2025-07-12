@@ -44,6 +44,14 @@
                     "doubleConsonnantTitle": "Liste des consonnes doubles",
                     "doubleConsonnantIntro": "Il existe 5 consonnes doubles principales utilisées en coréen :",
                     "doubleConsonnantExplanation": "Les consonnes doubles (쌍자음) sont des consonnes renforcées. Elles sont considérées comme une seule lettre et modifient la prononciation en la rendant plus forte."
+                },
+                {
+                    "title": "La consonne ieung (ㅇ)",
+                    "description": "Ce chapitre explique l’usage particulier de la consonne ieung.",
+                    "ieungTitle": "Règle spéciale",
+                    "ieungExamples": "Exemples de syllabes avec la consonne ㅇ",
+                    "ieungIntro": "En Hangeul, ieung (ㅇ) a une fonction unique.",
+                    "ieungExplanation": "Lorsque ieung (ㅇ) est placée au début d’un bloc syllabique, elle agit comme une consonne muette pour permettre à une syllabe de commencer par une voyelle. Placée en fin de bloc, elle se prononce 'ng'."
                 }
             ]
         }

@@ -44,6 +44,14 @@
                     "doubleConsonnantTitle": "List of double consonants",
                     "doubleConsonnantIntro": "There are 5 main double consonants used in Korean:",
                     "doubleConsonnantExplanation": "Double consonants (쌍자음) are reinforced consonants. They are considered as a single letter and strengthen the pronunciation."
+                },
+                {
+                    "title": "The consonant ieung (ㅇ)",
+                    "description": "This chapter explains the special usage of the consonant ieung.",
+                    "ieungTitle": "Special rule",
+                    "ieungExamples": "Examples of syllables with consonnant ㅇ",
+                    "ieungIntro": "In Hangeul, ieung (ㅇ) has a unique function.",
+                    "ieungExplanation": "When ieung (ㅇ) is placed at the beginning of a syllable, it acts as a silent consonant to allow a syllable to start with a vowel. When it appears at the end of a syllable block, it is pronounced as 'ng'."
                 }
             ]
         }

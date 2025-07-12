@@ -1,7 +1,7 @@
-import { ConsonnantsComponent } from "@/components/lessons/alphabet/ConsonnantsComponent";
 import type { Lesson } from "@/types/Lesson";
 import { VowelsComponent } from "@/components/lessons/alphabet/VowelsComponent";
 import { syllableLesson } from "@/services/lessons";
+import { SyllableIntroductionComponent } from "@/components/lessons/syllable/Introduction";
 
 export function getSyllableLesson(): Lesson {
     return {
@@ -14,7 +14,7 @@ export function getSyllableLesson(): Lesson {
             {
                 id: "syllable_introduction",
                 title: syllableLesson.chapters[0].title,
-                component: ConsonnantsComponent,
+                component: SyllableIntroductionComponent,
             },
             {
                 id: "syllable_batchim",

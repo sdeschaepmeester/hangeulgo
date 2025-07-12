@@ -6,7 +6,23 @@
             "chapters": [
                 {
                     "title": "Construire une syllabe",
-                    "description": "Ce chapitre explique comment former un bloc syllabique en Hangeul en combinant consonnes et voyelles étape par étape."
+                    "description": "Ce chapitre explique les règles de base pour construire un bloc syllabique en Hangeul.",
+                    "rulesTitle": "Les règles concernant la construction de syllabes",
+                    "rules": [
+                        "Un bloc de syllabe est au moins constitué de deux lettres (ex : consonne + voyelle).",
+                        "Chaque syllabe commence par une consonne. Si une syllabe commence par une voyelle, on utilise 이응 (ㅇ) comme consonne muette.",
+                        "Une consonne est toujours suivie d'une voyelle.",
+                        "Chaque bloc de syllabe occupe le même espace carré pour garder une écriture harmonieuse."
+                    ],
+                    "examples": [
+                        "Bloc de 3 lettres (han)",
+                        "Syllabe commençant avec ㅇ (a)",
+                        "Consonne + voyelle (ga)",
+                        "Horizontal",
+                        "Vertical"
+                    ],
+                    "constructionTitle": "Construction des syllabes",
+                    "constructionDescription": "Les voyelles verticales sont écrites à droite de la consonne. Les voyelles horizontales sont écrites en dessous de la consonne."
                 },
                 {
                     "title": "Batchims et Gyeobatchims",

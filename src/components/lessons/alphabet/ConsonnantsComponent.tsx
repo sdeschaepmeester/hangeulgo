@@ -1,7 +1,5 @@
-'use client';
-
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import ConsonantGroups from './ConsonnantGroups';
 import SubTitle from '../SubTitle';
 import LetterItem from './LetterItem';
@@ -36,19 +34,19 @@ const consonantsData: Consonant[] = [
 
 export const ConsonnantsComponent: React.FC<Props> = () => {
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             {/* ------------------------ What you learn ------------------------ */}
-            <Text style={{ fontStyle: "italic", marginBottom: 8 }}>
+            <Text style={{ fontStyle: 'italic', marginBottom: 8 }}>
                 {alphabetLesson.chapters[0].description}
             </Text>
-            {/* ------------------------ Consonnants types ------------------------ */}
+
+            {/* ------------------------ Consonants types ------------------------ */}
             <ConsonantGroups />
-            {/* ------------------------ Consonnants list ------------------------ */}
+
+            {/* ------------------------ Consonants list ------------------------ */}
             <View style={{ marginTop: 12 }}>
                 <SubTitle label={alphabetLesson.chapters[0].title ?? ''} />
-                <Text>
-                    {alphabetLesson.chapters[0].description}
-                </Text>
+                <Text>{alphabetLesson.chapters[0].description}</Text>
                 <View style={styles.list}>
                     {consonantsData.map((c) => (
                         <LetterItem
@@ -60,15 +58,14 @@ export const ConsonnantsComponent: React.FC<Props> = () => {
                     ))}
                 </View>
             </View>
-        </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flexWrap: 'wrap',
-        flexDirection: 'row',
-        gap: 12,
+        flexGrow: 1,
+        flexDirection: 'column',
     },
     button: {
         width: 64,
@@ -91,5 +88,5 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'center',
-    }
+    },
 });

@@ -3,6 +3,7 @@ import type { Lesson } from "@/types/Lesson";
 import { VowelsComponent } from "@/components/lessons/alphabet/VowelsComponent";
 import { DoubleConsonnantsComponent } from "@/components/lessons/alphabet/DoubleConsonnantsComponent";
 import { alphabetLesson } from "@/services/lessons";
+import { IeungComponent } from "@/components/lessons/alphabet/IeungComponent";
 
 export function getAlphabetLesson(): Lesson {
 
@@ -27,6 +28,11 @@ export function getAlphabetLesson(): Lesson {
                 id: "alphabet_doubleconsonnants",
                 title: alphabetLesson.chapters[2].title,
                 component: DoubleConsonnantsComponent,
+            },
+            {
+                id: "ieung",
+                title: alphabetLesson.chapters[3].title,
+                component: IeungComponent,
             },
         ],
     };

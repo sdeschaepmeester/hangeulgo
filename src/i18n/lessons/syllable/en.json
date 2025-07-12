@@ -6,7 +6,23 @@
             "chapters": [
                 {
                     "title": "Building a syllable",
-                    "description": "This chapter explains how to construct a syllable block in Hangeul, combining consonants and vowels step by step."
+                    "description": "This chapter explains the basic rules for constructing a syllable block in Hangeul.",
+                    "rulesTitle": "Rules concerning the construction of syllables",
+                    "rules": [
+                        "A syllable block is always made up of at least two letters (e.g. consonant + vowel).",
+                        "Each syllable always starts with a consonant. If a syllable starts with a vowel, ieung (ㅇ) is used as a silent consonant.",
+                        "A consonant is always followed by a vowel.",
+                        "Each syllable block takes up the same square space to keep the writing balanced."
+                    ],
+                    "examples": [
+                        "Block with 3 letters (han)",
+                        "Starts with ㅇ (a)",
+                        "Consonant + vowel (ga)",
+                        "Horizontal",
+                        "Vertical"
+                    ],
+                    "constructionTitle": "Building syllables",
+                    "constructionDescription": "Vertical vowels are written to the right of the consonant. Horizontal vowels are written below the consonant."
                 },
                 {
                     "title": "Batchims and Gyeobatchims",
