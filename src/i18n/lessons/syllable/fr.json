@@ -25,8 +25,36 @@
                     "constructionDescription": "Les voyelles verticales sont écrites à droite de la consonne. Les voyelles horizontales sont écrites en dessous de la consonne."
                 },
                 {
-                    "title": "Batchims et Gyeobatchims",
-                    "description": "Ce chapitre présente les batchims (consonnes finales) et les gyeobatchims (doubles consonnes finales), avec des règles et conseils de prononciation."
+                    "title": "Batchims et Gyeobbatchims",
+                    "description": "Ce chapitre présente les batchims (consonnes finales) et les gyeobbatchims (doubles consonnes finales), avec des règles et conseils de prononciation.",
+                    "introTitle": "Introduction",
+                    "introTextParts": [
+                        "Les consonnes de fin de syllabe sont appelées batchims et gyeobbatchims (겹받침 en coréen).",
+                        "Elles se placent en fin de syllabe et ont une prononciation différente de leur position initiale.",
+                        "Toute syllabe comportant",
+                        "au moins trois lettres",
+                        "peut avoir une consonne finale."
+                    ],
+                    "batchimTitle": "Batchims",
+                    "batchimText": "On appelle batchims les consonnes finales simples. Exemples et prononciations :",
+                    "batchimTableHeaders": [
+                        "Consonne finale",
+                        "Prononciation"
+                    ],
+                    "gyeobbatchimTitle": "Gyeobbatchims",
+                    "gyeobbatchimTextParts": [
+                        "Les gyeobbatchims (겹받침) sont des doubles consonnes finales.",
+                        "Il existe 11 combinaisons :",
+                        "En général, seule la première consonne est prononcée.",
+                        "Exceptions : ㄺ, ㄻ, ㄼ où l’on prononce la deuxième."
+                    ],
+                    "liaisonTitle": "Consonnes finales suivies d'une voyelle",
+                    "liaisonText": "Quand un batchim ou gyeobbatchim est suivi d’une syllabe commençant par une voyelle, le son bascule vers la syllabe suivante.",
+                    "word": "Exemple",
+                    "phonetic": "Phonétique",
+                    "translation": "Traduction",
+                    "pronunciation": "Prononciation",
+                    "pronunced": "se prononce"
                 }
             ]
         }
