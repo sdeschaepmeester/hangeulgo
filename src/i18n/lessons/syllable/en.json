@@ -35,13 +35,13 @@
                         "at least three letters",
                         "can have a final consonant."
                     ],
-                    "batchimTitle": "Batchims",
-                    "batchimText": "Batchims are simple final consonants. Examples and pronunciation:",
+                    "batchimTitle": "Final Consonants (Batchim)",
+                    "batchimText": "Batchims (받침) are simple final consonants. Examples and pronunciation:",
                     "batchimTableHeaders": [
                         "Final consonant",
                         "Pronunciation"
                     ],
-                    "gyeobbatchimTitle": "Gyeobbatchims",
+                    "gyeobbatchimTitle": "Double Final Consonants (Gyeobbatchim)",
                     "gyeobbatchimTextParts": [
                         "Gyeobbatchims (겹받침) are double final consonants.",
                         "There are 11 combinations:",
@@ -54,7 +54,9 @@
                     "phonetic": "Phonetic",
                     "translation": "Translation",
                     "pronunciation": "Pronunciation",
-                    "pronunced": "is pronunced"
+                    "pronunced": "is pronunced",
+                    "meeting": "meeting",
+                    "consonnant": "Consonnant"
                 }
             ]
         }

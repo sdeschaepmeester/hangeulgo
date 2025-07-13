@@ -10,16 +10,16 @@ export const BatchimComponent: React.FC = () => {
     const batchims = ["ㄳ", "ㄵ", "ㄶ", "ㄺ", "ㄻ", "ㄼ", "ㄽ", "ㄾ", "ㄿ", "ㅀ", "ㅄ"];
     const gyeobbatchimExamples = [
         {
-            word: '꽃잎',
-            romanization: 'kkot-ip',
-            translation: 'Pétale',
-            pronunciation: `ㄳ ${syllableLesson.chapters[1].pronunced} "t"`,
+            word: '감사합니다',
+            romanization: 'gam-sa-hab-ni-da',
+            prononciation: 'gam-sa-ham-ni-da',
+            explanation: `${syllableLesson.chapters[1].consonnant} ㅂ ${syllableLesson.chapters[1].meeting} ㄴ ${syllableLesson.chapters[1].pronunced} "m"`,
         },
         {
-            word: '읽어',
-            romanization: 'ilg-eo',
-            translation: 'Lire',
-            pronunciation: `ㄺ ${syllableLesson.chapters[1].pronunced} "k"`,
+            word: "읽다",
+            romanization: "ilg-da",
+            prononciation: "ik-tta",
+            explanation: `${syllableLesson.chapters[1].consonnant} ㄺ ${syllableLesson.chapters[1].meeting} ㄷ ${syllableLesson.chapters[1].pronunced} "k"`
         }
     ];
 
@@ -130,8 +130,8 @@ export const BatchimComponent: React.FC = () => {
                             </TouchableOpacity>
                         </View>
                         <Text style={styles.cell}>{ex.romanization}</Text>
-                        <Text style={styles.cell}>{ex.translation}</Text>
-                        <Text style={styles.cell}>{ex.pronunciation}</Text>
+                        <Text style={styles.cell}>{ex.prononciation}</Text>
+                        <Text style={styles.cell}>{ex.explanation}</Text>
                     </View>
                 ))}
             </View>

@@ -25,7 +25,7 @@
                     "constructionDescription": "Les voyelles verticales sont écrites à droite de la consonne. Les voyelles horizontales sont écrites en dessous de la consonne."
                 },
                 {
-                    "title": "Batchims et Gyeobbatchims",
+                    "title": "Consonnes et double consonnes finales",
                     "description": "Ce chapitre présente les batchims (consonnes finales) et les gyeobbatchims (doubles consonnes finales), avec des règles et conseils de prononciation.",
                     "introTitle": "Introduction",
                     "introTextParts": [
@@ -35,13 +35,13 @@
                         "au moins trois lettres",
                         "peut avoir une consonne finale."
                     ],
-                    "batchimTitle": "Batchims",
-                    "batchimText": "On appelle batchims les consonnes finales simples. Exemples et prononciations :",
+                    "batchimTitle": "Les consonnes finales (Batchim)",
+                    "batchimText": "On appelle batchims (받침) les consonnes finales simples. Exemples et prononciations :",
                     "batchimTableHeaders": [
                         "Consonne finale",
                         "Prononciation"
                     ],
-                    "gyeobbatchimTitle": "Gyeobbatchims",
+                    "gyeobbatchimTitle": "Les doubles consonnes finales (Gyeobbatchims)",
                     "gyeobbatchimTextParts": [
                         "Les gyeobbatchims (겹받침) sont des doubles consonnes finales.",
                         "Il existe 11 combinaisons :",
@@ -54,7 +54,9 @@
                     "phonetic": "Phonétique",
                     "translation": "Traduction",
                     "pronunciation": "Prononciation",
-                    "pronunced": "se prononce"
+                    "pronunced": "se prononce",
+                    "meeting": "suivie de",
+                    "consonnant": "La consonne"
                 }
             ]
         }
