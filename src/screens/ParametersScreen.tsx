@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, ScrollView, Text, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import MainLayout from "@/layouts/MainLayout";
-import TesterDaysTestBigCard from "@/components/test/TesterDaysTestBigCard";
 import colors from "@/constants/colors";
 import { isSoundEnabled, setSoundEnabled, playFeedbackIfEnabled } from "@/services/sound";
 import i18n from "@/i18n";
@@ -29,8 +28,6 @@ export default function ParametersScreen() {
     return (
         <MainLayout style={{ backgroundColor: colors.primary.light }}>
             <ScrollView contentContainerStyle={styles.scrollContent}>
-                {/* Number of days testing */}
-                <TesterDaysTestBigCard />
                 {/* Manage sound effects */}
                 <TouchableOpacity style={styles.soundToggle} onPress={toggleSound} disabled={loading}>
                     <MaterialCommunityIcons

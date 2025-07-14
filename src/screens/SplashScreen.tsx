@@ -7,7 +7,6 @@ import { initDatabase } from "@/db/database";
 import { isFirstLaunch } from "@/services/firstLaunch";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/App";
-import { saveDateInstallation } from "@/services/tester";
 import colors from "@/constants/colors";
 
 export default function SplashScreen() {
@@ -21,8 +20,6 @@ export default function SplashScreen() {
             // If first time launching the app or no language chosen, redirect.
             // Keep firsttime check, for future uses
             if (firstTime || !storedLang) {
-                await saveDateInstallation(); //! To remove once the tests are done
-
                 navigation.reset({
                     index: 0,
                     routes: [{ name: "ChooseLanguage" }],

@@ -157,10 +157,6 @@
     "flag": "🇫🇷",
     "nativeLang": "Français",
     "unnamed": "Sans nom",
-    "test": {
-        "daysTesting": "Jours de test",
-        "thankYou": "Merci de faire partie des testeurs !"
-    },
     "screens": {
         "addWord": "Ajouter un mot",
         "lexicon": "Réviser",
@@ -177,5 +173,6 @@
         "puzzle": "Remet le mot dans le bon ordre :"
     },
     "soundActivated": "Sons activés",
-    "soundInactivated": "Sons désactivés"
+    "soundInactivated": "Sons désactivés",
+    "settings": "Paramètres"
 }

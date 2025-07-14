@@ -157,10 +157,6 @@
     "flag": "🇺🇸",
     "unnamed": "Unnamed",
     "nativeLang": "English",
-    "test": {
-        "daysTesting": "Days testing",
-        "thankYou": "Thank you for being a tester !"
-    },
     "screens": {
         "addWord": "Add word",
         "lexicon": "Review",
@@ -177,5 +173,6 @@
         "puzzle": "Put the word back in order:"
     },
     "soundActivated": "Sounds enabled",
-    "soundInactivated": "Sounds disabled"
+    "soundInactivated": "Sounds disabled",
+    "settings": "Parameters"
 }
