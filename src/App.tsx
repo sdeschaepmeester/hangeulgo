@@ -18,7 +18,6 @@ import { GameSettings, GameType } from "./types/GameSettings";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import SplashScreen from "./screens/SplashScreen";
 import ChooseLanguageScreen from "./screens/ChooseLanguageScreen";
-import TesterDaysNumberCard from "./components/test/TesterDaysNumberCard";
 import ParametersScreen from "./screens/ParametersScreen";
 import i18n from "./i18n";
 import colors from "./constants/colors";
@@ -113,9 +112,6 @@ export default function App() {
               name="Home"
               component={HomeScreen}
               options={({ navigation }) => ({
-                headerLeft: () => (
-                  <TesterDaysNumberCard /> //! To remove once tests are done
-                ),
                 title: "",
                 headerRight: () => goSettingsButton(navigation),
               })}
@@ -128,7 +124,7 @@ export default function App() {
                 headerTitle: () => (
                   <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{ marginLeft: 10 }}>
                     <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
-                      Paramètres
+                      {i18n.t("parameters")}
                     </Text>
                   </TouchableOpacity>
                 ),

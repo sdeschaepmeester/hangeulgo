@@ -160,10 +160,6 @@
     "flag": "🇫🇷",
     "nativeLang": "Français",
     "unnamed": "Sans nom",
-    "test": {
-        "daysTesting": "Jours de test",
-        "thankYou": "Merci de faire partie des testeurs !"
-    },
     "screens": {
         "addWord": "Ajouter un mot",
         "lexicon": "Réviser",
@@ -188,5 +184,6 @@
     "noChapter": "Chapitre introuvable.",
     "return": "Retour",
     "returnToLessons": "Retour aux leçons",
-    "returnToChapters": "Retour à la liste des chapitres"
+    "returnToChapters": "Retour à la liste des chapitres",
+    "settings": "Paramètres"
 }
