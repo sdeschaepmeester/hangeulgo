@@ -30,7 +30,7 @@ function getDifficultyColor(difficulty: Props["difficulty"]) {
     }
 }
 
-export default function LessonElement({ icon, title, description, difficulty, totalItems, onPress, }: Props) {
+export default function LessonElement({ icon, title, description, difficulty, totalItems, onPress }: Props) {
     return (
         <TouchableOpacity
             style={[
@@ -41,19 +41,23 @@ export default function LessonElement({ icon, title, description, difficulty, to
             onPress={onPress}
             activeOpacity={0.8}
         >
-            <View style={styles.iconContainer}>{icon}</View>
-            <Text style={styles.title}>{title}</Text>
-            <Text style={styles.description}>{description}</Text>
-            <Text
-                style={[
-                    styles.difficulty,
-                    { color: getDifficultyColor(difficulty) },
-                ]}
-            >
-                {i18n.t('difficulties.difficulty')}{i18n.t('colon')} {getDifficultyLabel(difficulty)}
-            </Text>
+            <View style={styles.content}>
+                <View style={styles.iconContainer}>{icon}</View>
+                <Text style={styles.title}>{title}</Text>
+                <Text style={styles.description}>{description}</Text>
+                <Text
+                    style={[
+                        styles.difficulty,
+                        { color: getDifficultyColor(difficulty) },
+                    ]}
+                >
+                    {i18n.t("difficulties.difficulty")}
+                    {i18n.t("colon")} {getDifficultyLabel(difficulty)}
+                </Text>
+            </View>
+
             <TouchableOpacity style={styles.learnButton} onPress={onPress}>
-                <Text style={styles.learnButtonText}>{i18n.t('learn')}</Text>
+                <Text style={styles.learnButtonText}>{i18n.t("learn")}</Text>
             </TouchableOpacity>
         </TouchableOpacity>
     );
@@ -63,29 +67,15 @@ const styles = StyleSheet.create({
     card: {
         borderRadius: 12,
         backgroundColor: colors.neutral.lightest,
-        alignItems: "center",
-        justifyContent: "flex-start",
+        flexGrow: 1,
+        flexShrink: 0,
+        flexDirection: "column",
+        justifyContent: "space-between",
         paddingVertical: 16,
         paddingHorizontal: 12,
-        flexGrow: 1,
     },
-    learnButton: {
-        marginTop: 16,
-        backgroundColor: colors.primary.main,
-        borderRadius: 8,
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        width: "100%"
-    },
-    mobileCard: {
-        flexBasis: "48%",
-        aspectRatio: 1,
-        margin: "1%",
-    },
-    tabletCard: {
-        flexBasis: "30%",
-        aspectRatio: 1,
-        margin: "1.5%",
+    content: {
+        alignItems: "center",
     },
     noAspect: {
         aspectRatio: undefined,
@@ -93,30 +83,50 @@ const styles = StyleSheet.create({
         flexBasis: "100%",
     },
     iconContainer: {
-        marginBottom: 8,
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: "bold",
-        textAlign: "center",
+        alignItems: "center",
         marginBottom: 4,
     },
+    title: {
+        fontSize: 16,
+        fontWeight: "bold",
+        textAlign: "center",
+        marginBottom: 2,
+    },
     description: {
-        fontSize: 14,
+        fontSize: 13,
         textAlign: "center",
         color: colors.neutral.dark,
-        marginBottom: 12,
+        marginBottom: 6,
     },
     difficulty: {
-        fontSize: 14,
+        fontSize: 13,
         textAlign: "center",
         fontWeight: "600",
-        marginBottom: 12,
+        marginBottom: 0,
+    },
+    learnButton: {
+        backgroundColor: colors.primary.main,
+        borderRadius: 8,
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        width: "100%",
+        marginTop: 8,
     },
     learnButtonText: {
         color: "#fff",
         fontWeight: "bold",
         fontSize: 14,
-        textAlign: "center"
+        textAlign: "center",
     },
+    mobileCard: {
+        flexBasis: "48%",
+        maxWidth: "100%",
+        margin: "1%",
+    },
+    tabletCard: {
+        flexBasis: "30%",
+        maxWidth: "100%",
+        margin: "1.5%",
+    },
+
 });
