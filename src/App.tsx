@@ -3,6 +3,11 @@ import { TouchableOpacity, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { GameSettings, GameType } from "./types/GameSettings";
+import colors from "./constants/colors";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import i18n from "./i18n";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import HomeScreen from "./screens/HomeScreen";
 import AddWordScreen from "./screens/AddWordScreen";
@@ -13,15 +18,9 @@ import ResultScreen from "./screens/ResultScreen";
 import ScoreScreen from "./screens/ScoreScreen";
 import QuizListScreen from "./screens/QuizListScreen";
 import SavedQuizScreen from "./screens/SavedQuizScreen";
-
-import { GameSettings, GameType } from "./types/GameSettings";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import SplashScreen from "./screens/SplashScreen";
 import ChooseLanguageScreen from "./screens/ChooseLanguageScreen";
 import ParametersScreen from "./screens/ParametersScreen";
-import i18n from "./i18n";
-import colors from "./constants/colors";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import LessonsScreen from "./screens/LessonsScreen";
 import LessonDetailsScreen from "./screens/LessonDetailsScreen";
 import ChapterDetailScreen from "./screens/ChapterDetailScreen";
@@ -73,7 +72,8 @@ export default function App() {
   const goSettingsButton = (navigation: any) => (
     <TouchableOpacity
       onPress={() => navigation.navigate("Parameters")}
-      style={{ marginRight: 10 }}
+      style={{ marginRight: 10, paddingRight: 10 }}
+      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
     >
       <MaterialCommunityIcons name="cog" size={26} color={colors.neutral.white} />
     </TouchableOpacity>
@@ -114,6 +114,8 @@ export default function App() {
               options={({ navigation }) => ({
                 title: "",
                 headerRight: () => goSettingsButton(navigation),
+                headerBackVisible: false,
+                headerRightContainerStyle: { paddingRight: 15 }
               })}
             />
             <Stack.Screen name="ChooseLanguage" component={ChooseLanguageScreen} options={{ headerShown: false }} />
@@ -124,7 +126,7 @@ export default function App() {
                 headerTitle: () => (
                   <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{ marginLeft: 10 }}>
                     <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
-                      {i18n.t("parameters")}
+                      {i18n.t("settings")}
                     </Text>
                   </TouchableOpacity>
                 ),

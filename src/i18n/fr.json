@@ -41,7 +41,8 @@
         "cannotCreateTheme": "Vous ne pouvez plus créer de nouveaux thèmes.",
         "addorsearch": "Ajouter ou rechercher un mot-clé...",
         "phoneticPlaceholder": "Ex : annyeonghaseyo",
-        "mustContainKorean": "⚠️ Le champ coréen doit être composé au moins d'un caractère coréen."
+        "mustContainKorean": "⚠️ Le champ coréen doit être composé au moins d'un caractère coréen.",
+        "step": "Étape {{step}}"
     },
     "scores": {
         "title": "Historique des scores",

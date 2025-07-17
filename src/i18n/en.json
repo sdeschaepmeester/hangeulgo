@@ -41,7 +41,8 @@
         "cannotCreateTheme": "You can't create more theme.",
         "addorsearch": "Add or search for a theme...",
         "phoneticPlaceholder": "Eg: annyeonghaseyo",
-        "mustContainKorean": "⚠️ The korean input must contain at least one korean character"
+        "mustContainKorean": "⚠️ The korean input must contain at least one korean character",
+        "step": "Step {{step}}"
     },
     "scores": {
         "title": "Score history",
