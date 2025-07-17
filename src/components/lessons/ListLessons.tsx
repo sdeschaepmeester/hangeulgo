@@ -11,7 +11,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 export default function ListLessons() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const locale = i18n.locale === "en" ? "en" : "fr";
-
     const screenWidth = Dimensions.get("window").width;
     const baseSize = screenWidth >= 600 ? screenWidth / 4 : screenWidth / 2.2;
     const iconSize = baseSize * 0.2; // 20% of card
@@ -20,7 +19,6 @@ export default function ListLessons() {
         <View style={styles.list}>
             {Object.keys(lessonsMap).map((lessonId, _, arr) => {
                 const lesson = lessonsMap[lessonId](locale);
-
                 return (
                     <LessonElement
                         key={lessonId}

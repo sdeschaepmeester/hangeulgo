@@ -107,13 +107,6 @@ export default function AddWordScreen() {
         {/* ----------- Top section title ----------- */}
         <HeaderTitle
           label={i18n.t("addWord.step", { step: step + 1 })}
-          iconRight={
-            <MaterialCommunityIcons
-              name="help-circle"
-              size={24}
-              color={colors.primary.main}
-            />
-          }
         />
 
         {/* ----------- Step content ----------- */}
