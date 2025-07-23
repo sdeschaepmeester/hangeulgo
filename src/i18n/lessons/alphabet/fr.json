@@ -1,0 +1,63 @@
+{
+    "lessons": {
+        "alphabet": {
+            "title": "Apprendre l'alphabet coréen",
+            "description": "Apprends à identifier et lire les consonnes, voyelles et doubles consonnes.",
+            "chapters": [
+                {
+                    "title": "Les consonnes",
+                    "description": "Ce chapitre explique les différentes consonnes existantes dans l'Hangeul (langage coréen).",
+                    "consonnantGroupTitle": "Groupes de consonnes",
+                    "consonnantGroupIntro": "Les consonnes sont réparties en 5 groupes selon la façon dont elles sont prononcées :",
+                    "consonnants": "Consonnes :",
+                    "bilabial": "Bilabiales",
+                    "alveolar": "Alvéolaires",
+                    "palatal": "Palatales",
+                    "glottal": "Glottales",
+                    "velars": "Vélaires",
+                    "bilabialSound": "Son produit par les lèvres.",
+                    "alveolarSound": "Son produit par la langue sur les alvéoles dentaires.",
+                    "palatalSound": "Son produit par le milieu du palais.",
+                    "glottalSound": "Son produit par la gorge.",
+                    "velarsSound": "Son produit par l'arrière du palais.",
+                    "consonnantTitle": "Liste des consonnes et prononciation",
+                    "consonnantIntro": "Il existe 14 consonnes différentes :"
+                },
+                {
+                    "title": "Les voyelles",
+                    "description": "Ce chapitre explique les différentes voyelles existantes dans l'Hangeul (langage coréen).",
+                    "vowelGroupTitle": "Groupes de voyelles",
+                    "vowelGroupIntro": "Les voyelles sont regroupées selon leur articulation et leur forme :",
+                    "vowels": "Voyelles :",
+                    "basic": "Simples",
+                    "complex": "Composées",
+                    "double": "Doubles",
+                    "basicSound": "Voyelles de base formées d'un seul trait.",
+                    "complexSound": "Voyelles composées formées par la combinaison de voyelles de base.",
+                    "doubleSound": "Voyelles dites doubles ou diphtongues.",
+                    "vowelTitle": "Liste des voyelles et prononciation",
+                    "vowelIntro": "Il existe 12 voyelles séparées en 2 groupes différents :",
+                    "horizontalTitle": "Voyelles horizontales",
+                    "horizontalDescription": "Il existe 5 voyelles horizontales. Celles-ci s'écrivent en dessous des consonnes.",
+                    "verticalTitle": "Voyelles verticales",
+                    "verticalDescription": "Il existe 7 voyelles verticales. Celles-ci s'écrivent sur le côté droit des consonnes."
+                },
+                {
+                    "title": "Les consonnes doubles",
+                    "description": "Ce chapitre explique les consonnes doubles (쌍자음) dans l'Hangeul. Elles sont considérées comme une seule lettre.",
+                    "doubleConsonnantTitle": "Liste des consonnes doubles",
+                    "doubleConsonnantIntro": "Il existe 5 consonnes doubles principales utilisées en coréen :",
+                    "doubleConsonnantExplanation": "Les consonnes doubles (쌍자음) sont des consonnes renforcées. Elles sont considérées comme une seule lettre et modifient la prononciation en la rendant plus forte."
+                },
+                {
+                    "title": "La consonne ieung (ㅇ)",
+                    "description": "Ce chapitre explique l’usage particulier de la consonne ieung.",
+                    "ieungTitle": "Règle spéciale",
+                    "ieungExamples": "Exemples de syllabes avec la consonne ㅇ",
+                    "ieungIntro": "En Hangeul, ieung (ㅇ) a une fonction unique.",
+                    "ieungExplanation": "Lorsque ieung (ㅇ) est placée au début d’un bloc syllabique, elle agit comme une consonne muette pour permettre à une syllabe de commencer par une voyelle. Placée en fin de bloc, elle se prononce 'ng'."
+                }
+            ]
+        }
+    }
+}

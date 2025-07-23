@@ -8,23 +8,31 @@ interface Props {
     label: string;
     bgColor?: string;
     onClick: (event: GestureResponderEvent) => void;
+    fullWidth?: boolean;
 }
 
 const screenWidth = Dimensions.get("window").width;
 const isTablet = screenWidth >= 600;
 
-export default function SquareButton({ icon, label, bgColor = colors.neutral.lightest, onClick }: Props) {
+export default function SquareButton({ icon, label, bgColor = colors.neutral.lightest, onClick, fullWidth = false, }: Props) {
     return (
         <TouchableOpacity
             style={[
                 styles.button,
-                isTablet ? styles.buttonTablet : styles.buttonMobile,
+                fullWidth ? styles.fullWidthButton : isTablet ? styles.buttonTablet : styles.buttonMobile,
                 { backgroundColor: bgColor },
             ]}
             onPress={onClick}
         >
             <View style={styles.content}>
-                <View style={styles.iconContainer}>{icon}</View>
+                <View
+                    style={[
+                        styles.iconContainer,
+                        fullWidth && styles.iconContainerFullWidth,
+                    ]}
+                >
+                    {icon}
+                </View>
                 <Text style={styles.label}>{label}</Text>
             </View>
         </TouchableOpacity>
@@ -42,8 +50,12 @@ const styles = StyleSheet.create({
     buttonMobile: {
         aspectRatio: 1,
     },
-    buttonTablet: { // Avoid square because it's too big on tablets
-        paddingVertical: 16, 
+    buttonTablet: {
+        paddingVertical: 16,
+    },
+    fullWidthButton: {
+        width: "100%",
+        paddingVertical: 12,
     },
     content: {
         alignItems: "center",
@@ -52,14 +64,19 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
     },
     iconContainer: {
-        width: "50%",
-        aspectRatio: 1,
         justifyContent: "center",
         alignItems: "center",
+        width: "50%",
+        aspectRatio: 1,
+    },
+    iconContainerFullWidth: {
+        width: "auto",
+        aspectRatio: undefined,
+        marginBottom: 8,
     },
     label: {
         fontWeight: "bold",
         textAlign: "center",
-        fontSize: 16,
+        fontSize: screenWidth > 600 ? 18 : 16,
     },
 });
