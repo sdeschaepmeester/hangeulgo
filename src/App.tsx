@@ -110,7 +110,7 @@ export default function App() {
                 headerTitle: () => (
                   <TouchableOpacity onPress={() => navigation.navigate("Home")} style={{ marginLeft: 10 }}>
                     <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
-                      {i18n.t("parameters")}
+                      {i18n.t("settings")}
                     </Text>
                   </TouchableOpacity>
                 ),

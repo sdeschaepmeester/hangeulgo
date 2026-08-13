@@ -33,6 +33,8 @@ export default function QuizScreen({ route, navigation }: Props) {
     require("../../assets/quiz/bg_quiz_4.jpg"),
     require("../../assets/quiz/bg_quiz_5.jpg"),
     require("../../assets/quiz/bg_quiz_6.jpg"),
+    require("../../assets/quiz/bg_quiz_7.png"),
+    require("../../assets/quiz/bg_quiz_8.png"),
   ];
 
   const currentQuestion = questions[currentIndex];
