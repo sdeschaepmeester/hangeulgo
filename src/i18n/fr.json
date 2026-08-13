@@ -4,7 +4,8 @@
         "myquiz": "Mes quiz",
         "lexicon": "Lexique",
         "addWord": "Ajouter un mot",
-        "scores": "Scores"
+        "scores": "Scores",
+        "lessons": "Leçons"
     },
     "quiz": {
         "question": "Question",
@@ -40,7 +41,8 @@
         "cannotCreateTheme": "Vous ne pouvez plus créer de nouveaux thèmes.",
         "addorsearch": "Ajouter ou rechercher un mot-clé...",
         "phoneticPlaceholder": "Ex : annyeonghaseyo",
-        "mustContainKorean": "⚠️ Le champ coréen doit être composé au moins d'un caractère coréen."
+        "mustContainKorean": "⚠️ Le champ coréen doit être composé au moins d'un caractère coréen.",
+        "step": "Étape {{step}}"
     },
     "scores": {
         "title": "Historique des scores",
@@ -87,7 +89,8 @@
         "play": "Jouer",
         "home": "Accueil",
         "lexicon": "Lexique",
-        "addWord": "Ajouter"
+        "addWord": "Ajouter",
+        "lessons": "Leçons"
     },
     "topbar": {
         "lexicon": "Réviser",
@@ -146,7 +149,8 @@
     "difficulties": {
         "easy": "Facile",
         "medium": "Moyen",
-        "hard": "Difficile"
+        "hard": "Difficile",
+        "difficulty": "Difficulté"
     },
     "medal": {
         "bad": "Ça arrive même aux meilleurs !",
@@ -164,7 +168,9 @@
         "scores": "Mes scores",
         "quizTypes": "Types de quiz",
         "savedQuiz": "Quiz enregistrés",
-        "settings": "Paramètres"
+        "settings": "Paramètres",
+        "lessons": "Leçons",
+        "lessonDetails": "Leçon"
     },
     "prompt": {
         "comprehension": "Sélectionne la traduction :",
@@ -174,5 +180,11 @@
     },
     "soundActivated": "Sons activés",
     "soundInactivated": "Sons désactivés",
+    "learn": "Apprendre",
+    "chapter": "Chapitre",
+    "noChapter": "Chapitre introuvable.",
+    "return": "Retour",
+    "returnToLessons": "Retour aux leçons",
+    "returnToChapters": "Retour à la liste des chapitres",
     "settings": "Paramètres"
 }

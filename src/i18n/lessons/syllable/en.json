@@ -1,0 +1,64 @@
+{
+    "lessons": {
+        "syllable": {
+            "title": "Korean Syllables",
+            "description": "Discover how Korean syllables are built and understand the role of batchims (final consonants) and gyeobatchims (double final consonants).",
+            "chapters": [
+                {
+                    "title": "Building a syllable",
+                    "description": "This chapter explains the basic rules for constructing a syllable block in Hangeul.",
+                    "rulesTitle": "Rules concerning the construction of syllables",
+                    "rules": [
+                        "A syllable block is always made up of at least two letters (e.g. consonant + vowel).",
+                        "Each syllable always starts with a consonant. If a syllable starts with a vowel, ieung (ㅇ) is used as a silent consonant.",
+                        "A consonant is always followed by a vowel.",
+                        "Each syllable block takes up the same square space to keep the writing balanced."
+                    ],
+                    "examples": [
+                        "Block with 3 letters (han)",
+                        "Starts with ㅇ (a)",
+                        "Consonant + vowel (ga)",
+                        "Horizontal",
+                        "Vertical"
+                    ],
+                    "constructionTitle": "Building syllables",
+                    "constructionDescription": "Vertical vowels are written to the right of the consonant. Horizontal vowels are written below the consonant."
+                },
+                {
+                    "title": "Batchims and Gyeobbatchims",
+                    "description": "This chapter introduces batchims (final consonants) and gyeobbatchims (double final consonants) with pronunciation rules and tips.",
+                    "introTitle": "Introduction",
+                    "introTextParts": [
+                        "Final consonants in a syllable are called batchims and gyeobbatchims (겹받침 in Korean).",
+                        "They are placed at the end of a syllable and have a pronunciation that differs from their initial position.",
+                        "Any syllable with",
+                        "at least three letters",
+                        "can have a final consonant."
+                    ],
+                    "batchimTitle": "Final Consonants (Batchim)",
+                    "batchimText": "Batchims (받침) are simple final consonants. Examples and pronunciation:",
+                    "batchimTableHeaders": [
+                        "Final consonant",
+                        "Pronunciation"
+                    ],
+                    "gyeobbatchimTitle": "Double Final Consonants (Gyeobbatchim)",
+                    "gyeobbatchimTextParts": [
+                        "Gyeobbatchims (겹받침) are double final consonants.",
+                        "There are 11 combinations:",
+                        "In general, only the first consonant is pronounced.",
+                        "Exceptions: ㄺ, ㄻ, ㄼ where the second consonant is pronounced."
+                    ],
+                    "liaisonTitle": "Final consonants followed by a vowel",
+                    "liaisonText": "When a batchim or gyeobbatchim is followed by a syllable starting with a vowel, the final consonant sound links to the next syllable.",
+                    "word": "Example",
+                    "phonetic": "Phonetic",
+                    "translation": "Translation",
+                    "pronunciation": "Pronunciation",
+                    "pronunced": "is pronunced",
+                    "meeting": "meeting",
+                    "consonnant": "Consonnant"
+                }
+            ]
+        }
+    }
+}

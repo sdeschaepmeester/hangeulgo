@@ -4,7 +4,8 @@
         "myquiz": "My quizzes",
         "lexicon": "Lexicon",
         "addWord": "Add a word",
-        "scores": "Scores"
+        "scores": "Scores",
+        "lessons": "Lessons"
     },
     "quiz": {
         "question": "Question",
@@ -40,7 +41,8 @@
         "cannotCreateTheme": "You can't create more theme.",
         "addorsearch": "Add or search for a theme...",
         "phoneticPlaceholder": "Eg: annyeonghaseyo",
-        "mustContainKorean": "⚠️ The korean input must contain at least one korean character"
+        "mustContainKorean": "⚠️ The korean input must contain at least one korean character",
+        "step": "Step {{step}}"
     },
     "scores": {
         "title": "Score history",
@@ -87,7 +89,8 @@
         "play": "Play",
         "home": "Home",
         "lexicon": "Lexicon",
-        "addWord": "Add word"
+        "addWord": "Add word",
+        "lessons": "Lessons"
     },
     "topbar": {
         "lexicon": "Review",
@@ -146,7 +149,8 @@
     "difficulties": {
         "easy": "Easy",
         "medium": "Medium",
-        "hard": "Hard"
+        "hard": "Hard",
+        "difficulty": "Difficulty"
     },
     "medal": {
         "bad": "It happens to the best of us!",
@@ -164,7 +168,9 @@
         "scores": "My scores",
         "quizTypes": "Quiz types",
         "savedQuiz": "Saved quizzes",
-        "settings": "Settings"
+        "settings": "Settings",
+        "lessons": "Lessons",
+        "lessonDetails": "Lesson"
     },
     "prompt": {
         "comprehension": "Select the translation:",
@@ -174,5 +180,11 @@
     },
     "soundActivated": "Sounds enabled",
     "soundInactivated": "Sounds disabled",
+    "learn": "Learn",
+    "chapter": "Chapter",
+    "noChapter": "Chapter not found",
+    "return": "Return",
+    "returnToLessons": "Return to lessons list",
+    "returnToChapters": "Return to chapters list",
     "settings": "Parameters"
 }

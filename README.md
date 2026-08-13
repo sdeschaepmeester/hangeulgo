@@ -1,6 +1,6 @@
 # 🇰🇷 HangeulGo
 
-<img src="screenshots/hangeulgo_presentation.png" alt="Home" width="800"/>
+<img src="screenshots/english/banner.png" alt="Home" width="800"/>
 
 🇫🇷 [Consulter la version française](./README.fr.md)
 
@@ -28,9 +28,14 @@ You can personalize your quizzes by assigning keywords (themes) to your words.
 
 ## Preview
 
-<img src="screenshots/intro.png" alt="Intro" width="900"/>
-<img src="screenshots/gametypes.png" alt="Games" width="900"/>
-<img src="screenshots/end.png" alt="Results" width="900"/>
+<img src="screenshots/english/1.png" alt="img" width="450"/>
+<img src="screenshots/english/2.png" alt="img" width="450"/>
+<img src="screenshots/english/3.png" alt="img" width="450"/>
+<img src="screenshots/english/4.png" alt="img" width="450"/>
+<img src="screenshots/english/5.png" alt="img" width="450"/>
+<img src="screenshots/english/6.png" alt="img" width="450"/>
+<img src="screenshots/english/7.png" alt="img" width="450"/>
+
 
 ## Features
 

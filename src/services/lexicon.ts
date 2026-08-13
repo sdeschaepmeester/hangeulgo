@@ -179,7 +179,6 @@ export async function saveWord({ native, ko, phonetic, difficulty, tags, edit, i
     id?: number;
 }) {
     const db = await dbPromise;
-
     if (edit && id != null) {
         await db.runAsync(
             `UPDATE lexicon SET native = ?, ko = ?, phonetic = ?, difficulty = ? WHERE id = ?`,

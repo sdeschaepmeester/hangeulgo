@@ -32,22 +32,32 @@ export default function HomeSections() {
                 />
             </SectionCardGame>
 
-            {/* Lexique section */}
+            {/* Lexicon section */}
             <View style={styles.sectionSpacing}>
                 <SectionCardGame title={i18n.t("lexicon.title")}>
                     <SquareButton
-                        icon={<MaterialCommunityIcons name="book-open-variant" style={styles.icon} />}
+                        icon={<MaterialCommunityIcons name="pen" style={styles.icon} />}
                         label={i18n.t("home.lexicon")}
                         bgColor={colors.primary.light}
                         onClick={() => navigation.navigate("Lexicon")}
                     />
                     <SquareButton
-                        icon={<MaterialCommunityIcons name="layers-plus" style={styles.icon} />}
-                        label={i18n.t("home.addWord")}
+                        icon={<MaterialCommunityIcons name="book-open-page-variant" style={styles.icon} />}
+                        label={i18n.t("home.lessons")}
                         bgColor={colors.primary.light}
-                        onClick={() => navigation.navigate("AddWord")}
+                        onClick={() => navigation.navigate("Lessons")}
                     />
                 </SectionCardGame>
+                {/* Add a word */}
+                <View style={styles.fullWidthButtonContainer}>
+                    <SquareButton
+                        icon={<MaterialCommunityIcons name="plus-circle" style={styles.icon} />}
+                        label={i18n.t("home.addWord")}
+                        bgColor={colors.primary.main}
+                        onClick={() => navigation.navigate("AddWord")}
+                        fullWidth
+                    />
+                </View>
             </View>
         </View>
     );
@@ -64,5 +74,9 @@ const styles = StyleSheet.create({
     icon: {
         fontSize: screenWidth * 0.18,
         color: colors.neutral.dark,
+    },
+    fullWidthButtonContainer: {
+        marginTop: 32,
+        width: "100%",
     },
 });

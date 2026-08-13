@@ -30,7 +30,7 @@ export async function initI18n(): Promise<void> {
     }
 }
 
-// Pour changer dynamiquement la langue et la stocker
+// Change language
 export async function setAppLanguage(lang: "fr" | "en"): Promise<void> {
     i18n.locale = lang;
     await SecureStore.setItemAsync("userLang", lang);
